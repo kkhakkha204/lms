@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\QuizQuestionController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LearningController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -120,14 +122,46 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/users-export', [UserController::class, 'export'])->name('admin.users.export');
 });
 
-Route::prefix('student')->middleware(['auth'])->group(function () {
-    Route::get('/courses', [StudentController::class, 'index'])->name('student.courses.index');
-    Route::get('/courses/{course}', [StudentController::class, 'show'])->name('student.courses.show');
-    Route::post('/courses/{course}/enroll', [StudentController::class, 'enroll'])->name('student.courses.enroll');
-    Route::get('/courses/{course}/payment', [StudentController::class, 'showPaymentForm'])->name('student.courses.payment.form');
-    Route::post('/courses/{course}/payment', [StudentController::class, 'processPayment'])->name('student.courses.payment');
-    Route::get('/courses/{course}/payment/success', [StudentController::class, 'paymentSuccess'])->name('student.courses.payment.success');
-    Route::get('/courses/{course}/learn', [StudentController::class, 'learn'])->name('student.courses.learn');
-    Route::post('/courses/{course}/progress/lesson/{lesson}', [StudentController::class, 'updateLessonProgress'])->name('student.progress.lesson');
-    Route::post('/courses/{course}/progress/quiz/{quiz}', [StudentController::class, 'submitQuiz'])->name('student.progress.quiz');
+// Routes công khai cho course listing
+Route::get('/courses', [StudentController::class, 'index'])->name('student.courses.index');
+Route::get('/courses/{slug}', [StudentController::class, 'showCourse'])->name('student.courses.show');
+Route::get('/category/{slug}', [StudentController::class, 'coursesByCategory'])->name('student.courses.category');
+
+// Routes yêu cầu đăng nhập
+Route::middleware(['auth'])->group(function () {
+    // Dashboard học viên
+    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
+    // Trang học tập
+    Route::get('/student/learn/{courseSlug}/{lessonSlug?}', [StudentController::class, 'learn'])->name('student.learn');
+
+    // Checkout
+    Route::get('/checkout/{courseSlug}', [PaymentController::class, 'checkout'])->name('payment.checkout');
+
+    // Payment processing
+    Route::post('/payment/create-intent', [PaymentController::class, 'createPaymentIntent'])->name('payment.create-intent');
+    Route::post('/payment/confirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');
+
+    // Payment result pages
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+});
+// Thêm vào web.php - Learning Routes
+Route::middleware(['auth'])->group(function () {
+    // Learning interface
+    Route::prefix('learn')->group(function () {
+        Route::get('/{courseSlug}', [LearningController::class, 'index'])->name('learning.index');
+        Route::get('/{courseSlug}/lesson/{lessonSlug}', [LearningController::class, 'lesson'])->name('learning.lesson');
+        Route::get('/{courseSlug}/quiz/{quizSlug}', [LearningController::class, 'quiz'])->name('learning.quiz');
+        Route::get('/{courseSlug}/progress', [LearningController::class, 'getProgress'])->name('learning.progress');
+    });
+
+    // Material download - PHẢI ĐẶT NGOÀI prefix learn
+    Route::get('/material/{materialId}/download', [LearningController::class, 'downloadMaterial'])->name('learning.download-material');
+
+    // API routes for AJAX calls
+    Route::prefix('api/learning')->group(function () {
+        Route::post('/video-progress', [LearningController::class, 'updateVideoProgress']);
+        Route::post('/submit-quiz', [LearningController::class, 'submitQuiz']);
+    });
 });

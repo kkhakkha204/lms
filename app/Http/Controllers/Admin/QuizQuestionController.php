@@ -9,7 +9,7 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class QuizQuestionController extends Controller
 {

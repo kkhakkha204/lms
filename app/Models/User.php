@@ -65,8 +65,8 @@ class User extends Authenticatable
             return asset('assets/avatars/' . $this->avatar);
         }
 
-        // Avatar mặc định nếu không có
-        return asset('assets/avatars/default-avatar.png');
+        // Avatar mặc định sử dụng service online
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=3B82F6&color=fff&size=128';
     }
 
     public function enrollments()
