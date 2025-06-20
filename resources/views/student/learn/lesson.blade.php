@@ -211,7 +211,7 @@
     function lessonViewer() {
         return {
             videoProgress: 0,
-            isCompleted: {{ $progress['lesson_' . $lesson->id]->lesson_completed ?? 'false' }},
+            isCompleted: {{ ($progress['lesson_' . $lesson->id]->lesson_completed ?? false) ? 'true' : 'false' }},
             watchedSeconds: {{ $progress['lesson_' . $lesson->id]->video_watched_seconds ?? 0 }},
             video: null,
             progressTimer: null,
@@ -298,6 +298,6 @@
                         console.error('Error saving progress:', error);
                     });
             }
-        }
+        };
     }
 </script>
