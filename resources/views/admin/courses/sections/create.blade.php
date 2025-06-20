@@ -3,32 +3,119 @@
 @section('title', 'Tạo mục mới')
 
 @section('content')
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold mb-6">Tạo mục mới cho {{ $course->title }}</h1>
-        <form action="{{ route('admin.courses.sections.store', $course) }}" method="POST" class="bg-white p-6 rounded-lg shadow-lg">
-            @csrf
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Tiêu đề</label>
-                <input type="text" name="title" value="{{ old('title') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                @error('title')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-                @enderror
+    <div class="min-h-screen bg-gray-50 py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                    <a href="{{ route('admin.courses.index') }}" class="hover:text-blue-600 transition-colors">Khóa học</a>
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <a href="{{ route('admin.courses.edit', $course) }}" class="hover:text-blue-600 transition-colors">{{ $course->title }}</a>
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-gray-900">Tạo mục mới</span>
+                </nav>
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Tạo mục mới</h1>
+                        <p class="mt-2 text-gray-600">Thêm mục mới cho khóa học "{{ $course->title }}"</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <a href="{{ route('admin.courses.edit', $course) }}"
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            Quay lại
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Mô tả</label>
-                <textarea name="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ old('description') }}</textarea>
-                @error('description')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-                @enderror
+
+            <!-- Form Card -->
+            <div class="bg-white shadow-xl rounded-xl overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-700">
+                    <h2 class="text-lg font-semibold text-white">Thông tin mục</h2>
+                    <p class="text-blue-100 text-sm mt-1">Thứ tự sẽ được tự động gán sau các mục hiện có</p>
+                </div>
+
+                <form action="{{ route('admin.courses.sections.store', $course) }}" method="POST" class="p-6 space-y-6">
+                    @csrf
+
+                    <!-- Title Field -->
+                    <div class="space-y-2">
+                        <label for="title" class="block text-sm font-semibold text-gray-700">
+                            Tiêu đề mục <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text"
+                               id="title"
+                               name="title"
+                               value="{{ old('title') }}"
+                               placeholder="Nhập tiêu đề cho mục..."
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('title') border-red-500 @enderror">
+                        @error('title')
+                        <div class="flex items-center mt-2 text-red-600">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-sm">{{ $message }}</span>
+                        </div>
+                        @enderror
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="space-y-2">
+                        <label for="description" class="block text-sm font-semibold text-gray-700">
+                            Mô tả
+                        </label>
+                        <textarea id="description"
+                                  name="description"
+                                  rows="4"
+                                  placeholder="Nhập mô tả cho mục (tùy chọn)..."
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                        @error('description')
+                        <div class="flex items-center mt-2 text-red-600">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-sm">{{ $message }}</span>
+                        </div>
+                        @enderror
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                            </svg>
+                            <div>
+                                <h4 class="text-sm font-medium text-blue-800">Thông tin về thứ tự</h4>
+                                <p class="text-sm text-blue-700 mt-1">Mục mới sẽ được tự động đặt ở cuối danh sách. Bạn có thể sắp xếp lại thứ tự bằng cách kéo thả trong trang quản lý khóa học.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                        <a href="{{ route('admin.courses.edit', $course) }}"
+                           class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            Hủy
+                        </a>
+                        <button type="submit"
+                                class="inline-flex items-center px-6 py-3 border border-transparent rounded-lg text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Tạo mục
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Thứ tự</label>
-                <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                @error('sort_order')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Tạo</button>
-        </form>
+        </div>
     </div>
 @endsection

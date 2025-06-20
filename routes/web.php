@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CourseSectionController;
 use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\QuizQuestionController;
 use App\Http\Controllers\Admin\StatisticsController;
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/admin/courses/{course}/sections/{section}/lessons/{lesson}', [LessonController::class, 'update'])->name('admin.courses.sections.lessons.update');
     Route::delete('/admin/courses/{course}/sections/{section}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('admin.courses.sections.lessons.destroy');
     Route::get('/admin/courses/{course}/sections/{section}/lessons/{lesson}/pdf', [LessonController::class, 'generatePdf'])->name('admin.courses.sections.lessons.pdf');
+    Route::delete('/admin/materials/{material}', [MaterialController::class, 'destroy'])->name('admin.materials.destroy');
 
 
     // Route cho Quizzes

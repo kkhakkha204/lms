@@ -19,12 +19,15 @@ class CourseSectionController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'sort_order' => 'required|integer|min:0',
         ]);
+
+        // Tự động gán thứ tự sau section cuối cùng
+        $maxSortOrder = $course->sections()->max('sort_order') ?? 0;
+        $validated['sort_order'] = $maxSortOrder + 1;
 
         $course->sections()->create($validated);
 
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được tạo.');
+        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được tạo thành công.');
     }
 
     public function edit(Course $course, CourseSection $section)
@@ -37,17 +40,17 @@ class CourseSectionController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'sort_order' => 'required|integer|min:0',
         ]);
 
+        // Giữ nguyên sort_order khi edit, không cho phép thay đổi
         $section->update($validated);
 
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được cập nhật.');
+        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được cập nhật thành công.');
     }
 
     public function destroy(Course $course, CourseSection $section)
     {
         $section->delete();
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được xóa.');
+        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được xóa thành công.');
     }
 }
