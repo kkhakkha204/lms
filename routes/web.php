@@ -103,6 +103,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/courses/{course}/sections/{section}/quizzes/{quiz}/questions/{question}/edit', [QuizQuestionController::class, 'edit'])->name('admin.courses.sections.quizzes.questions.edit');
     Route::put('/admin/courses/{course}/sections/{section}/quizzes/{quiz}/questions/{question}', [QuizQuestionController::class, 'update'])->name('admin.courses.sections.quizzes.questions.update');
     Route::delete('/admin/courses/{course}/sections/{section}/quizzes/{quiz}/questions/{question}', [QuizQuestionController::class, 'destroy'])->name('admin.courses.sections.quizzes.questions.destroy');
+// Route cho sắp xếp lại thứ tự câu hỏi
+    Route::post('/reorder', [QuizQuestionController::class, 'reorder'])
+        ->name('admin.courses.sections.quizzes.questions.reorder');
+
+    // Route cho nhân bản câu hỏi
+    Route::post('/{question}/duplicate', [QuizQuestionController::class, 'duplicate'])
+        ->name('admin.courses.sections.quizzes.questions.duplicate');
 
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
