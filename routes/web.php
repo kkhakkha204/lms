@@ -93,6 +93,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/courses/{course}/sections/{section}/quizzes/{quiz}/edit', [QuizController::class, 'edit'])->name('admin.courses.sections.quizzes.edit');
     Route::put('/admin/courses/{course}/sections/{section}/quizzes/{quiz}', [QuizController::class, 'update'])->name('admin.courses.sections.quizzes.update');
     Route::delete('/admin/courses/{course}/sections/{section}/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('admin.courses.sections.quizzes.destroy');
+    Route::post('/admin/courses/{course}/sections/{section}/quizzes/{quiz}/sort-questions', [QuizController::class, 'sortQuestions'])->name('admin.courses.sections.quizzes.sort-questions');
+
 
     // Route cho Quiz Questions
     Route::get('/admin/courses/{course}/sections/{section}/quizzes/{quiz}/questions', [QuizQuestionController::class, 'index'])->name('admin.courses.sections.quizzes.questions.index');
