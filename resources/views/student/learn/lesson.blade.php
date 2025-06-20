@@ -1,95 +1,80 @@
 <div class="h-full flex flex-col" x-data="lessonViewer()">
     <!-- Video Section -->
     @if($lesson->video_url)
-        <div class="bg-black">
-            <div class="video-container">
+        @php
+            $isYoutube = str_contains($lesson->video_url, 'youtube.com') || str_contains($lesson->video_url, 'youtu.be');
+        @endphp
+
+        @if($isYoutube)
+            <!-- YouTube Video Container -->
+            <div class="bg-black relative w-full" style="padding-bottom: 56.25%; height: 0;">
                 @php
-                    $isYoutube = str_contains($lesson->video_url, 'youtube.com') || str_contains($lesson->video_url, 'youtu.be');
+                    // Extract video ID from various YouTube URL formats
+                    $videoId = '';
+                    $url = $lesson->video_url;
+
+                    if (str_contains($url, 'youtu.be/')) {
+                        // Format: https://youtu.be/VIDEO_ID
+                        $parts = explode('youtu.be/', $url);
+                        if (count($parts) > 1) {
+                            $videoId = explode('?', $parts[1])[0];
+                        }
+                    } elseif (str_contains($url, 'youtube.com/watch?v=')) {
+                        // Format: https://youtube.com/watch?v=VIDEO_ID
+                        parse_str(parse_url($url, PHP_URL_QUERY), $query);
+                        $videoId = $query['v'] ?? '';
+                    } elseif (str_contains($url, 'youtube.com/embed/')) {
+                        // Format: https://youtube.com/embed/VIDEO_ID
+                        $parts = explode('youtube.com/embed/', $url);
+                        if (count($parts) > 1) {
+                            $videoId = explode('?', $parts[1])[0];
+                        }
+                    }
+
+                    // Clean video ID
+                    $videoId = preg_replace('/[^a-zA-Z0-9_-]/', '', explode('&', $videoId)[0]);
                 @endphp
 
-                @if($isYoutube)
-                    <!-- YouTube Video -->
-                    @php
-                        // Extract video ID from various YouTube URL formats
-                        $videoId = '';
-                        $url = $lesson->video_url;
+                @if($videoId)
+                    <iframe
+                        id="youtube-player"
+                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1&playsinline=1"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        class="absolute top-0 left-0 w-full h-full"
+                        style="border: none;">
+                    </iframe>
 
-                        if (str_contains($url, 'youtu.be/')) {
-                            // Format: https://youtu.be/VIDEO_ID
-                            $parts = explode('youtu.be/', $url);
-                            if (count($parts) > 1) {
-                                $videoId = explode('?', $parts[1])[0];
-                            }
-                        } elseif (str_contains($url, 'youtube.com/watch?v=')) {
-                            // Format: https://youtube.com/watch?v=VIDEO_ID
-                            parse_str(parse_url($url, PHP_URL_QUERY), $query);
-                            $videoId = $query['v'] ?? '';
-                        } elseif (str_contains($url, 'youtube.com/embed/')) {
-                            // Format: https://youtube.com/embed/VIDEO_ID
-                            $parts = explode('youtube.com/embed/', $url);
-                            if (count($parts) > 1) {
-                                $videoId = explode('?', $parts[1])[0];
-                            }
-                        }
-
-                        // Clean video ID (remove any additional parameters)
-                        $videoId = preg_replace('/[^a-zA-Z0-9_-]/', '', explode('&', $videoId)[0]);
-                    @endphp
-
-                    @if($videoId)
-                        <!-- Try different embed approaches -->
-                        <div class="w-full h-full relative">
-                            <!-- Primary iframe -->
-                            <iframe
-                                id="youtube-player"
-                                src="https://www.youtube-nocookie.com/embed/{{ $videoId }}?modestbranding=1&rel=0"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen
-                                referrerpolicy="strict-origin-when-cross-origin"
-                                class="w-full h-full">
-                            </iframe>
-
-                            <!-- Fallback direct link -->
-                            <div class="absolute bottom-4 right-4">
-                                <a href="https://www.youtube.com/watch?v={{ $videoId }}"
-                                   target="_blank"
-                                   class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
-                                    <i class="fab fa-youtube mr-1"></i>
-                                    Xem trên YouTube
-                                </a>
-                            </div>
-                        </div>
-
-                        <script>
-                            console.log('YouTube Video ID:', '{{ $videoId }}');
-                            console.log('Embed URL:', 'https://www.youtube-nocookie.com/embed/{{ $videoId }}');
-
-                            // Check if iframe loads
-                            const iframe = document.getElementById('youtube-player');
-                            iframe.onload = function() {
-                                console.log('YouTube iframe loaded successfully');
-                            };
-                            iframe.onerror = function() {
-                                console.error('YouTube iframe failed to load');
-                            };
-                        </script>
-                    @else
-                        <div class="w-full h-full flex items-center justify-center text-white bg-red-600">
-                            <div class="text-center">
-                                <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                                <p>Không thể phân tích video YouTube</p>
-                                <p class="text-sm mt-2">URL gốc: {{ $lesson->video_url }}</p>
-                                <p class="text-xs mt-1">Video ID rỗng hoặc không hợp lệ</p>
-                                <a href="{{ $lesson->video_url }}" target="_blank"
-                                   class="inline-block mt-4 bg-white text-red-600 px-4 py-2 rounded">
-                                    Xem video gốc
-                                </a>
-                            </div>
-                        </div>
-                    @endif
+                    <!-- Fallback link -->
+                    <div class="absolute bottom-4 right-4 z-10">
+                        <a href="https://www.youtube.com/watch?v={{ $videoId }}"
+                           target="_blank"
+                           class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors">
+                            <i class="fab fa-youtube mr-1"></i>
+                            Xem trên YouTube
+                        </a>
+                    </div>
                 @else
-                    <!-- Local Video -->
+                    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white bg-red-600">
+                        <div class="text-center p-4">
+                            <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                            <p class="text-lg">Không thể phân tích video YouTube</p>
+                            <p class="text-sm mt-2 opacity-75">URL: {{ $lesson->video_url }}</p>
+                            <a href="{{ $lesson->video_url }}" target="_blank"
+                               class="inline-block mt-4 bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-100">
+                                Xem video gốc
+                            </a>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        @else
+            <!-- Local Video -->
+            <div class="bg-black">
+                <div class="video-container">
                     <video
                         id="lesson-video"
                         controls
@@ -102,9 +87,9 @@
                             <p>Trình duyệt của bạn không hỗ trợ video này.</p>
                         </div>
                     </video>
-                @endif
+                </div>
             </div>
-        </div>
+        @endif
     @else
         <!-- No Video -->
         <div class="bg-gray-100 p-8 text-center">
