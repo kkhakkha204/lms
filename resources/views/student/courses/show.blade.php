@@ -332,7 +332,66 @@
 
                         <!-- Reviews Tab -->
                         <div x-show="activeTab === 'reviews'" class="mt-8">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Đánh giá từ học viên</h3>
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-2xl font-bold text-gray-900">Đánh giá từ học viên</h3>
+
+                                @auth
+                                    @if($canReview)
+                                        <a href="{{ route('courses.review.create', $course->slug) }}"
+                                           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                            <i class="fas fa-star mr-2"></i>
+                                            Viết đánh giá
+                                        </a>
+                                    @elseif($userReview)
+                                        <div class="flex space-x-2">
+                                            <a href="{{ route('courses.review.edit', $course->slug) }}"
+                                               class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                                                <i class="fas fa-edit mr-2"></i>
+                                                Sửa đánh giá
+                                            </a>
+                                        </div>
+                                    @elseif(!$isEnrolled)
+                                        <div class="text-sm text-gray-500">
+                                            Bạn cần đăng ký khóa học để đánh giá
+                                        </div>
+                                    @endif
+                                @else
+                                    <a href="{{ route('login') }}"
+                                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                        Đăng nhập để đánh giá
+                                    </a>
+                                @endauth
+                            </div>
+
+                            <!-- User's Review (if exists) -->
+                            @if($userReview)
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center mb-2">
+                                                <h4 class="font-semibold text-blue-900 mr-3">Đánh giá của bạn</h4>
+                                                <div class="flex text-yellow-400">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        @if($i <= $userReview->rating)
+                                                            <i class="fas fa-star text-sm"></i>
+                                                        @else
+                                                            <i class="far fa-star text-sm"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span class="text-sm text-blue-700 ml-2">{{ $userReview->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            @if($userReview->review)
+                                                <p class="text-blue-800">{{ $userReview->review }}</p>
+                                            @endif
+                                        </div>
+                                        <a href="{{ route('courses.review.edit', $course->slug) }}"
+                                           class="text-blue-600 hover:text-blue-800 text-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
 
                             <!-- Rating Summary -->
                             <div class="bg-gray-50 rounded-lg p-6 mb-8">
@@ -354,74 +413,84 @@
                                     </div>
 
                                     <div class="flex-1 ml-8">
-                                        @php
-                                            $ratingBreakdown = [
-                                                5 => 65,
-                                                4 => 20,
-                                                3 => 10,
-                                                2 => 3,
-                                                1 => 2
-                                            ];
-                                        @endphp
-                                        @foreach($ratingBreakdown as $stars => $percentage)
+                                        @foreach($ratingBreakdown as $stars => $data)
                                             <div class="flex items-center mb-2">
                                                 <span class="text-sm text-gray-600 w-12">{{ $stars }} sao</span>
                                                 <div class="flex-1 mx-3 bg-gray-200 rounded-full h-2">
-                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: {{ $percentage }}%"></div>
+                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: {{ $data['percentage'] }}%"></div>
                                                 </div>
-                                                <span class="text-sm text-gray-600 w-8">{{ $percentage }}%</span>
+                                                <span class="text-sm text-gray-600 w-12">{{ $data['percentage'] }}%</span>
+                                                <span class="text-sm text-gray-500 w-8 ml-2">({{ $data['count'] }})</span>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Individual Reviews -->
-                            @if($course->reviews->count() > 0)
-                                <div class="space-y-6">
-                                    @foreach($course->reviews->take(5) as $review)
-                                        <div class="border-b border-gray-200 pb-6">
-                                            <div class="flex items-start space-x-4">
-                                                <img src="{{ $review->student->avatar_url }}"
-                                                     alt="{{ $review->student->name }}"
-                                                     class="w-12 h-12 rounded-full">
-                                                <div class="flex-1">
-                                                    <div class="flex items-center space-x-2 mb-2">
-                                                        <h5 class="font-semibold text-gray-900">{{ $review->student->name }}</h5>
-                                                        <div class="flex text-yellow-400">
-                                                            @for($i = 1; $i <= 5; $i++)
-                                                                @if($i <= $review->rating)
-                                                                    <i class="fas fa-star text-sm"></i>
-                                                                @else
-                                                                    <i class="far fa-star text-sm"></i>
-                                                                @endif
-                                                            @endfor
+                            <!-- Reviews List -->
+                            <div id="reviewsList">
+                                @if($course->reviews->count() > 0)
+                                    <div class="space-y-6">
+                                        @foreach($course->reviews as $review)
+                                            <div class="border-b border-gray-200 pb-6">
+                                                <div class="flex items-start space-x-4">
+                                                    <img src="{{ $review->student->avatar_url }}"
+                                                         alt="{{ $review->student->name }}"
+                                                         class="w-12 h-12 rounded-full">
+                                                    <div class="flex-1">
+                                                        <div class="flex items-center space-x-2 mb-2">
+                                                            <h5 class="font-semibold text-gray-900">{{ $review->student->name }}</h5>
+                                                            <div class="flex text-yellow-400">
+                                                                @for($i = 1; $i <= 5; $i++)
+                                                                    @if($i <= $review->rating)
+                                                                        <i class="fas fa-star text-sm"></i>
+                                                                    @else
+                                                                        <i class="far fa-star text-sm"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            <span class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                                                            @if($review->updated_at && $review->updated_at != $review->created_at)
+                                                                <span class="text-xs text-gray-400">(đã chỉnh sửa)</span>
+                                                            @endif
                                                         </div>
-                                                        <span class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                                                        @if($review->review)
+                                                            <p class="text-gray-700">{{ $review->review }}</p>
+                                                        @endif
                                                     </div>
-                                                    <p class="text-gray-700">{{ $review->comment }}</p>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
 
-                                    @if($course->reviews->count() > 5)
-                                        <div class="text-center">
-                                            <button class="text-blue-600 hover:text-blue-700 font-medium">
-                                                Xem tất cả {{ number_format($course->reviews->count()) }} đánh giá
+                                    <!-- Load More Reviews -->
+                                    @if($course->reviews_count > 5)
+                                        <div class="text-center mt-6">
+                                            <button onclick="loadMoreReviews()"
+                                                    id="loadMoreBtn"
+                                                    class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                                                <i class="fas fa-chevron-down mr-2"></i>
+                                                Xem thêm đánh giá ({{ $course->reviews_count - 5 }} còn lại)
                                             </button>
                                         </div>
                                     @endif
-                                </div>
-                            @else
-                                <div class="text-center py-12">
-                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <i class="fas fa-star text-gray-400 text-2xl"></i>
+                                @else
+                                    <div class="text-center py-12">
+                                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <i class="fas fa-star text-gray-400 text-2xl"></i>
+                                        </div>
+                                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Chưa có đánh giá</h4>
+                                        <p class="text-gray-600 mb-4">Hãy là người đầu tiên đánh giá khóa học này!</p>
+                                        @if($canReview)
+                                            <a href="{{ route('courses.review.create', $course->slug) }}"
+                                               class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                                <i class="fas fa-star mr-2"></i>
+                                                Viết đánh giá đầu tiên
+                                            </a>
+                                        @endif
                                     </div>
-                                    <h4 class="text-lg font-semibold text-gray-900 mb-2">Chưa có đánh giá</h4>
-                                    <p class="text-gray-600">Hãy là người đầu tiên đánh giá khóa học này!</p>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -507,6 +576,176 @@
                 }
             }
         });
+        let currentPage = 1;
+        let isLoading = false;
+
+        function loadMoreReviews() {
+            if (isLoading) return;
+
+            isLoading = true;
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang tải...';
+
+            fetch(`{{ route('api.courses.reviews', $course->slug) }}?page=${currentPage + 1}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.reviews.length > 0) {
+                        appendReviews(data.reviews);
+                        currentPage = data.pagination.current_page;
+
+                        // Hide button if no more reviews
+                        if (currentPage >= data.pagination.last_page) {
+                            loadMoreBtn.style.display = 'none';
+                        } else {
+                            loadMoreBtn.innerHTML = `<i class="fas fa-chevron-down mr-2"></i>Xem thêm đánh giá`;
+                        }
+                    } else {
+                        loadMoreBtn.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading reviews:', error);
+                    loadMoreBtn.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>Lỗi tải đánh giá';
+                })
+                .finally(() => {
+                    isLoading = false;
+                });
+        }
+
+        function appendReviews(reviews) {
+            const reviewsList = document.querySelector('#reviewsList .space-y-6');
+
+            reviews.forEach(review => {
+                const reviewElement = createReviewElement(review);
+                reviewsList.appendChild(reviewElement);
+            });
+        }
+
+        function createReviewElement(review) {
+            const div = document.createElement('div');
+            div.className = 'border-b border-gray-200 pb-6';
+
+            const stars = Array.from({length: 5}, (_, i) => {
+                const starClass = i < review.rating ? 'fas fa-star' : 'far fa-star';
+                return `<i class="${starClass} text-sm"></i>`;
+            }).join('');
+
+            const updatedText = review.updated_at && review.updated_at !== review.created_at
+                ? '<span class="text-xs text-gray-400">(đã chỉnh sửa)</span>'
+                : '';
+
+            const reviewContent = review.review
+                ? `<p class="text-gray-700">${review.review}</p>`
+                : '';
+
+            div.innerHTML = `
+        <div class="flex items-start space-x-4">
+            <img src="${review.student.avatar_url}"
+                 alt="${review.student.name}"
+                 class="w-12 h-12 rounded-full">
+            <div class="flex-1">
+                <div class="flex items-center space-x-2 mb-2">
+                    <h5 class="font-semibold text-gray-900">${review.student.name}</h5>
+                    <div class="flex text-yellow-400">
+                        ${stars}
+                    </div>
+                    <span class="text-sm text-gray-500">${timeAgo(review.created_at)}</span>
+                    ${updatedText}
+                </div>
+                ${reviewContent}
+            </div>
+        </div>
+    `;
+
+            return div;
+        }
+
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+
+            const intervals = [
+                { label: 'năm', seconds: 31536000 },
+                { label: 'tháng', seconds: 2592000 },
+                { label: 'tuần', seconds: 604800 },
+                { label: 'ngày', seconds: 86400 },
+                { label: 'giờ', seconds: 3600 },
+                { label: 'phút', seconds: 60 }
+            ];
+
+            for (const interval of intervals) {
+                const count = Math.floor(diffInSeconds / interval.seconds);
+                if (count > 0) {
+                    return `${count} ${interval.label} trước`;
+                }
+            }
+
+            return 'Vừa xong';
+        }
+
+        // Check if user can review when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            @auth
+            checkCanReview();
+            @endauth
+        });
+
+        @auth
+        function checkCanReview() {
+            fetch(`{{ route('api.courses.can-review', $course->slug) }}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateReviewButton(data.can_review, data.reason);
+                })
+                .catch(error => {
+                    console.error('Error checking review status:', error);
+                });
+        }
+
+        function updateReviewButton(canReview, reason) {
+            const reviewButtonContainer = document.querySelector('.review-button-container');
+            if (!reviewButtonContainer) return;
+
+            if (canReview) {
+                reviewButtonContainer.innerHTML = `
+            <a href="{{ route('courses.review.create', $course->slug) }}"
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                <i class="fas fa-star mr-2"></i>
+                Viết đánh giá
+            </a>
+        `;
+            } else {
+                let buttonText = '';
+                switch (reason) {
+                    case 'not_enrolled':
+                        buttonText = 'Bạn cần đăng ký khóa học để đánh giá';
+                        break;
+                    case 'already_reviewed':
+                        buttonText = 'Bạn đã đánh giá khóa học này';
+                        break;
+                    default:
+                        buttonText = 'Không thể đánh giá';
+                }
+
+                reviewButtonContainer.innerHTML = `
+            <div class="text-sm text-gray-500">${buttonText}</div>
+        `;
+            }
+        }
+        @endauth
     </script>
 @endpush
 

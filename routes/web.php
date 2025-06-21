@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\CourseReviewController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
@@ -121,6 +122,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     Route::get('/admin/users-export', [UserController::class, 'export'])->name('admin.users.export');
+
+
 });
 
 // Routes công khai cho course listing
@@ -135,6 +138,22 @@ Route::middleware(['auth'])->group(function () {
 
     // Trang học tập
     Route::get('/student/learn/{courseSlug}/{lessonSlug?}', [StudentController::class, 'learn'])->name('student.learn');
+
+    // Review routes
+    Route::prefix('courses/{courseSlug}/review')->name('courses.review.')->group(function () {
+        Route::get('/create', [CourseReviewController::class, 'create'])->name('create');
+        Route::post('/', [CourseReviewController::class, 'store'])->name('store');
+        Route::get('/edit', [CourseReviewController::class, 'edit'])->name('edit');
+        Route::put('/', [CourseReviewController::class, 'update'])->name('update');
+        Route::delete('/', [CourseReviewController::class, 'destroy'])->name('destroy');
+    });
+
+    // AJAX routes cho reviews
+    Route::prefix('api/courses/{courseSlug}')->name('api.courses.')->group(function () {
+        Route::get('/reviews', [CourseReviewController::class, 'getReviews'])->name('reviews');
+        Route::get('/can-review', [CourseReviewController::class, 'canReview'])->name('can-review');
+        Route::get('/rating-breakdown', [CourseReviewController::class, 'getRatingBreakdown'])->name('rating-breakdown');
+    });
 
     // Checkout
     Route::get('/checkout/{courseSlug}', [PaymentController::class, 'checkout'])->name('payment.checkout');

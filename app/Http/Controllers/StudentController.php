@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Category;
 use App\Models\Enrollment;
+use App\Models\CourseReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -87,7 +88,12 @@ class StudentController extends Controller
             'instructor',
             'sections.lessons',
             'sections.quizzes',
-            'reviews.student'
+            'reviews' => function ($query) {
+                $query->with('student')
+                    ->where('is_approved', true)
+                    ->orderBy('created_at', 'desc')
+                    ->limit(5); // Chỉ lấy 5 reviews đầu tiên để hiển thị
+            }
         ])
             ->where('slug', $slug)
             ->where('status', 'published')
@@ -95,11 +101,25 @@ class StudentController extends Controller
 
         // Kiểm tra xem user đã đăng ký khóa học này chưa
         $isEnrolled = false;
+        $userReview = null;
+        $canReview = false;
+
         if (Auth::check()) {
-            $isEnrolled = Enrollment::where('student_id', Auth::id())
+            $userId = Auth::id();
+
+            // Kiểm tra enrollment
+            $isEnrolled = Enrollment::where('student_id', $userId)
                 ->where('course_id', $course->id)
                 ->where('status', 'active')
                 ->exists();
+
+            // Lấy review của user hiện tại (nếu có)
+            $userReview = CourseReview::where('student_id', $userId)
+                ->where('course_id', $course->id)
+                ->first();
+
+            // Kiểm tra có thể review không
+            $canReview = $isEnrolled && !$userReview;
         }
 
         // Tính tổng số bài học và quiz
@@ -119,12 +139,18 @@ class StudentController extends Controller
             ->limit(4)
             ->get();
 
+        // Tính rating breakdown để hiển thị
+        $ratingBreakdown = $this->calculateRatingBreakdown($course->id);
+
         return view('student.courses.show', compact(
             'course',
             'isEnrolled',
             'totalLessons',
             'totalQuizzes',
-            'relatedCourses'
+            'relatedCourses',
+            'userReview',
+            'canReview',
+            'ratingBreakdown'
         ));
     }
 
@@ -150,7 +176,13 @@ class StudentController extends Controller
             'not_started_courses' => $enrollments->where('progress_percentage', 0)->count(),
         ];
 
-        return view('student.dashboard', compact('enrollments', 'stats'));
+        // Thêm thống kê reviews
+        $reviewStats = [
+            'total_reviews' => CourseReview::where('student_id', $user->id)->count(),
+            'pending_reviews' => $this->getPendingReviewsCount($user->id),
+        ];
+
+        return view('student.dashboard', compact('enrollments', 'stats', 'reviewStats'));
     }
 
     /**
@@ -205,7 +237,14 @@ class StudentController extends Controller
                 ?->first();
         }
 
-        return view('student.learn.index', compact('course', 'currentLesson', 'enrollment'));
+        // Kiểm tra xem user đã review khóa học này chưa
+        $userReview = CourseReview::where('student_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->first();
+
+        $canReview = !$userReview; // Có thể review nếu chưa review
+
+        return view('student.learn.index', compact('course', 'currentLesson', 'enrollment', 'userReview', 'canReview'));
     }
 
     /**
@@ -224,5 +263,54 @@ class StudentController extends Controller
             ->paginate(12);
 
         return view('student.courses.category', compact('category', 'courses'));
+    }
+
+    /**
+     * Tính rating breakdown cho khóa học
+     */
+    private function calculateRatingBreakdown($courseId)
+    {
+        $breakdown = CourseReview::where('course_id', $courseId)
+            ->where('is_approved', true)
+            ->selectRaw('rating, COUNT(*) as count')
+            ->groupBy('rating')
+            ->orderBy('rating', 'desc')
+            ->get()
+            ->pluck('count', 'rating')
+            ->toArray();
+
+        $totalReviews = array_sum($breakdown);
+
+        // Tạo breakdown với phần trăm
+        $ratingBreakdown = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $count = $breakdown[$i] ?? 0;
+            $percentage = $totalReviews > 0 ? round(($count / $totalReviews) * 100, 1) : 0;
+
+            $ratingBreakdown[$i] = [
+                'count' => $count,
+                'percentage' => $percentage
+            ];
+        }
+
+        return $ratingBreakdown;
+    }
+
+    /**
+     * Đếm số khóa học chưa review
+     */
+    private function getPendingReviewsCount($userId)
+    {
+        // Lấy danh sách khóa học đã enroll
+        $enrolledCourseIds = Enrollment::where('student_id', $userId)
+            ->where('status', 'active')
+            ->pluck('course_id');
+
+        // Lấy danh sách khóa học đã review
+        $reviewedCourseIds = CourseReview::where('student_id', $userId)
+            ->pluck('course_id');
+
+        // Đếm khóa học chưa review
+        return $enrolledCourseIds->diff($reviewedCourseIds)->count();
     }
 }

@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+use App\Models\CourseReview;
+use App\Observers\CourseReviewObserver;
+use App\Policies\CourseReviewPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +23,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register model observers
+        CourseReview::observe(CourseReviewObserver::class);
+
+        // Register policies
+        Gate::policy(CourseReview::class, CourseReviewPolicy::class);
+
+        // Additional gates for course review functionality
+        Gate::define('review-course', function ($user, $course) {
+            return app(CourseReviewPolicy::class)->create($user, $course);
+        });
+
+        Gate::define('moderate-reviews', function ($user) {
+            return app(CourseReviewPolicy::class)->moderate($user);
+        });
     }
 }
