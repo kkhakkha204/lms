@@ -9,6 +9,7 @@ use App\Models\QuizQuestion;
 use App\Models\StudentProgress;
 use App\Models\Enrollment;
 use App\Models\LessonMaterial;
+use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -112,12 +113,20 @@ class LearningController extends Controller
         $updatedPercentage = 0;
         if ($validated['completed']) {
             $updatedPercentage = $this->updateEnrollmentProgress($lesson->course_id);
+
+            // Debug log
+            \Log::info('Video progress updated', [
+                'lesson_id' => $lesson->id,
+                'completion_percentage' => $updatedPercentage,
+                'user_id' => Auth::id()
+            ]);
         }
 
         return response()->json([
             'success' => true,
             'progress' => $progress,
-            'completion_percentage' => $updatedPercentage ?: $this->calculateProgress($lesson->course)
+            'completion_percentage' => $updatedPercentage ?: $this->calculateProgress($lesson->course),
+            'course_completed' => $updatedPercentage >= 100
         ]);
     }
 
@@ -173,11 +182,20 @@ class LearningController extends Controller
         // Cập nhật tiến độ enrollment
         $updatedPercentage = $this->updateEnrollmentProgress($quiz->course_id);
 
+        // Debug log
+        \Log::info('Quiz progress updated', [
+            'quiz_id' => $quiz->id,
+            'completion_percentage' => $updatedPercentage,
+            'user_id' => Auth::id(),
+            'quiz_passed' => $result['passed']
+        ]);
+
         return response()->json([
             'success' => true,
             'result' => $result,
             'progress' => $progress,
-            'completion_percentage' => $updatedPercentage
+            'completion_percentage' => $updatedPercentage,
+            'course_completed' => $updatedPercentage >= 100
         ]);
     }
 
@@ -358,6 +376,142 @@ class LearningController extends Controller
     }
 
     /**
+     * Course completion summary
+     */
+    public function summary($courseSlug)
+    {
+        $course = Course::with([
+            'sections.lessons',
+            'sections.quizzes.questions',
+            'instructor',
+            'category'
+        ])->where('slug', $courseSlug)->firstOrFail();
+
+        // Kiểm tra quyền truy cập
+        $this->checkAccess($course);
+
+        $enrollment = Enrollment::where('student_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->where('status', 'active')
+            ->firstOrFail();
+
+        // Kiểm tra đã hoàn thành chưa
+        if ($enrollment->progress_percentage < 100) {
+            return redirect()->route('learning.index', $course->slug)
+                ->with('error', 'Bạn chưa hoàn thành khóa học này.');
+        }
+
+        // Lấy tiến độ chi tiết
+        $progress = $this->getStudentProgress($course->id);
+        $completionPercentage = $this->calculateProgress($course, $progress);
+
+        // Tính toán thống kê chi tiết
+        $stats = $this->calculateDetailedStats($course, $progress, $enrollment);
+
+        // Kiểm tra đã có certificate chưa
+        $existingCertificate = Certificate::where('student_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->first();
+
+        return view('student.learn.summary', compact(
+            'course',
+            'enrollment',
+            'progress',
+            'completionPercentage',
+            'stats',
+            'existingCertificate'
+        ));
+    }
+
+    /**
+     * Issue certificate từ summary page
+     */
+    public function issueCertificate(Request $request, $courseSlug)
+    {
+        $course = Course::where('slug', $courseSlug)->firstOrFail();
+
+        // Kiểm tra quyền truy cập
+        $this->checkAccess($course);
+
+        $enrollment = Enrollment::where('student_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->where('status', 'active')
+            ->firstOrFail();
+
+        // Kiểm tra đã hoàn thành và chưa có certificate
+        if ($enrollment->progress_percentage < 100) {
+            return back()->with('error', 'Bạn chưa hoàn thành khóa học này.');
+        }
+
+        $existingCertificate = Certificate::where('student_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->first();
+
+        if ($existingCertificate) {
+            return back()->with('info', 'Bạn đã nhận chứng chỉ cho khóa học này rồi.');
+        }
+
+        try {
+            $certificateService = app(\App\Services\CertificateService::class);
+            $certificate = $certificateService->autoIssueCertificate($enrollment);
+
+            if ($certificate) {
+                return back()->with('certificate_issued', [
+                    'message' => 'Chúc mừng! Chứng chỉ của bạn đã được cấp thành công.',
+                    'certificate_code' => $certificate->certificate_code,
+                    'download_url' => route('certificates.download', $certificate->certificate_code)
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Certificate issuance failed: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi xảy ra khi cấp chứng chỉ. Vui lòng thử lại sau.');
+        }
+
+        return back()->with('error', 'Không thể cấp chứng chỉ lúc này.');
+    }
+
+    /**
+     * Tính toán thống kê chi tiết cho summary
+     */
+    private function calculateDetailedStats($course, $progress, $enrollment)
+    {
+        $lessonProgress = $progress->where('type', 'lesson');
+        $quizProgress = $progress->where('type', 'quiz');
+
+        // Lesson statistics
+        $totalLessons = $course->sections->sum(function ($section) {
+            return $section->lessons->count();
+        });
+        $completedLessons = $lessonProgress->where('lesson_completed', true)->count();
+
+        // Quiz statistics
+        $totalQuizzes = $course->sections->sum(function ($section) {
+            return $section->quizzes->count();
+        });
+        $completedQuizzes = $quizProgress->where('quiz_passed', true)->count();
+        $averageQuizScore = $quizProgress->where('quiz_passed', true)->avg('quiz_score') ?: 0;
+
+        // Time statistics
+        $totalVideoTime = $lessonProgress->sum('video_watched_seconds') / 3600; // Convert to hours
+        $studyDuration = $enrollment->enrolled_at->diffInDays($enrollment->completed_at ?: now());
+
+        // Overall score calculation
+        $overallScore = ($averageQuizScore * 0.7) + ($enrollment->progress_percentage * 0.3);
+
+        return [
+            'total_lessons' => $totalLessons,
+            'completed_lessons' => $completedLessons,
+            'total_quizzes' => $totalQuizzes,
+            'completed_quizzes' => $completedQuizzes,
+            'average_quiz_score' => round($averageQuizScore, 1),
+            'total_video_time' => round($totalVideoTime, 1),
+            'study_duration_days' => $studyDuration,
+            'overall_score' => round($overallScore, 1),
+            'grade' => $this->calculateGrade($overallScore),
+        ];
+    }
+
+    /**
      * Lấy tiến độ học tập của học viên
      */
     private function getStudentProgress($courseId)
@@ -368,6 +522,18 @@ class LearningController extends Controller
             ->keyBy(function ($item) {
                 return $item->type . '_' . ($item->lesson_id ?: $item->quiz_id);
             });
+    }
+
+    /**
+     * Tính grade dựa trên điểm
+     */
+    private function calculateGrade($score)
+    {
+        if ($score >= 95) return 'Xuất sắc';
+        if ($score >= 85) return 'Giỏi';
+        if ($score >= 75) return 'Khá';
+        if ($score >= 65) return 'Trung bình';
+        return 'Đạt';
     }
 
     /**
@@ -482,12 +648,25 @@ class LearningController extends Controller
             $lessonsCompleted = $progress->where('type', 'lesson')->where('lesson_completed', true)->count();
             $quizzesCompleted = $progress->where('type', 'quiz')->where('quiz_passed', true)->count();
 
+            $wasCompleted = $enrollment->progress_percentage >= 100;
+
             $enrollment->update([
                 'progress_percentage' => $completionPercentage,
                 'lessons_completed' => $lessonsCompleted,
                 'quizzes_completed' => $quizzesCompleted,
                 'completed_at' => $completionPercentage >= 100 ? now() : null,
             ]);
+
+            // Nếu vừa hoàn thành 100% (chưa completed trước đó)
+            if ($completionPercentage >= 100 && !$wasCompleted) {
+                session()->flash('course_completed', [
+                    'course_id' => $courseId,
+                    'completion_percentage' => $completionPercentage,
+                    'lessons_completed' => $lessonsCompleted,
+                    'quizzes_completed' => $quizzesCompleted,
+                    'redirect_to_summary' => true
+                ]);
+            }
 
             return $completionPercentage;
         }

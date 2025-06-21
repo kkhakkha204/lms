@@ -36,6 +36,11 @@
                 @endphp
 
                 @if($videoId)
+                    <!-- Debug info -->
+                    <div class="text-white text-xs p-2 bg-blue-600 mb-2">
+                        Video ID: {{ $videoId }} | URL: {{ $lesson->video_url }}
+                    </div>
+
                     <iframe
                         id="youtube-player"
                         src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1&playsinline=1"
@@ -47,6 +52,18 @@
                         class="absolute top-0 left-0 w-full h-full"
                         style="border: none;">
                     </iframe>
+
+                    <!-- Manual test iframe -->
+                    <div class="absolute top-16 left-4 bg-black bg-opacity-75 text-white p-2 text-xs">
+                        <p>Manual test:</p>
+                        <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                            width="200"
+                            height="113"
+                            frameborder="0"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
 
                     <!-- Fallback link -->
                     <div class="absolute bottom-4 right-4 z-10">
@@ -211,7 +228,7 @@
     function lessonViewer() {
         return {
             videoProgress: 0,
-            isCompleted: {{ ($progress['lesson_' . $lesson->id]->lesson_completed ?? false) ? 'true' : 'false' }},
+            isCompleted: {{ $progress['lesson_' . $lesson->id]->lesson_completed ?? 'false' }},
             watchedSeconds: {{ $progress['lesson_' . $lesson->id]->video_watched_seconds ?? 0 }},
             video: null,
             progressTimer: null,
@@ -284,10 +301,26 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        console.log('API Response:', data); // Debug log
+
                         if (data.success) {
                             console.log('Progress saved successfully');
-                            if (completed) {
-                                // Reload page để cập nhật sidebar
+                            console.log('Completion percentage:', data.completion_percentage);
+                            console.log('Course completed:', data.course_completed);
+
+                            // Check i-f course completed and should redirect to summary
+                            if (completed && data.course_completed) {
+                                console.log('Course completed! Redirecting to summary...');
+                                // Show completion notification
+                                this.showCompletionNotification();
+
+                                // Redirect to summary after 3 seconds
+                                setTimeout(() => {
+                                    window.location.href = `/learn/{{ $lesson->course->slug }}/summary`;
+                                }, 3000);
+                            } else if (completed) {
+                                console.log('Lesson completed but course not finished yet');
+                                // Just reload to update sidebar
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 1000);
@@ -297,7 +330,29 @@
                     .catch(error => {
                         console.error('Error saving progress:', error);
                     });
+            },
+
+            showCompletionNotification() {
+                // Create completion notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                notification.innerHTML = `
+                <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trophy text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">🎉 Chúc mừng!</h3>
+                    <p class="text-gray-600 mb-4">Bạn đã hoàn thành khóa học!</p>
+                    <p class="text-sm text-gray-500">Đang chuyển đến trang tổng kết...</p>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full animate-pulse" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                document.body.appendChild(notification);
             }
-        };
+        }
     }
 </script>

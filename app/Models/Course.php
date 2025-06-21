@@ -170,4 +170,8 @@ class Course extends Model
     {
         return $this->quizzes()->count();
     }
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 }

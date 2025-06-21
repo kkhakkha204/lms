@@ -50,4 +50,8 @@ class Enrollment extends Model
         return $this->hasMany(StudentProgress::class, 'course_id', 'course_id')
             ->where('student_id', $this->student_id);
     }
+    public function certificate()
+    {
+        return $this->hasOne(Certificate::class);
+    }
 }

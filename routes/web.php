@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\QuizQuestionController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
@@ -153,6 +154,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{courseSlug}', [LearningController::class, 'index'])->name('learning.index');
         Route::get('/{courseSlug}/lesson/{lessonSlug}', [LearningController::class, 'lesson'])->name('learning.lesson');
         Route::get('/{courseSlug}/quiz/{quizSlug}', [LearningController::class, 'quiz'])->name('learning.quiz');
+        Route::get('/{courseSlug}/summary', [LearningController::class, 'summary'])->name('learning.summary');
+        Route::post('/{courseSlug}/issue-certificate', [LearningController::class, 'issueCertificate'])->name('learning.issue-certificate');
         Route::get('/{courseSlug}/progress', [LearningController::class, 'getProgress'])->name('learning.progress');
     });
 
@@ -165,3 +168,30 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/submit-quiz', [LearningController::class, 'submitQuiz']);
     });
 });
+
+// Public certificate verification (không cần auth)
+Route::get('/certificates/verify/{code?}', [CertificateController::class, 'verify'])->name('certificates.verify');
+Route::post('/certificates/verify-ajax', [CertificateController::class, 'verifyAjax'])->name('certificates.verify-ajax');
+
+// Public certificate download (có thể không cần auth để share)
+Route::get('/certificates/download/{code}', [CertificateController::class, 'download'])->name('certificates.download');
+
+// Student certificate routes (cần auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-certificates', [CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/certificates/{code}', [CertificateController::class, 'show'])->name('certificates.show');
+    Route::post('/certificates/{code}/regenerate', [CertificateController::class, 'regenerate'])->name('certificates.regenerate');
+});
+
+// Admin certificate routes
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/certificates', [CertificateController::class, 'adminIndex'])->name('admin.certificates.index');
+    Route::get('/certificates/stats', [CertificateController::class, 'stats'])->name('admin.certificates.stats');
+    Route::post('/certificates/issue', [CertificateController::class, 'issue'])->name('admin.certificates.issue');
+    Route::post('/certificates/bulk-issue', [CertificateController::class, 'bulkIssue'])->name('admin.certificates.bulk-issue');
+    Route::patch('/certificates/{id}/revoke', [CertificateController::class, 'revoke'])->name('admin.certificates.revoke');
+});
+
+
+
+

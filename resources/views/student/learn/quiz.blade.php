@@ -337,9 +337,26 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        console.log('Quiz API Response:', data); // Debug log
+
                         if (data.success) {
                             this.quizResult = data.result;
                             this.showResults = true;
+
+                            console.log('Quiz completed. Course completed?', data.course_completed);
+                            console.log('Quiz passed:', data.result.passed);
+
+                            // Check i-f course completed
+                            if (data.result.passed && data.course_completed) {
+                                console.log('Course completed! Redirecting to summary...');
+                                // Show completion notification and redirect to summary
+                                setTimeout(() => {
+                                    this.showCompletionNotification();
+                                    setTimeout(() => {
+                                        window.location.href = `/learn/{{ $quiz->course->slug }}/summary`;
+                                    }, 3000);
+                                }, 2000);
+                            }
                         } else {
                             alert('Có lỗi xảy ra: ' + data.error);
                         }
@@ -352,6 +369,28 @@
 
             retryQuiz() {
                 this.startQuiz();
+            },
+
+            showCompletionNotification() {
+                // Create completion notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                notification.innerHTML = `
+                <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trophy text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">🎉 Chúc mừng!</h3>
+                    <p class="text-gray-600 mb-4">Bạn đã hoàn thành khóa học!</p>
+                    <p class="text-sm text-gray-500">Đang chuyển đến trang tổng kết...</p>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full animate-pulse" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                document.body.appendChild(notification);
             }
         }
     }
