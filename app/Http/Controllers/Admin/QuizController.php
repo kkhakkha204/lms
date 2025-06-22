@@ -41,9 +41,10 @@ class QuizController extends Controller
         $validated['sort_order'] = $nextSortOrder;
         $validated['is_active'] = true;
 
-        $section->quizzes()->create(array_merge($validated, ['course_id' => $course->id]));
+        // Tạo quiz và lưu vào biến để có thể redirect đến trang edit
+        $quiz = $section->quizzes()->create(array_merge($validated, ['course_id' => $course->id]));
 
-        return redirect()->route('admin.courses.edit', $course)
+        return redirect()->route('admin.courses.sections.quizzes.edit', [$course, $section, $quiz])
             ->with('success', 'Bài kiểm tra đã được tạo thành công.');
     }
 

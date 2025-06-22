@@ -56,7 +56,7 @@ class LessonController extends Controller
             }
         }
 
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Bài học đã được tạo.');
+        return redirect()->route('admin.courses.edit', $course)->with('success', 'Bài học đã được tạo.')->with('active_tab', 'curriculum');
     }
 
     public function edit(Course $course, CourseSection $section, Lesson $lesson)
@@ -100,7 +100,7 @@ class LessonController extends Controller
             }
         }
 
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Bài học đã được cập nhật.');
+        return redirect()->route('admin.courses.edit', $course)->with('success', 'Bài học đã được cập nhật.')->with('active_tab', 'curriculum');
     }
 
     public function destroy(Course $course, CourseSection $section, Lesson $lesson)
@@ -109,7 +109,7 @@ class LessonController extends Controller
             Storage::disk('public')->delete($material->file_path);
         }
         $lesson->delete();
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Bài học đã được xóa.');
+        return redirect()->route('admin.courses.edit', $course)->with('success', 'Bài học đã được xóa.')->with('active_tab', 'curriculum');
     }
 
     public function generatePdf(Course $course, CourseSection $section, Lesson $lesson)

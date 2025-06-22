@@ -43,7 +43,7 @@ class QuizQuestionController extends Controller
             $this->handleQuestionOptions($question, $request, $validated['type']);
         });
 
-        return redirect()->route('admin.courses.edit', $course)
+        return redirect()->route('admin.courses.sections.quizzes.edit', [$course, $section, $quiz])
             ->with('success', 'Câu hỏi đã được tạo thành công.');
     }
 
