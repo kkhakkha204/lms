@@ -35,7 +35,7 @@
                     <p class="text-gray-500 text-sm mt-1">Slug hiện tại: <code class="bg-gray-100 px-2 py-1 rounded">{{ $lesson->slug }}</code></p>
                 </div>
 
-                <!-- Nội dung -->
+                <!-- Nội dung bài học với Rich Text Editor -->
                 <div>
                     <label for="content" class="block text-sm font-semibold text-gray-700 mb-2">
                         Nội dung bài học
@@ -43,13 +43,22 @@
                     <textarea
                         id="content"
                         name="content"
-                        rows="8"
+                        rows="15"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Nhập nội dung bài học (văn bản, ghi chú, hướng dẫn...)"
+                        placeholder="Nhập nội dung bài học..."
                     >{{ old('content', $lesson->content) }}</textarea>
                     @error('content')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                    <div class="mt-2 text-sm text-gray-600">
+                        <p><strong>Hướng dẫn:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 text-xs">
+                            <li>Sử dụng toolbar để định dạng văn bản (đậm, nghiêng, gạch chân...)</li>
+                            <li>Chèn hình ảnh, bảng, liên kết, code snippet</li>
+                            <li>Tạo danh sách có thứ tự hoặc không có thứ tự</li>
+                            <li>Thêm màu sắc cho văn bản và nền</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Tóm tắt -->
@@ -284,8 +293,249 @@
         </div>
     </div>
 
+    <!-- TinyMCE CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
+
+
     <script>
-        // Video Preview
+        // Initialize TinyMCE với config đầy đủ inline
+        tinymce.init({
+            selector: '#content',
+            height: 500,
+            menubar: 'file edit view insert format tools table help',
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount', 'codesample',
+                'emoticons', 'template', 'paste', 'textcolor', 'colorpicker'
+            ],
+            toolbar: [
+                'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough',
+                'forecolor backcolor | alignleft aligncenter alignright alignjustify',
+                'bullist numlist outdent indent | removeformat | help',
+                'link image media table | codesample emoticons | fullscreen preview code'
+            ].join(' | '),
+
+            block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6; Preformatted=pre',
+
+            font_family_formats: [
+                'System=-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                'Arial=arial,helvetica,sans-serif',
+                'Georgia=georgia,palatino',
+                'Times New Roman=times new roman,times',
+                'Courier New=courier new,courier,monospace'
+            ].join('; '),
+
+            font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 20pt 24pt 36pt 48pt',
+
+            // Image upload handler
+            images_upload_handler: function (blobInfo, success, failure, progress) {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+
+                xhr.withCredentials = false;
+                xhr.open('POST', '/admin/upload-image');
+
+                xhr.upload.onprogress = function (e) {
+                    if (progress && e.lengthComputable) {
+                        progress(e.loaded / e.total * 100);
+                    }
+                };
+
+                xhr.onload = function() {
+                    if (xhr.status !== 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+
+                    try {
+                        const json = JSON.parse(xhr.responseText);
+                        if (!json || typeof json.location !== 'string') {
+                            failure('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+                        success(json.location);
+                    } catch (e) {
+                        failure('JSON Parse Error: ' + e.message);
+                    }
+                };
+
+                xhr.onerror = function() {
+                    failure('Network Error');
+                };
+
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                xhr.send(formData);
+            },
+
+            // Content styling
+            content_style: `
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    color: #333;
+                    max-width: 100%;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    color: #2563eb;
+                    margin-top: 1.5em;
+                    margin-bottom: 0.5em;
+                    font-weight: 600;
+                }
+                p { margin-bottom: 1em; }
+                ul, ol { margin-bottom: 1em; padding-left: 2em; }
+                blockquote {
+                    border-left: 4px solid #e5e7eb;
+                    margin: 1.5em 0;
+                    padding-left: 1em;
+                    color: #6b7280;
+                    background-color: #f9fafb;
+                    padding: 1em;
+                    border-radius: 0.375rem;
+                }
+                code {
+                    background-color: #f3f4f6;
+                    padding: 0.2em 0.4em;
+                    border-radius: 0.25em;
+                    font-family: 'Courier New', monospace;
+                    color: #ef4444;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    margin: 1em 0;
+                    border: 1px solid #e5e7eb;
+                }
+                th, td {
+                    border: 1px solid #e5e7eb;
+                    padding: 0.75em 1em;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f9fafb;
+                    font-weight: 600;
+                }
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 0.5em;
+                    margin: 1em 0;
+                }
+            `,
+
+            // Setup function
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                });
+            },
+
+            // Basic settings
+            branding: false,
+            promotion: false,
+            resize: true,
+            statusbar: true,
+            elementpath: false,
+
+            // Templates
+            templates: [
+                {
+                    title: 'Bài học cơ bản',
+                    description: 'Template cơ bản cho bài học',
+                    content: `
+                        <h2>📚 Mục tiêu học tập</h2>
+                        <ul>
+                            <li>Mục tiêu 1</li>
+                            <li>Mục tiêu 2</li>
+                            <li>Mục tiêu 3</li>
+                        </ul>
+
+                        <h2>Giới thiệu</h2>
+                        <p>Mô tả ngắn gọn về chủ đề bài học...</p>
+
+                        <h2>Nội dung chính</h2>
+
+                        <h3>Phần 1: Khái niệm cơ bản</h3>
+                        <p>Giải thích các khái niệm cơ bản...</p>
+
+                        <blockquote>
+                            <p><strong>💡 Ghi chú quan trọng:</strong> Điểm quan trọng cần lưu ý...</p>
+                        </blockquote>
+
+                        <h3>Phần 2: Ví dụ thực tế</h3>
+                        <p>Ví dụ minh họa...</p>
+
+                        <h2>Tóm tắt</h2>
+                        <p>Tóm tắt những điểm chính đã học...</p>
+
+                        <h2>Bài tập thực hành</h2>
+                        <ol>
+                            <li>Bài tập 1</li>
+                            <li>Bài tập 2</li>
+                            <li>Bài tập 3</li>
+                        </ol>
+                    `
+                },
+                {
+                    title: 'Bài học lập trình',
+                    description: 'Template cho bài học lập trình',
+                    content: `
+                        <h2>Giới thiệu</h2>
+                        <p>Mô tả ngắn gọn về chủ đề lập trình...</p>
+
+                        <h2>Cú pháp cơ bản</h2>
+                        <pre><code class="language-javascript">// Ví dụ code JavaScript
+function example() {
+    console.log("Hello World!");
+    return true;
+}</code></pre>
+
+                        <h2>Ví dụ thực tế</h2>
+                        <p>Giải thích chi tiết về ví dụ:</p>
+
+                        <pre><code class="language-javascript">// Code example với comment chi tiết
+const students = [
+    { name: "An", score: 85 },
+    { name: "Bình", score: 92 }
+];
+
+// Tính điểm trung bình
+const average = students.reduce((sum, student) => sum + student.score, 0) / students.length;
+console.log("Điểm trung bình:", average);</code></pre>
+
+                        <blockquote>
+                            <p><strong>⚠️ Lưu ý:</strong> Những điểm cần chú ý khi viết code...</p>
+                        </blockquote>
+
+                        <h2>Thực hành</h2>
+                        <p>Hãy thử viết code để:</p>
+                        <ol>
+                            <li>Tạo function tính tổng</li>
+                            <li>Xử lý mảng dữ liệu</li>
+                            <li>Kiểm tra kết quả</li>
+                        </ol>
+                    `
+                }
+            ],
+
+            // Code sample languages
+            codesample_languages: [
+                { text: 'HTML/XML', value: 'markup' },
+                { text: 'JavaScript', value: 'javascript' },
+                { text: 'CSS', value: 'css' },
+                { text: 'PHP', value: 'php' },
+                { text: 'Python', value: 'python' },
+                { text: 'Java', value: 'java' },
+                { text: 'C++', value: 'cpp' },
+                { text: 'SQL', value: 'sql' }
+            ]
+        });
+
+        // Video Preview functionality
         const videoUrlInput = document.getElementById('video_url');
         const videoPreview = document.getElementById('video-preview');
 
@@ -297,7 +547,6 @@
                 return;
             }
 
-            // Check if it's a YouTube URL
             const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/;
             const youtubeMatch = url.match(youtubeRegex);
 
@@ -316,7 +565,6 @@
                     </iframe>
                 `;
             } else {
-                // For other video URLs, show video element
                 videoPreview.innerHTML = `
                     <video
                         width="100%"
@@ -377,7 +625,6 @@
         // Delete existing material
         function deleteMaterial(materialId) {
             if (confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) {
-                // You'll need to implement this route and method
                 fetch(`/admin/materials/${materialId}`, {
                     method: 'DELETE',
                     headers: {

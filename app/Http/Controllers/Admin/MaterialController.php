@@ -31,4 +31,20 @@ class MaterialController extends Controller
             ], 500);
         }
     }
+    /**
+     * Download a lesson material
+     */
+    public function download(LessonMaterial $material)
+    {
+        try {
+            if (Storage::disk('public')->exists($material->file_path)) {
+                return Storage::disk('public')->download($material->file_path, $material->file_name);
+            }
+
+            abort(404, 'File not found');
+
+        } catch (\Exception $e) {
+            abort(500, 'Download failed: ' . $e->getMessage());
+        }
+    }
 }

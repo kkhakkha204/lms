@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CourseSectionController;
+use App\Http\Controllers\Admin\ImageUploadController;
 use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\QuizController;
@@ -89,6 +90,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/admin/courses/{course}/sections/{section}/lessons/{lesson}', [LessonController::class, 'update'])->name('admin.courses.sections.lessons.update');
     Route::delete('/admin/courses/{course}/sections/{section}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('admin.courses.sections.lessons.destroy');
     Route::get('/admin/courses/{course}/sections/{section}/lessons/{lesson}/pdf', [LessonController::class, 'generatePdf'])->name('admin.courses.sections.lessons.pdf');
+    Route::post('/admin/upload-image', [ImageUploadController::class, 'upload'])->name('admin.upload-image');
+    Route::delete('/admin/delete-image', [ImageUploadController::class, 'delete'])->name('admin.delete-image');
+    Route::get('/admin/browse-images', [ImageUploadController::class, 'browse'])->name('admin.browse-images');
+
+    // Route download material (nếu chưa có)
+    Route::get('/admin/materials/{material}/download', [MaterialController::class, 'download'])->name('admin.materials.download');
+
     Route::delete('/admin/materials/{material}', [MaterialController::class, 'destroy'])->name('admin.materials.destroy');
 
 

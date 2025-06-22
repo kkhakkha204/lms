@@ -36,11 +36,6 @@
                 @endphp
 
                 @if($videoId)
-                    <!-- Debug info -->
-                    <div class="text-white text-xs p-2 bg-blue-600 mb-2">
-                        Video ID: {{ $videoId }} | URL: {{ $lesson->video_url }}
-                    </div>
-
                     <iframe
                         id="youtube-player"
                         src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1&playsinline=1"
@@ -52,18 +47,6 @@
                         class="absolute top-0 left-0 w-full h-full"
                         style="border: none;">
                     </iframe>
-
-                    <!-- Manual test iframe -->
-                    <div class="absolute top-16 left-4 bg-black bg-opacity-75 text-white p-2 text-xs">
-                        <p>Manual test:</p>
-                        <iframe
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                            width="200"
-                            height="113"
-                            frameborder="0"
-                            allowfullscreen>
-                        </iframe>
-                    </div>
 
                     <!-- Fallback link -->
                     <div class="absolute bottom-4 right-4 z-10">
@@ -162,13 +145,21 @@
                 </div>
             </div>
 
-            <!-- Lesson Content -->
+            <!-- Lesson Content với TinyMCE rich content -->
             @if($lesson->content)
-                <div class="prose max-w-none mb-8">
-                    <div class="bg-white rounded-lg border p-6">
-                        <h2 class="text-xl font-semibold text-gray-900 mb-4">Nội dung bài học</h2>
-                        <div class="text-gray-700 leading-relaxed">
-                            {!! nl2br(e($lesson->content)) !!}
+                <div class="mb-8">
+                    <div class="bg-white rounded-lg border overflow-hidden">
+                        <div class="bg-gray-50 px-6 py-4 border-b">
+                            <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                                <i class="fas fa-book-open mr-2 text-blue-600"></i>
+                                Nội dung bài học
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <!-- Rich content display với styling tương tự TinyMCE -->
+                            <div class="lesson-rich-content prose prose-lg max-w-none">
+                                {!! $lesson->content !!}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,36 +167,39 @@
 
             <!-- Lesson Materials -->
             @if($lesson->materials && $lesson->materials->count() > 0)
-                <div class="bg-white rounded-lg border p-6 mb-8">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">
-                        <i class="fas fa-download mr-2"></i>
-                        Tài liệu đính kèm
-                    </h2>
-
-                    <div class="space-y-3">
-                        @foreach($lesson->materials as $material)
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                                        <i class="fas fa-file-pdf text-red-600"></i>
+                <div class="bg-white rounded-lg border mb-8">
+                    <div class="bg-gray-50 px-6 py-4 border-b">
+                        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                            <i class="fas fa-download mr-2 text-green-600"></i>
+                            Tài liệu đính kèm
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-3">
+                            @foreach($lesson->materials as $material)
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                            <i class="fas fa-file-pdf text-red-600 text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium text-gray-900">{{ $material->title }}</h3>
+                                            <p class="text-sm text-gray-500">
+                                                PDF • {{ number_format($material->file_size / 1024 / 1024, 1) }} MB
+                                                @if($material->download_count > 0)
+                                                    • {{ number_format($material->download_count) }} lượt tải
+                                                @endif
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 class="font-medium text-gray-900">{{ $material->title }}</h3>
-                                        <p class="text-sm text-gray-500">
-                                            PDF • {{ number_format($material->file_size / 1024 / 1024, 1) }} MB
-                                            @if($material->download_count > 0)
-                                                • {{ number_format($material->download_count) }} lượt tải
-                                            @endif
-                                        </p>
-                                    </div>
+                                    <a href="{{ route('learning.download-material', $material->id) }}"
+                                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                                        <i class="fas fa-download mr-2"></i>
+                                        Tải xuống
+                                    </a>
                                 </div>
-                                <a href="{{ route('learning.download-material', $material->id) }}"
-                                   class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-download mr-1"></i>
-                                    Tải xuống
-                                </a>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             @endif
@@ -215,7 +209,7 @@
                 <button @click="markAsCompleted"
                         :disabled="isCompleted"
                         :class="isCompleted ? 'bg-green-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
-                        class="px-6 py-3 text-white font-semibold rounded-lg transition-colors">
+                        class="px-8 py-3 text-white font-semibold rounded-lg transition-colors text-lg">
                     <i :class="isCompleted ? 'fas fa-check' : 'fas fa-check-circle'" class="mr-2"></i>
                     <span x-text="isCompleted ? 'Đã hoàn thành' : 'Đánh dấu hoàn thành'"></span>
                 </button>
@@ -223,6 +217,183 @@
         </div>
     </div>
 </div>
+
+<!-- CSS cho rich content display -->
+<style>
+    .lesson-rich-content {
+        line-height: 1.7;
+        color: #374151;
+    }
+
+    .lesson-rich-content h1,
+    .lesson-rich-content h2,
+    .lesson-rich-content h3,
+    .lesson-rich-content h4,
+    .lesson-rich-content h5,
+    .lesson-rich-content h6 {
+        color: #2563eb;
+        margin-top: 1.5em;
+        margin-bottom: 0.75em;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .lesson-rich-content h1 { font-size: 2.25em; }
+    .lesson-rich-content h2 { font-size: 1.875em; }
+    .lesson-rich-content h3 { font-size: 1.5em; }
+    .lesson-rich-content h4 { font-size: 1.25em; }
+    .lesson-rich-content h5 { font-size: 1.125em; }
+    .lesson-rich-content h6 { font-size: 1em; }
+
+    .lesson-rich-content p {
+        margin-bottom: 1em;
+        line-height: 1.7;
+    }
+
+    .lesson-rich-content ul,
+    .lesson-rich-content ol {
+        margin-bottom: 1em;
+        padding-left: 2em;
+    }
+
+    .lesson-rich-content li {
+        margin-bottom: 0.5em;
+        line-height: 1.6;
+    }
+
+    .lesson-rich-content blockquote {
+        border-left: 4px solid #3b82f6;
+        margin: 1.5em 0;
+        padding: 1em 1.5em;
+        background-color: #eff6ff;
+        border-radius: 0.5rem;
+        color: #1e40af;
+        font-style: italic;
+    }
+
+    .lesson-rich-content code {
+        background-color: #f3f4f6;
+        padding: 0.25em 0.5em;
+        border-radius: 0.375rem;
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #dc2626;
+        font-weight: 500;
+    }
+
+    .lesson-rich-content pre {
+        background-color: #1f2937;
+        color: #f9fafb;
+        padding: 1.5em;
+        border-radius: 0.75rem;
+        overflow-x: auto;
+        margin: 1.5em 0;
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
+        line-height: 1.5;
+    }
+
+    .lesson-rich-content pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+        border-radius: 0;
+    }
+
+    .lesson-rich-content table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5em 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .lesson-rich-content th,
+    .lesson-rich-content td {
+        border: 1px solid #e5e7eb;
+        padding: 0.75em 1em;
+        text-align: left;
+    }
+
+    .lesson-rich-content th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .lesson-rich-content tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .lesson-rich-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        margin: 1.5em 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .lesson-rich-content a {
+        color: #2563eb;
+        text-decoration: underline;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .lesson-rich-content a:hover {
+        color: #1d4ed8;
+    }
+
+    .lesson-rich-content strong {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .lesson-rich-content em {
+        font-style: italic;
+    }
+
+    .lesson-rich-content hr {
+        border: none;
+        border-top: 2px solid #e5e7eb;
+        margin: 2em 0;
+    }
+
+    /* Highlight class nếu có */
+    .lesson-rich-content .highlight {
+        background-color: #fef3c7;
+        padding: 0.25em 0.5em;
+        border-radius: 0.375rem;
+        font-weight: 500;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .lesson-rich-content {
+            font-size: 14px;
+        }
+
+        .lesson-rich-content h1 { font-size: 1.875em; }
+        .lesson-rich-content h2 { font-size: 1.5em; }
+        .lesson-rich-content h3 { font-size: 1.25em; }
+
+        .lesson-rich-content pre {
+            padding: 1em;
+            font-size: 0.9em;
+        }
+
+        .lesson-rich-content table {
+            font-size: 0.9em;
+        }
+
+        .lesson-rich-content th,
+        .lesson-rich-content td {
+            padding: 0.5em 0.75em;
+        }
+    }
+</style>
 
 <script>
     function lessonViewer() {
@@ -301,26 +472,22 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('API Response:', data); // Debug log
+                        console.log('API Response:', data);
 
                         if (data.success) {
                             console.log('Progress saved successfully');
                             console.log('Completion percentage:', data.completion_percentage);
                             console.log('Course completed:', data.course_completed);
 
-                            // Check i-f course completed and should redirect to summary
                             if (completed && data.course_completed) {
                                 console.log('Course completed! Redirecting to summary...');
-                                // Show completion notification
                                 this.showCompletionNotification();
 
-                                // Redirect to summary after 3 seconds
                                 setTimeout(() => {
                                     window.location.href = `/learn/{{ $lesson->course->slug }}/summary`;
                                 }, 3000);
                             } else if (completed) {
                                 console.log('Lesson completed but course not finished yet');
-                                // Just reload to update sidebar
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 1000);
@@ -333,7 +500,6 @@
             },
 
             showCompletionNotification() {
-                // Create completion notification
                 const notification = document.createElement('div');
                 notification.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
                 notification.innerHTML = `
