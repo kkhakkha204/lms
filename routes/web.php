@@ -116,6 +116,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/{question}/duplicate', [QuizQuestionController::class, 'duplicate'])
         ->name('admin.courses.sections.quizzes.questions.duplicate');
 
+    // Routes cho Orders/Payments Management
+    Route::get('/admin/payments', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payments.index');
+    Route::get('/admin/payments/export', [App\Http\Controllers\Admin\PaymentController::class, 'export'])->name('admin.payments.export');
+    Route::get('/admin/payments/{payment}', [App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('admin.payments.show');
+    Route::put('/admin/payments/{payment}/status', [App\Http\Controllers\Admin\PaymentController::class, 'updateStatus'])->name('admin.payments.update-status');
+
+
+    //Route cho users
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
     Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
