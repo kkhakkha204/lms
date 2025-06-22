@@ -61,12 +61,48 @@ class User extends Authenticatable
             if (str_starts_with($this->avatar, 'http')) {
                 return $this->avatar;
             }
-            // Nếu không thì thêm path assets
-            return asset('assets/avatars/' . $this->avatar);
+
+            // Check if file exists in storage
+            $avatarPath = 'avatars/' . $this->avatar;
+
+            if (\Storage::disk('public')->exists($avatarPath)) {
+                return asset('storage/' . $avatarPath);
+            }
+
+            // If file doesn't exist, log and fall back to default
+            \Log::warning('Avatar file not found', [
+                'user_id' => $this->id,
+                'avatar' => $this->avatar,
+                'path' => $avatarPath,
+                'full_path' => storage_path('app/public/' . $avatarPath)
+            ]);
         }
 
         // Avatar mặc định sử dụng service online
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=3B82F6&color=fff&size=128';
+    }
+
+    /**
+     * Check if user has a custom avatar
+     *
+     * @return bool
+     */
+    public function getHasCustomAvatarAttribute()
+    {
+        return !empty($this->avatar) && \Storage::disk('public')->exists('avatars/' . $this->avatar);
+    }
+
+    /**
+     * Get avatar file size in bytes
+     *
+     * @return int|null
+     */
+    public function getAvatarSizeAttribute()
+    {
+        if ($this->avatar && \Storage::disk('public')->exists('avatars/' . $this->avatar)) {
+            return \Storage::disk('public')->size('avatars/' . $this->avatar);
+        }
+        return null;
     }
 
     public function enrollments()

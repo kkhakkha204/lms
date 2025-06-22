@@ -15,6 +15,7 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseReviewController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -147,13 +148,32 @@ Route::get('/category/{slug}', [StudentController::class, 'coursesByCategory'])-
 
 // Routes yêu cầu đăng nhập
 Route::middleware(['auth'])->group(function () {
-    // Dashboard học viên
-    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
 
-    // Trang học tập
-    Route::get('/student/learn/{courseSlug}/{lessonSlug?}', [StudentController::class, 'learn'])->name('student.learn');
+    // Dashboard chính
+    Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
 
-    // Review routes
+    // Student course routes
+    Route::prefix('student')->name('student.')->group(function () {
+        // Dashboard (alias)
+        Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+
+        // Course listing và detail
+        Route::get('/courses', [StudentController::class, 'index'])->name('courses.index');
+        Route::get('/courses/{slug}', [StudentController::class, 'showCourse'])->name('courses.show');
+        Route::get('/courses/category/{categorySlug}', [StudentController::class, 'coursesByCategory'])->name('courses.category');
+
+        // Learning interface
+        Route::get('/learn/{courseSlug}/{lessonSlug?}', [StudentController::class, 'learn'])->name('learn');
+    });
+
+    // API routes cho dashboard (AJAX calls)
+    Route::prefix('api/student')->name('api.student.')->group(function () {
+        Route::get('/dashboard/stats', [StudentController::class, 'getDashboardStats'])->name('dashboard.stats');
+        Route::get('/enrollments', [StudentController::class, 'getEnrollments'])->name('enrollments');
+        Route::get('/learning-progress/{courseSlug}', [StudentController::class, 'getLearningProgress'])->name('learning.progress');
+    });
+
+    // Review routes (đã có sẵn nhưng bổ sung)
     Route::prefix('courses/{courseSlug}/review')->name('courses.review.')->group(function () {
         Route::get('/create', [CourseReviewController::class, 'create'])->name('create');
         Route::post('/', [CourseReviewController::class, 'store'])->name('store');
@@ -169,18 +189,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/rating-breakdown', [CourseReviewController::class, 'getRatingBreakdown'])->name('rating-breakdown');
     });
 
-    // Checkout
+    // Checkout và Payment
     Route::get('/checkout/{courseSlug}', [PaymentController::class, 'checkout'])->name('payment.checkout');
-
-    // Payment processing
     Route::post('/payment/create-intent', [PaymentController::class, 'createPaymentIntent'])->name('payment.create-intent');
     Route::post('/payment/confirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');
-
-    // Payment result pages
     Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 });
-// Thêm vào web.php - Learning Routes
+
+// Learning Routes (đã có sẵn)
 Route::middleware(['auth'])->group(function () {
     // Learning interface
     Route::prefix('learn')->group(function () {
@@ -192,7 +209,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{courseSlug}/progress', [LearningController::class, 'getProgress'])->name('learning.progress');
     });
 
-    // Material download - PHẢI ĐẶT NGOÀI prefix learn
+    // Material download
     Route::get('/material/{materialId}/download', [LearningController::class, 'downloadMaterial'])->name('learning.download-material');
 
     // API routes for AJAX calls
@@ -202,11 +219,9 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// Public certificate verification (không cần auth)
+// Certificate routes
 Route::get('/certificates/verify/{code?}', [CertificateController::class, 'verify'])->name('certificates.verify');
 Route::post('/certificates/verify-ajax', [CertificateController::class, 'verifyAjax'])->name('certificates.verify-ajax');
-
-// Public certificate download (có thể không cần auth để share)
 Route::get('/certificates/download/{code}', [CertificateController::class, 'download'])->name('certificates.download');
 
 // Student certificate routes (cần auth)
@@ -216,14 +231,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/certificates/{code}/regenerate', [CertificateController::class, 'regenerate'])->name('certificates.regenerate');
 });
 
-// Admin certificate routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/certificates', [CertificateController::class, 'adminIndex'])->name('admin.certificates.index');
-    Route::get('/certificates/stats', [CertificateController::class, 'stats'])->name('admin.certificates.stats');
-    Route::post('/certificates/issue', [CertificateController::class, 'issue'])->name('admin.certificates.issue');
-    Route::post('/certificates/bulk-issue', [CertificateController::class, 'bulkIssue'])->name('admin.certificates.bulk-issue');
-    Route::patch('/certificates/{id}/revoke', [CertificateController::class, 'revoke'])->name('admin.certificates.revoke');
+// Profile routes (nếu chưa có)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+    Route::post('/profile/avatar/remove', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.remove');
+
 });
+
 
 
 

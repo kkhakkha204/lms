@@ -6,11 +6,80 @@ use App\Models\Course;
 use App\Models\Category;
 use App\Models\Enrollment;
 use App\Models\CourseReview;
+use App\Models\Certificate;
+use App\Models\StudentProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
+    /**
+     * Dashboard học viên - Khóa học đã đăng ký với thống kê chi tiết
+     */
+    public function dashboard()
+    {
+        $user = Auth::user();
+
+        // Lấy tất cả enrollments với thông tin course và instructor
+        $enrollments = Enrollment::with([
+            'course' => function ($query) {
+                $query->select('id', 'title', 'slug', 'thumbnail', 'instructor_id');
+            },
+            'course.instructor:id,name',
+            'certificate:id,student_id,course_id,enrollment_id,certificate_code,final_score,issued_at'
+        ])
+            ->where('student_id', $user->id)
+            ->where('status', 'active')
+            ->orderBy('enrolled_at', 'desc')
+            ->get();
+
+        // Tính toán tổng số lessons cho mỗi course
+        foreach ($enrollments as $enrollment) {
+            $totalLessons = DB::table('lessons')
+                ->where('course_id', $enrollment->course_id)
+                ->where('is_active', true)
+                ->count();
+
+            $enrollment->course->total_lessons = $totalLessons;
+        }
+
+        // Thống kê tổng quan
+        $stats = [
+            'total_courses' => $enrollments->count(),
+            'completed_courses' => $enrollments->where('progress_percentage', 100)->count(),
+            'in_progress_courses' => $enrollments->where('progress_percentage', '>', 0)
+                ->where('progress_percentage', '<', 100)->count(),
+            'not_started_courses' => $enrollments->where('progress_percentage', 0)->count(),
+        ];
+
+        // Thống kê reviews
+        $reviewStats = [
+            'total_reviews' => CourseReview::where('student_id', $user->id)->count(),
+            'pending_reviews' => $this->getPendingReviewsCount($user->id),
+        ];
+
+        // Thống kê certificates
+        $certificateStats = [
+            'total_certificates' => Certificate::where('student_id', $user->id)
+                ->where('status', 'active')
+                ->count(),
+            'recent_certificates' => Certificate::where('student_id', $user->id)
+                ->where('status', 'active')
+                ->with('course:id,title')
+                ->orderBy('issued_at', 'desc')
+                ->limit(3)
+                ->get()
+        ];
+
+        return view('student.dashboard', compact(
+            'enrollments',
+            'stats',
+            'reviewStats',
+            'certificateStats'
+        ));
+    }
+
     /**
      * Trang chủ học viên - Danh sách tất cả khóa học
      */
@@ -73,7 +142,9 @@ class StudentController extends Controller
         }
 
         $courses = $query->paginate(12);
-        $categories = Category::active()->ordered()->get();
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
 
         return view('student.courses.index', compact('courses', 'categories'));
     }
@@ -86,13 +157,20 @@ class StudentController extends Controller
         $course = Course::with([
             'category',
             'instructor',
-            'sections.lessons',
-            'sections.quizzes',
+            'sections' => function ($query) {
+                $query->where('is_active', true)->orderBy('sort_order');
+            },
+            'sections.lessons' => function ($query) {
+                $query->where('is_active', true)->orderBy('sort_order');
+            },
+            'sections.quizzes' => function ($query) {
+                $query->where('is_active', true)->orderBy('sort_order');
+            },
             'reviews' => function ($query) {
                 $query->with('student')
                     ->where('is_approved', true)
                     ->orderBy('created_at', 'desc')
-                    ->limit(5); // Chỉ lấy 5 reviews đầu tiên để hiển thị
+                    ->limit(5);
             }
         ])
             ->where('slug', $slug)
@@ -103,15 +181,18 @@ class StudentController extends Controller
         $isEnrolled = false;
         $userReview = null;
         $canReview = false;
+        $enrollment = null;
 
         if (Auth::check()) {
             $userId = Auth::id();
 
-            // Kiểm tra enrollment
-            $isEnrolled = Enrollment::where('student_id', $userId)
+            // Lấy thông tin enrollment
+            $enrollment = Enrollment::where('student_id', $userId)
                 ->where('course_id', $course->id)
                 ->where('status', 'active')
-                ->exists();
+                ->first();
+
+            $isEnrolled = (bool) $enrollment;
 
             // Lấy review của user hiện tại (nếu có)
             $userReview = CourseReview::where('student_id', $userId)
@@ -145,6 +226,7 @@ class StudentController extends Controller
         return view('student.courses.show', compact(
             'course',
             'isEnrolled',
+            'enrollment',
             'totalLessons',
             'totalQuizzes',
             'relatedCourses',
@@ -152,37 +234,6 @@ class StudentController extends Controller
             'canReview',
             'ratingBreakdown'
         ));
-    }
-
-    /**
-     * Dashboard học viên - Khóa học đã đăng ký
-     */
-    public function dashboard()
-    {
-        $user = Auth::user();
-
-        $enrollments = Enrollment::with(['course.instructor'])
-            ->where('student_id', $user->id)
-            ->where('status', 'active')
-            ->orderBy('enrolled_at', 'desc')
-            ->get();
-
-        // Thống kê
-        $stats = [
-            'total_courses' => $enrollments->count(),
-            'completed_courses' => $enrollments->where('progress_percentage', 100)->count(),
-            'in_progress_courses' => $enrollments->where('progress_percentage', '>', 0)
-                ->where('progress_percentage', '<', 100)->count(),
-            'not_started_courses' => $enrollments->where('progress_percentage', 0)->count(),
-        ];
-
-        // Thêm thống kê reviews
-        $reviewStats = [
-            'total_reviews' => CourseReview::where('student_id', $user->id)->count(),
-            'pending_reviews' => $this->getPendingReviewsCount($user->id),
-        ];
-
-        return view('student.dashboard', compact('enrollments', 'stats', 'reviewStats'));
     }
 
     /**
@@ -242,7 +293,7 @@ class StudentController extends Controller
             ->where('course_id', $course->id)
             ->first();
 
-        $canReview = !$userReview; // Có thể review nếu chưa review
+        $canReview = !$userReview;
 
         return view('student.learn.index', compact('course', 'currentLesson', 'enrollment', 'userReview', 'canReview'));
     }
@@ -263,6 +314,115 @@ class StudentController extends Controller
             ->paginate(12);
 
         return view('student.courses.category', compact('category', 'courses'));
+    }
+
+    /**
+     * API: Lấy thống kê dashboard cho AJAX
+     */
+    public function getDashboardStats()
+    {
+        $user = Auth::user();
+
+        $enrollments = Enrollment::where('student_id', $user->id)
+            ->where('status', 'active')
+            ->get();
+
+        $stats = [
+            'total_courses' => $enrollments->count(),
+            'completed_courses' => $enrollments->where('progress_percentage', 100)->count(),
+            'in_progress_courses' => $enrollments->where('progress_percentage', '>', 0)
+                ->where('progress_percentage', '<', 100)->count(),
+            'not_started_courses' => $enrollments->where('progress_percentage', 0)->count(),
+            'total_certificates' => Certificate::where('student_id', $user->id)
+                ->where('status', 'active')
+                ->count(),
+            'total_reviews' => CourseReview::where('student_id', $user->id)->count(),
+            'pending_reviews' => $this->getPendingReviewsCount($user->id),
+        ];
+
+        return response()->json($stats);
+    }
+
+    /**
+     * API: Lấy danh sách khóa học với filter
+     */
+    public function getEnrollments(Request $request)
+    {
+        $user = Auth::user();
+        $filter = $request->get('filter', 'all'); // all, completed, in-progress, not-started
+
+        $query = Enrollment::with([
+            'course' => function ($q) {
+                $q->select('id', 'title', 'slug', 'thumbnail', 'instructor_id');
+            },
+            'course.instructor:id,name',
+            'certificate:id,student_id,course_id,certificate_code'
+        ])
+            ->where('student_id', $user->id)
+            ->where('status', 'active');
+
+        // Apply filters
+        switch ($filter) {
+            case 'completed':
+                $query->where('progress_percentage', 100);
+                break;
+            case 'in-progress':
+                $query->where('progress_percentage', '>', 0)
+                    ->where('progress_percentage', '<', 100);
+                break;
+            case 'not-started':
+                $query->where('progress_percentage', 0);
+                break;
+        }
+
+        $enrollments = $query->orderBy('enrolled_at', 'desc')->get();
+
+        // Add total lessons count for each course
+        foreach ($enrollments as $enrollment) {
+            $totalLessons = DB::table('lessons')
+                ->where('course_id', $enrollment->course_id)
+                ->where('is_active', true)
+                ->count();
+
+            $enrollment->course->total_lessons = $totalLessons;
+        }
+
+        return response()->json($enrollments);
+    }
+
+    /**
+     * API: Lấy tiến độ học tập chi tiết
+     */
+    public function getLearningProgress($courseSlug)
+    {
+        $course = Course::where('slug', $courseSlug)->firstOrFail();
+        $user = Auth::user();
+
+        // Kiểm tra enrollment
+        $enrollment = Enrollment::where('student_id', $user->id)
+            ->where('course_id', $course->id)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$enrollment) {
+            return response()->json(['error' => 'Not enrolled'], 403);
+        }
+
+        // Lấy chi tiết progress
+        $progress = StudentProgress::where('student_id', $user->id)
+            ->where('course_id', $course->id)
+            ->with(['lesson:id,title,slug', 'quiz:id,title'])
+            ->get();
+
+        $data = [
+            'enrollment' => $enrollment,
+            'progress' => $progress,
+            'lessons_completed' => $progress->where('type', 'lesson')->where('lesson_completed', true)->count(),
+            'quizzes_completed' => $progress->where('type', 'quiz')->where('quiz_passed', true)->count(),
+            'average_quiz_score' => $progress->where('type', 'quiz')->where('quiz_passed', true)->avg('quiz_score') ?: 0,
+        ];
+
+        return response()->json($data);
     }
 
     /**
@@ -312,5 +472,45 @@ class StudentController extends Controller
 
         // Đếm khóa học chưa review
         return $enrolledCourseIds->diff($reviewedCourseIds)->count();
+    }
+
+    /**
+     * Tính learning streak (chuỗi học tập)
+     */
+    private function calculateLearningStreak($userId)
+    {
+        // Lấy các ngày có hoạt động học tập gần đây
+        $recentProgress = StudentProgress::where('student_id', $userId)
+            ->where('completed_at', '>=', now()->subDays(30))
+            ->selectRaw('DATE(completed_at) as date')
+            ->groupBy('date')
+            ->orderBy('date', 'desc')
+            ->pluck('date')
+            ->toArray();
+
+        if (empty($recentProgress)) {
+            return 0;
+        }
+
+        $streak = 0;
+        $currentDate = now()->format('Y-m-d');
+
+        // Kiểm tra từ hôm nay trở về trước
+        for ($i = 0; $i < 30; $i++) {
+            $checkDate = now()->subDays($i)->format('Y-m-d');
+
+            if (in_array($checkDate, $recentProgress)) {
+                $streak++;
+            } else {
+                // Nếu không học trong ngày hiện tại thì dừng
+                if ($i === 0) {
+                    break;
+                }
+                // Nếu không học trong ngày trước đó thì cũng dừng
+                break;
+            }
+        }
+
+        return $streak;
     }
 }
