@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\QuizQuestionController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
@@ -123,7 +124,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     Route::get('/admin/users-export', [UserController::class, 'export'])->name('admin.users.export');
 
-
+// Route cho Reviews Dashboard
+    Route::get('/admin/reviews', [ReviewController::class, 'index'])->name('admin.reviews.index');
+    Route::get('/admin/reviews/{review}', [ReviewController::class, 'show'])->name('admin.reviews.show');
+    Route::post('/admin/reviews/{review}/toggle-approval', [ReviewController::class, 'toggleApproval'])->name('admin.reviews.toggle-approval');
+    Route::delete('/admin/reviews/{review}', [ReviewController::class, 'destroy'])->name('admin.reviews.destroy');
+    Route::post('/admin/reviews/bulk-action', [ReviewController::class, 'bulkAction'])->name('admin.reviews.bulk-action');
 });
 
 // Routes công khai cho course listing
