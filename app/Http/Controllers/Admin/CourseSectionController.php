@@ -27,7 +27,10 @@ class CourseSectionController extends Controller
 
         $course->sections()->create($validated);
 
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được tạo thành công.');
+        return redirect()
+            ->route('admin.courses.edit', $course)
+            ->with('success', 'Mục đã được tạo thành công.')
+            ->with('active_tab', 'curriculum');
     }
 
     public function edit(Course $course, CourseSection $section)
@@ -45,12 +48,18 @@ class CourseSectionController extends Controller
         // Giữ nguyên sort_order khi edit, không cho phép thay đổi
         $section->update($validated);
 
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được cập nhật thành công.');
+        return redirect()
+            ->route('admin.courses.edit', $course)
+            ->with('success', 'Mục đã được cập nhật thành công.')
+            ->with('active_tab', 'curriculum');
     }
 
     public function destroy(Course $course, CourseSection $section)
     {
         $section->delete();
-        return redirect()->route('admin.courses.edit', $course)->with('success', 'Mục đã được xóa thành công.');
+        return redirect()
+            ->route('admin.courses.edit', $course)
+            ->with('success', 'Mục đã được xóa thành công.')
+            ->with('active_tab', 'curriculum');
     }
 }

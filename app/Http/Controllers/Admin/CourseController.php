@@ -179,9 +179,11 @@ class CourseController extends Controller
 
         $course->update($validated);
 
+        // Chuyển sang tab curriculum sau khi cập nhật
         return redirect()
             ->route('admin.courses.edit', $course)
-            ->with('success', 'Khóa học đã được cập nhật thành công.');
+            ->with('success', 'Khóa học đã được cập nhật thành công.')
+            ->with('active_tab', 'curriculum');
     }
 
     public function destroy(Course $course)
