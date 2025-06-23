@@ -349,7 +349,7 @@
 </nav>
 
 <!-- Main Content -->
-<main class="">
+<main class="font-quicksand">
     @yield('content')
 </main>
 
