@@ -153,12 +153,13 @@ class LearningController extends Controller
 
         if ($existingProgress && $existingProgress->quiz_attempts >= $quiz->max_attempts) {
             return response()->json([
+                'success' => false,
                 'error' => 'Bạn đã hết số lần làm bài cho quiz này.'
             ], 400);
         }
 
-        // Tính điểm
-        $result = $this->calculateQuizScore($quiz, $validated['answers']);
+        // Tính điểm và lấy thông tin chi tiết
+        $result = $this->calculateQuizScoreWithDetails($quiz, $validated['answers']);
 
         // Cập nhật progress
         $progress = StudentProgress::updateOrCreate(
@@ -182,21 +183,98 @@ class LearningController extends Controller
         // Cập nhật tiến độ enrollment
         $updatedPercentage = $this->updateEnrollmentProgress($quiz->course_id);
 
-        // Debug log
-        \Log::info('Quiz progress updated', [
+        // Debug log để kiểm tra dữ liệu
+        \Log::info('Quiz result data:', [
+            'result' => $result,
             'quiz_id' => $quiz->id,
-            'completion_percentage' => $updatedPercentage,
-            'user_id' => Auth::id(),
-            'quiz_passed' => $result['passed']
+            'user_id' => Auth::id()
         ]);
 
         return response()->json([
             'success' => true,
-            'result' => $result,
+            'result' => [
+                'score' => (float) $result['score'],
+                'earned_points' => (int) $result['earned_points'],
+                'total_points' => (int) $result['total_points'],
+                'correct_answers' => (int) $result['correct_answers'],
+                'total_questions' => (int) $result['total_questions'],
+                'passed' => (bool) $result['passed'],
+                'passing_score' => (float) $quiz->passing_score,
+                'question_results' => $result['question_results'] ?? []
+            ],
             'progress' => $progress,
             'completion_percentage' => $updatedPercentage,
-            'course_completed' => $updatedPercentage >= 100
+            'course_completed' => $updatedPercentage >= 100,
+            'correct_answers_data' => $result['correct_answers_data'] ?? []
         ]);
+    }
+
+    /**
+     * Tính điểm quiz với chi tiết từng câu
+     */
+    private function calculateQuizScoreWithDetails($quiz, $answers)
+    {
+        $totalPoints = 0;
+        $earnedPoints = 0;
+        $correctAnswers = 0;
+        $totalQuestions = $quiz->questions->count();
+        $questionResults = [];
+        $correctAnswersData = [];
+
+        foreach ($quiz->questions as $question) {
+            $totalPoints += $question->points;
+            $userAnswer = $answers[$question->id] ?? null;
+            $isCorrect = $this->isAnswerCorrect($question, $userAnswer);
+
+            // Store question result
+            $questionResults[$question->id] = $isCorrect;
+
+            // Store correct answers for review
+            $correctAnswersData[$question->id] = $this->getCorrectAnswerData($question);
+
+            if ($isCorrect) {
+                $earnedPoints += $question->points;
+                $correctAnswers++;
+            }
+        }
+
+        $scorePercentage = $totalPoints > 0 ? ($earnedPoints / $totalPoints) * 100 : 0;
+        $passed = $scorePercentage >= $quiz->passing_score;
+
+        return [
+            'score' => round($scorePercentage, 1),
+            'earned_points' => $earnedPoints,
+            'total_points' => $totalPoints,
+            'correct_answers' => $correctAnswers,
+            'total_questions' => $totalQuestions,
+            'passed' => $passed,
+            'passing_score' => $quiz->passing_score,
+            'question_results' => $questionResults,
+            'correct_answers_data' => $correctAnswersData
+        ];
+    }
+
+    /**
+     * Lấy thông tin đáp án đúng cho review
+     */
+    private function getCorrectAnswerData($question)
+    {
+        switch ($question->type) {
+            case 'single_choice':
+            case 'true_false':
+                $correctOption = $question->options->where('is_correct', true)->first();
+                return $correctOption ? $correctOption->id : null;
+
+            case 'multiple_choice':
+                return $question->options->where('is_correct', true)->pluck('id')->toArray();
+
+            case 'fill_blank':
+                $correctOption = $question->options->where('is_correct', true)->first();
+                return $correctOption ? $correctOption->option_text : null;
+
+            default:
+                return null;
+        }
     }
 
     /**
