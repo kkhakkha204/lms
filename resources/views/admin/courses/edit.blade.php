@@ -93,7 +93,7 @@
                     @method('PUT')
 
                     <div class="p-6 space-y-8">
-                        <!-- Current Thumbnail Display -->
+                        <!-- Current Thumbnail Display - Thay thế phần thumbnail hiện tại -->
                         <div class="bg-gray-50 p-6 rounded-lg">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">
                                 <i class="fas fa-image mr-2"></i>Hình ảnh đại diện
@@ -104,9 +104,12 @@
                                     <!-- Current Image -->
                                     <div class="flex-shrink-0">
                                         <p class="text-sm font-medium text-gray-700 mb-2">Hình ảnh hiện tại:</p>
-                                        <img src="{{ Storage::url($course->thumbnail) }}"
-                                             alt="{{ $course->title }}"
-                                             class="w-64 h-36 object-cover rounded-lg border shadow-sm">
+                                        <!-- Sửa CSS để giữ tỷ lệ ảnh -->
+                                        <div class="w-64 h-36 bg-gray-100 rounded-lg border overflow-hidden">
+                                            <img src="{{ Storage::url($course->thumbnail) }}"
+                                                 alt="{{ $course->title }}"
+                                                 class="w-full h-full object-contain"> <!-- Đổi từ object-cover thành object-contain -->
+                                        </div>
                                     </div>
 
                                     <!-- Upload New -->
@@ -131,13 +134,18 @@
                                         <div id="image-preview" class="hidden mt-4">
                                             <p class="text-sm font-medium text-gray-700 mb-2">Xem trước hình mới:</p>
                                             <div class="relative">
-                                                <img id="preview-img" src="" alt="Preview"
-                                                     class="w-64 h-36 object-cover rounded-lg border shadow-sm">
+                                                <!-- Container với tỷ lệ cố định -->
+                                                <div class="w-64 h-36 bg-gray-100 rounded-lg border overflow-hidden">
+                                                    <img id="preview-img" src="" alt="Preview"
+                                                         class="w-full h-full object-contain"> <!-- object-contain để giữ tỷ lệ -->
+                                                </div>
                                                 <button type="button" onclick="removeImage()"
                                                         class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors">
                                                     <i class="fas fa-times text-sm"></i>
                                                 </button>
                                             </div>
+                                            <!-- Thông tin ảnh -->
+                                            <div id="image-info" class="mt-2 text-xs text-gray-500"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -157,13 +165,16 @@
                                 <div id="image-preview" class="hidden mt-4">
                                     <p class="text-sm font-medium text-gray-700 mb-2">Xem trước:</p>
                                     <div class="relative">
-                                        <img id="preview-img" src="" alt="Preview"
-                                             class="w-64 h-36 object-cover rounded-lg border shadow-sm">
+                                        <div class="w-64 h-36 bg-gray-100 rounded-lg border overflow-hidden">
+                                            <img id="preview-img" src="" alt="Preview"
+                                                 class="w-full h-full object-contain">
+                                        </div>
                                         <button type="button" onclick="removeImage()"
                                                 class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors">
                                             <i class="fas fa-times text-sm"></i>
                                         </button>
                                     </div>
+                                    <div id="image-info" class="mt-2 text-xs text-gray-500"></div>
                                 </div>
                             @endif
 
@@ -1256,17 +1267,30 @@
                 }, 3000);
             }
 
-            // Image preview functionality
             function previewImage(input) {
                 const file = input.files[0];
                 const preview = document.getElementById('image-preview');
                 const previewImg = document.getElementById('preview-img');
+                const imageInfo = document.getElementById('image-info');
 
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         previewImg.src = e.target.result;
                         preview.classList.remove('hidden');
+
+                        // Hiển thị thông tin file
+                        const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                        imageInfo.textContent = `Kích thước: ${fileSize}MB | Định dạng: ${file.type}`;
+
+                        // Tính toán kích thước ảnh
+                        previewImg.onload = function() {
+                            const img = new Image();
+                            img.onload = function() {
+                                imageInfo.textContent += ` | Độ phân giải: ${img.width}x${img.height}px`;
+                            };
+                            img.src = e.target.result;
+                        };
                     };
                     reader.readAsDataURL(file);
                 }
@@ -1275,6 +1299,10 @@
             function removeImage() {
                 document.getElementById('thumbnail').value = '';
                 document.getElementById('image-preview').classList.add('hidden');
+                const imageInfo = document.getElementById('image-info');
+                if (imageInfo) {
+                    imageInfo.textContent = '';
+                }
             }
 
             // Price toggle functionality

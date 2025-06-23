@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseReviewController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -150,6 +151,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 // Routes công khai cho course listing
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/courses', [StudentController::class, 'index'])->name('student.courses.index');
 Route::get('/courses/{slug}', [StudentController::class, 'showCourse'])->name('student.courses.show');
 Route::get('/category/{slug}', [StudentController::class, 'coursesByCategory'])->name('student.courses.category');

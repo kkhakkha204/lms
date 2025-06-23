@@ -65,13 +65,16 @@
                             @enderror
                         </div>
 
-                        <!-- Preview Area -->
+                        <!-- Preview Area - Thay thế phần preview hiện tại -->
                         <div class="flex-1">
                             <div id="image-preview" class="hidden">
                                 <p class="text-sm font-medium text-gray-700 mb-2">Xem trước:</p>
                                 <div class="relative">
-                                    <img id="preview-img" src="" alt="Preview"
-                                         class="w-full h-48 object-cover rounded-lg border">
+                                    <!-- Sửa lại CSS để giữ tỷ lệ ảnh -->
+                                    <div class="w-full h-48 bg-gray-100 rounded-lg border overflow-hidden">
+                                        <img id="preview-img" src="" alt="Preview"
+                                             class="w-full h-full object-contain"> <!-- Đổi từ object-cover thành object-contain -->
+                                    </div>
                                     <button type="button" onclick="removeImage()"
                                             class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,6 +82,8 @@
                                         </svg>
                                     </button>
                                 </div>
+                                <!-- Thêm thông tin ảnh -->
+                                <div id="image-info" class="mt-2 text-xs text-gray-500"></div>
                             </div>
                         </div>
                     </div>
@@ -377,17 +382,31 @@
     </div>
 
     <script>
-        // Image preview functionality
+        // Cập nhật hàm previewImage để hiển thị thông tin ảnh
         function previewImage(input) {
             const file = input.files[0];
             const preview = document.getElementById('image-preview');
             const previewImg = document.getElementById('preview-img');
+            const imageInfo = document.getElementById('image-info');
 
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImg.src = e.target.result;
                     preview.classList.remove('hidden');
+
+                    // Hiển thị thông tin file
+                    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                    imageInfo.textContent = `Kích thước: ${fileSize}MB | Định dạng: ${file.type}`;
+
+                    // Tính toán kích thước ảnh
+                    previewImg.onload = function() {
+                        const img = new Image();
+                        img.onload = function() {
+                            imageInfo.textContent += ` | Độ phân giải: ${img.width}x${img.height}px`;
+                        };
+                        img.src = e.target.result;
+                    };
                 };
                 reader.readAsDataURL(file);
             }
@@ -396,6 +415,7 @@
         function removeImage() {
             document.getElementById('thumbnail').value = '';
             document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('image-info').textContent = '';
         }
 
         // Slug generation

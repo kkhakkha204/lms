@@ -252,32 +252,54 @@ class CourseController extends Controller
         $manager = new ImageManager(new Driver());
         $processedImage = $manager->read($file->getPathname());
 
-        // Resize maintaining aspect ratio
-        $processedImage->resize(800, 450, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
+        // Get original dimensions
+        $originalWidth = $processedImage->width();
+        $originalHeight = $processedImage->height();
 
-        // Create thumbnail version
+        // Calculate target dimensions maintaining aspect ratio
+        $maxWidth = 800;
+        $maxHeight = 450;
+
+        // Calculate scaling factor
+        $scaleWidth = $maxWidth / $originalWidth;
+        $scaleHeight = $maxHeight / $originalHeight;
+        $scale = min($scaleWidth, $scaleHeight, 1); // Don't upscale
+
+        $newWidth = (int)($originalWidth * $scale);
+        $newHeight = (int)($originalHeight * $scale);
+
+        // Resize maintaining aspect ratio (will not distort)
+        $processedImage->resize($newWidth, $newHeight);
+
+        // Create thumbnail version with same aspect ratio logic
         $thumbnailImage = clone $processedImage;
-        $thumbnailImage->resize(300, 200, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
+
+        // For thumbnail, use smaller max dimensions
+        $thumbMaxWidth = 300;
+        $thumbMaxHeight = 200;
+
+        $thumbScaleWidth = $thumbMaxWidth / $newWidth;
+        $thumbScaleHeight = $thumbMaxHeight / $newHeight;
+        $thumbScale = min($thumbScaleWidth, $thumbScaleHeight, 1);
+
+        $thumbWidth = (int)($newWidth * $thumbScale);
+        $thumbHeight = (int)($newHeight * $thumbScale);
+
+        $thumbnailImage->resize($thumbWidth, $thumbHeight);
 
         // Save main image
         $storagePath = storage_path('app/public/courses/' . $filename);
         if (!file_exists(dirname($storagePath))) {
             mkdir(dirname($storagePath), 0755, true);
         }
-        $processedImage->save($storagePath, 80);
+        $processedImage->save($storagePath, 85); // Tăng quality lên 85
 
         // Save thumbnail
         $thumbnailPath = storage_path('app/public/courses/thumbnails/' . $filename);
         if (!file_exists(dirname($thumbnailPath))) {
             mkdir(dirname($thumbnailPath), 0755, true);
         }
-        $thumbnailImage->save($thumbnailPath, 80);
+        $thumbnailImage->save($thumbnailPath, 85);
 
         return 'courses/' . $filename;
     }
