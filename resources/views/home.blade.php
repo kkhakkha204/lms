@@ -239,7 +239,7 @@
     </section>
 
     <!-- Featured Courses Section -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="text-center mb-16 fade-in-up">
@@ -280,9 +280,9 @@
                                         <!-- Level Badge -->
                                         <div class="absolute top-3 left-3">
                                             <span class="px-2.5 py-1 text-xs font-medium rounded-full backdrop-blur-sm
-                                                @if($course->level === 'beginner') bg-black text-white
-                                                @elseif($course->level === 'intermediate') bg-black text-white
-                                                @else bg-black text-white @endif">
+                                                @if($course->level === 'beginner') bg-white text-[#1c1c1c]
+                                                @elseif($course->level === 'intermediate') bg-white text-[#1c1c1c]
+                                                @else bg-white text-[#1c1c1c] @endif">
                                                 @if($course->level === 'beginner') Cơ bản
                                                 @elseif($course->level === 'intermediate') Trung cấp
                                                 @else Nâng cao @endif
@@ -333,17 +333,17 @@
                                             <!-- Price -->
                                             <div class="flex items-baseline gap-2">
                                                 @if($course->is_free)
-                                                    <span class="text-lg font-bold text-green-600">Miễn phí</span>
+                                                    <span class="text-[18px] font-semibold text-[#1c1c1c]">Miễn phí</span>
                                                 @else
                                                     @if($course->has_discount)
-                                                        <span class="text-lg font-bold text-gray-900">
+                                                        <span class="text-[18px] font-semibold text-[#1c1c1c]">
                                                             {{ number_format($course->discount_price, 0, ',', '.') }}đ
                                                         </span>
                                                         <span class="text-sm text-gray-400 line-through">
                                                             {{ number_format($course->price, 0, ',', '.') }}đ
                                                         </span>
                                                     @else
-                                                        <span class="text-lg font-bold text-gray-900">
+                                                        <span class="text-[18px] font-semibold text-[#1c1c1c]">
                                                             {{ number_format($course->price, 0, ',', '.') }}đ
                                                         </span>
                                                     @endif
@@ -352,9 +352,9 @@
 
                                             <!-- CTA Button -->
                                             <a href="{{ route('student.courses.show', $course->slug) }}"
-                                               class="inline-flex items-center gap-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
-                                                <span>Xem</span>
-                                                <div class="w-4 h-4">
+                                               class="inline-flex items-center gap-2 bg-[#1c1c1c] text-white px-3 py-3 rounded-3xl text-sm font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+
+                                                <div class="w-5 h-5">
                                                     <svg viewBox="0 0 20 20" fill="currentColor" class="w-full h-full">
                                                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                                                     </svg>
@@ -369,14 +369,14 @@
                 </div>
 
                 <!-- Navigation Arrows -->
-                <button class="carousel-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 z-10 hover:bg-gray-50" id="prevBtn">
-                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="carousel-prev absolute -left-14 top-[45%] -translate-y-1/2 -translate-x-4 bg-[#1c1c1c] rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 z-10 hover:bg-gray-50" id="prevBtn">
+                    <svg class="w-6 h-6 text-white hover:text-[#1c1c1c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </button>
 
-                <button class="carousel-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 z-10 hover:bg-gray-50" id="nextBtn">
-                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="carousel-next absolute -right-14 top-[45%] -translate-y-1/2 translate-x-4 bg-[#1c1c1c] rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 z-10 hover:bg-gray-50" id="nextBtn">
+                    <svg class="w-6 h-6 text-white hover:text-[#1c1c1c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>

@@ -5,7 +5,7 @@
 
 @section('content')
     <!-- Hero Section with Modern Gradient -->
-    <section class="relative bg-gradient-to-br from-[#1c1c1c] via-[#2a2a2a] to-[#7e0202] text-white py-40 overflow-hidden font-quicksand">
+    <section class="relative bg-gradient-to-br from-[#7e0202] via-[#2a2a2a] to-[#1c1c1c] text-white py-40 overflow-hidden font-quicksand">
         <!-- Background Elements -->
         <div class="absolute inset-0">
             <div class="absolute top-10 left-10 w-32 h-32 bg-[#ed292a] opacity-10 rounded-full blur-xl"></div>
@@ -54,16 +54,16 @@
 
                 <!-- Quick Stats -->
                 <div class="flex justify-center items-center space-x-8 mt-4 text-sm">
-                    <div class="flex items-center text-gray-300">
-                        <i class="fas fa-users mr-2 text-[#ed292a]"></i>
+                    <div class="flex items-center text-gray-50">
+                        <i class="fas fa-users mr-2 text-gray-50"></i>
                         <span>10,000+ Học viên</span>
                     </div>
-                    <div class="flex items-center text-gray-300">
-                        <i class="fas fa-book mr-2 text-[#ed292a]"></i>
+                    <div class="flex items-center text-gray-50">
+                        <i class="fas fa-book mr-2 text-gray-50"></i>
                         <span>500+ Khóa học</span>
                     </div>
-                    <div class="flex items-center text-gray-300">
-                        <i class="fas fa-star mr-2 text-[#ed292a]"></i>
+                    <div class="flex items-center text-gray-50">
+                        <i class="fas fa-star mr-2 text-gray-50"></i>
                         <span>4.8/5 Đánh giá</span>
                     </div>
                 </div>
@@ -284,9 +284,9 @@
                                         <div class="absolute top-3 left-3">
                                             @php
                                                 $levelConfig = [
-                                                    'beginner' => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-800', 'icon' => 'fas fa-seedling'],
-                                                    'intermediate' => ['bg' => 'bg-amber-100', 'text' => 'text-amber-800', 'icon' => 'fas fa-tree'],
-                                                    'advanced' => ['bg' => 'bg-rose-100', 'text' => 'text-rose-800', 'icon' => 'fas fa-mountain']
+                                                    'beginner' => ['bg' => 'bg-white', 'text' => 'text-[#1c1c1c]', 'icon' => 'fas fa-seedling'],
+                                                    'intermediate' => ['bg' => 'bg-white', 'text' => 'text-[#1c1c1c]', 'icon' => 'fas fa-tree'],
+                                                    'advanced' => ['bg' => 'bg-white', 'text' => 'text-[#1c1c1c]', 'icon' => 'fas fa-mountain']
                                                 ];
                                                 $levelLabels = [
                                                     'beginner' => 'Cơ bản',
