@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative h-screen overflow-hidden bg-white">
+    <section class="relative h-[650px] overflow-hidden bg-white">
 
         <!-- Hero Content -->
         <div class="relative z-10 flex items-center justify-center h-full px-4">

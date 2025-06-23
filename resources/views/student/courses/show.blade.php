@@ -397,8 +397,13 @@
                                                     <h4 class="text-xl font-bold text-[#1c1c1c] mb-1">{{ $section->title }}</h4>
                                                     <p class="text-sm text-gray-500">
                                                         {{ $section->lessons->count() + $section->quizzes->count() }} bài học
-                                                        @if($section->lessons->sum('video_duration'))
-                                                            • {{ $section->lessons->sum('video_duration') }} phút
+                                                        @php
+                                                            $totalDuration = $section->lessons->filter(function($lesson) {
+                                                            return is_numeric($lesson->video_duration);
+                                                            })->sum('video_duration');
+                                                        @endphp
+                                                        @if($totalDuration > 0)
+                                                            • {{ $totalDuration }} phút
                                                         @endif
                                                     </p>
                                                 </div>
