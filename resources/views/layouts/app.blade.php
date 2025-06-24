@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -355,6 +355,13 @@
     </div>
 </nav>
 
+<!-- ChatBot Component - Hiển thị trên tất cả trang -->
+@auth
+    @include('components.chatbot')
+@else
+    <!-- ChatBot cho guest users -->
+    @include('components.chatbot-guest')
+@endauth
 <!-- Main Content -->
 <main class="font-quicksand">
     @yield('content')
@@ -484,80 +491,80 @@
     <div class="absolute top-0 right-0 w-48 h-48 bg-purple-600/3 rounded-full blur-3xl translate-x-24 -translate-y-24"></div>
 </footer>
 
-<!-- Floating Action Buttons -->
-<div class="fixed bottom-6 right-6 z-50" x-data="floatingButtons()">
-    <!-- Contact Button with Expandable Options -->
-    <div class="relative mb-4">
-        <!-- Social Media Options -->
-        <div x-show="contactOpen"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"
-             x-transition:enter-end="opacity-1 transform translate-y-0 scale-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-1 transform translate-y-0 scale-100"
-             x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"
-             class="absolute bottom-16 right-0 flex flex-col space-y-3">
+{{--<!-- Floating Action Buttons -->--}}
+{{--<div class="fixed bottom-6 right-6 z-50" x-data="floatingButtons()">--}}
+{{--    <!-- Contact Button with Expandable Options -->--}}
+{{--    <div class="relative mb-4">--}}
+{{--        <!-- Social Media Options -->--}}
+{{--        <div x-show="contactOpen"--}}
+{{--             x-transition:enter="transition ease-out duration-300"--}}
+{{--             x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"--}}
+{{--             x-transition:enter-end="opacity-1 transform translate-y-0 scale-100"--}}
+{{--             x-transition:leave="transition ease-in duration-200"--}}
+{{--             x-transition:leave-start="opacity-1 transform translate-y-0 scale-100"--}}
+{{--             x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"--}}
+{{--             class="absolute bottom-16 right-0 flex flex-col space-y-3">--}}
 
-            <!-- Zalo -->
-            <a href="#"
-               class="w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">
-                <span class="text-white text-sm font-bold">Z</span>
-                <div class="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                    Zalo
-                </div>
-            </a>
+{{--            <!-- Zalo -->--}}
+{{--            <a href="#"--}}
+{{--               class="w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">--}}
+{{--                <span class="text-white text-sm font-bold">Z</span>--}}
+{{--                <div class="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">--}}
+{{--                    Zalo--}}
+{{--                </div>--}}
+{{--            </a>--}}
 
-            <!-- Facebook -->
-            <a href="#"
-               class="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">
-                <span class="text-white text-sm font-bold">f</span>
-                <div class="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                    Facebook
-                </div>
-            </a>
+{{--            <!-- Facebook -->--}}
+{{--            <a href="#"--}}
+{{--               class="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">--}}
+{{--                <span class="text-white text-sm font-bold">f</span>--}}
+{{--                <div class="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">--}}
+{{--                    Facebook--}}
+{{--                </div>--}}
+{{--            </a>--}}
 
-            <!-- Instagram -->
-            <a href="#"
-               class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">
-                <span class="text-white text-sm font-bold">ig</span>
-                <div class="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                    Instagram
-                </div>
-            </a>
-        </div>
+{{--            <!-- Instagram -->--}}
+{{--            <a href="#"--}}
+{{--               class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-2xl shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">--}}
+{{--                <span class="text-white text-sm font-bold">ig</span>--}}
+{{--                <div class="absolute right-14 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">--}}
+{{--                    Instagram--}}
+{{--                </div>--}}
+{{--            </a>--}}
+{{--        </div>--}}
 
-        <!-- Main Contact Button -->
-        <button @click="contactOpen = !contactOpen"
-                class="w-14 h-14 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-gray-600">
-            <svg class="w-6 h-6 text-white transition-transform duration-300"
-                 :class="{ 'rotate-45': contactOpen }"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            <div class="absolute right-16 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                Liên hệ
-            </div>
-        </button>
-    </div>
+{{--        <!-- Main Contact Button -->--}}
+{{--        <button @click="contactOpen = !contactOpen"--}}
+{{--                class="w-14 h-14 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-gray-600">--}}
+{{--            <svg class="w-6 h-6 text-white transition-transform duration-300"--}}
+{{--                 :class="{ 'rotate-45': contactOpen }"--}}
+{{--                 fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
+{{--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>--}}
+{{--            </svg>--}}
+{{--            <div class="absolute right-16 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">--}}
+{{--                Liên hệ--}}
+{{--            </div>--}}
+{{--        </button>--}}
+{{--    </div>--}}
 
-    <!-- Back to Top Button -->
-    <button @click="scrollToTop()"
-            x-show="showBackToTop"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform translate-y-4"
-            x-transition:enter-end="opacity-1 transform translate-y-0"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-1 transform translate-y-0"
-            x-transition:leave-end="opacity-0 transform translate-y-4"
-            class="w-14 h-14 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-gray-600">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-        </svg>
-        <div class="absolute right-16 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-            Lên đầu trang
-        </div>
-    </button>
-</div>
+{{--    <!-- Back to Top Button -->--}}
+{{--    <button @click="scrollToTop()"--}}
+{{--            x-show="showBackToTop"--}}
+{{--            x-transition:enter="transition ease-out duration-300"--}}
+{{--            x-transition:enter-start="opacity-0 transform translate-y-4"--}}
+{{--            x-transition:enter-end="opacity-1 transform translate-y-0"--}}
+{{--            x-transition:leave="transition ease-in duration-200"--}}
+{{--            x-transition:leave-start="opacity-1 transform translate-y-0"--}}
+{{--            x-transition:leave-end="opacity-0 transform translate-y-4"--}}
+{{--            class="w-14 h-14 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-gray-600">--}}
+{{--        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
+{{--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>--}}
+{{--        </svg>--}}
+{{--        <div class="absolute right-16 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">--}}
+{{--            Lên đầu trang--}}
+{{--        </div>--}}
+{{--    </button>--}}
+{{--</div>--}}
 
 <!-- Scripts -->
 <script>

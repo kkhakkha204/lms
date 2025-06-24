@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ChatBotService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CourseReview;
@@ -16,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->singleton(ChatBotService::class);
     }
 
     /**

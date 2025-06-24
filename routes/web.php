@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\CourseReviewController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LearningController;
@@ -253,7 +254,20 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+// ChatBot Routes
+Route::prefix('chatbot')->name('chatbot.')->group(function () {
+    // Public routes (cho cả guest và user)
+    Route::post('/send-message', [ChatBotController::class, 'sendMessage'])->name('send');
+    Route::get('/quick-actions', [ChatBotController::class, 'getQuickActions'])->name('quick-actions');
 
+    // Authenticated routes
+    Route::middleware('auth')->group(function () {
+        Route::get('/', [ChatBotController::class, 'index'])->name('index');
+        Route::get('/recommendations', [ChatBotController::class, 'getRecommendations'])->name('recommendations');
+        Route::get('/history', [ChatBotController::class, 'getHistory'])->name('history');
+        Route::delete('/history/{id}', [ChatBotController::class, 'deleteHistory'])->name('history.delete');
+    });
+});
 
 
 
