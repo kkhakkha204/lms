@@ -15,6 +15,13 @@
 
     <!-- Custom Styles -->
     <style>
+        @font-face {
+            font-family: 'CustomTitle';
+            src: url('{{ asset("assets/fonts/title2.otf") }}') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
         [x-cloak] { display: none !important; }
 
         .font-quicksand {

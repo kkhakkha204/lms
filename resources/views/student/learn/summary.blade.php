@@ -5,7 +5,7 @@
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <!-- Hero Section with Dark Theme -->
-        <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-black relative overflow-hidden pt-32">
+        <div class=" bg-gradient-to-b from-white via-gray-800 to-[#1c1c1c] relative overflow-hidden pt-32">
             <!-- Background Pattern -->
             <div class="absolute inset-0 opacity-10">
                 <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20"></div>
@@ -24,14 +24,14 @@
                         <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-red-600/30 rounded-full blur-3xl -z-10"></div>
                     </div>
 
-                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight" style="font-family: 'CustomTitle', sans-serif; ">
                         Xuất sắc!
                     </h1>
                     <div class="max-w-2xl mx-auto">
                         <p class="text-xl text-gray-300 mb-4 leading-relaxed">
                             Bạn đã hoàn thành thành công khóa học
                         </p>
-                        <h2 class="text-2xl md:text-3xl font-semibold text-red-400 bg-gradient-to-r from-red-400 to-red-300 bg-clip-text text-transparent">
+                        <h2 class="text-2xl md:text-3xl font-semibold text-red-400 bg-gradient-to-r from-red-400 to-red-300 bg-clip-text text-transparent" style="font-family: 'CustomTitle', sans-serif;">
                             "{{ $course->title }}"
                         </h2>
                     </div>
@@ -106,21 +106,15 @@
 
                     <div class="space-y-6">
                         <!-- Overall Score Highlight -->
-                        <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-6 text-center">
-                            <div class="text-4xl font-bold text-red-600 mb-2">{{ $stats['overall_score'] }}%</div>
-                            <div class="text-lg font-semibold text-gray-700">{{ $stats['grade'] }}</div>
-                            <div class="text-sm text-gray-600 mt-2">Điểm tổng kết</div>
+                        <div class="bg-gradient-to-r h-[155px] from-[#1c1c1c] via-[#7e0202] to-[#ed292a] rounded-xl p-8 text-center">
+                            <div class="text-5xl font-bold text-white mb-4">{{ $stats['overall_score'] }}%</div>
+                            <div class="text-xl font-semibold text-gray-50">{{ $stats['grade'] }}</div>
                         </div>
 
                         <div class="space-y-4">
                             <div class="flex justify-between items-center py-3 border-b border-gray-100">
                                 <span class="text-gray-600 font-medium">Điểm trung bình quiz</span>
                                 <span class="font-bold text-gray-900">{{ $stats['average_quiz_score'] }}%</span>
-                            </div>
-
-                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                                <span class="text-gray-600 font-medium">Thời gian xem video</span>
-                                <span class="font-bold text-gray-900">{{ $stats['total_video_time'] }} giờ</span>
                             </div>
 
                             <div class="flex justify-between items-center py-3 border-b border-gray-100">
@@ -147,10 +141,10 @@
 
                     <div class="space-y-6">
                         <!-- Course Thumbnail -->
-                        <div class="relative overflow-hidden rounded-2xl">
+                        <div class="relative overflow-hidden rounded-xl">
                             <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://via.placeholder.com/400x200?text=Course' }}"
                                  alt="{{ $course->title }}"
-                                 class="w-full h-48 object-cover">
+                                 class="w-full h-[155px] object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                         </div>
 
@@ -384,11 +378,7 @@
                 transform: scale(1.05);
             }
 
-            /* Enhanced gradient animations */
-            .bg-gradient-to-r:hover {
-                background-size: 200% 200%;
-                animation: gradient-shift 2s ease infinite;
-            }
+
 
             @keyframes gradient-shift {
                 0%, 100% { background-position: 0% 50%; }
