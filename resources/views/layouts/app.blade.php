@@ -130,7 +130,7 @@
     :class="{ 'navbar-hidden': hidden, 'navbar-visible': !hidden }"
     class="navbar-floating fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-[1440px] px-4 font-quicksand"
 >
-    <div class="backdrop-blur-navbar bg-black/90 border border-white/10 rounded-[100px] shadow-2xl">
+    <div class="backdrop-blur-navbar bg-black/90 border-2 border-white/80 rounded-[100px] shadow-2xl">
         <div class="flex items-center px-6 py-2">
             <!-- Logo -->
             <div class="logo-container w-1/4">
