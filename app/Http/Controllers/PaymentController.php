@@ -105,6 +105,29 @@ class PaymentController extends Controller
     }
 
     /**
+     * Tính toán amount cho Stripe dựa trên currency
+     */
+    private function calculateStripeAmount($amount, $currency = 'vnd')
+    {
+        // Các loại tiền tệ không sử dụng đơn vị nhỏ hơn (zero-decimal currencies)
+        $zeroDecimalCurrencies = [
+            'bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw',
+            'mga', 'pyg', 'rwf', 'ugx', 'vnd', 'vuv', 'xaf',
+            'xcd', 'xof', 'xpf'
+        ];
+
+        $currency = strtolower($currency);
+
+        if (in_array($currency, $zeroDecimalCurrencies)) {
+            // Với VND và các loại tiền zero-decimal, không nhân với 100
+            return (int) $amount;
+        } else {
+            // Với USD, EUR, etc. cần nhân với 100 để chuyển thành cents
+            return (int) ($amount * 100);
+        }
+    }
+
+    /**
      * Tạo Payment Intent cho Stripe
      */
     public function createPaymentIntent(Request $request)
@@ -130,11 +153,22 @@ class PaymentController extends Controller
 
         try {
             $finalPrice = $course->discount_price ?: $course->price;
+            $currency = 'vnd';
+
+            // Tính toán amount phù hợp cho Stripe
+            $stripeAmount = $this->calculateStripeAmount($finalPrice, $currency);
+
+            // Kiểm tra giới hạn của Stripe cho VND (99,999,999)
+            if ($currency === 'vnd' && $stripeAmount > 99999999) {
+                return response()->json([
+                    'error' => 'Số tiền vượt quá giới hạn cho phép của Stripe VND (₫99,999,999).'
+                ], 400);
+            }
 
             // Tạo Payment Intent
             $paymentIntent = PaymentIntent::create([
-                'amount' => $finalPrice * 100, // Stripe sử dụng cents
-                'currency' => 'vnd',
+                'amount' => $stripeAmount,
+                'currency' => $currency,
                 'metadata' => [
                     'course_id' => $course->id,
                     'student_id' => $user->id,
