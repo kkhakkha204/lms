@@ -158,14 +158,6 @@
                        class="nav-item px-5 py-2 rounded-3xl transition-all duration-300 {{ request()->routeIs('student.courses.*') ? 'bg-white text-black' : 'text-white' }}">
                         Khóa học
                     </a>
-                    <a href="#about"
-                       class="nav-item px-5 py-2 text-white rounded-3xl transition-all duration-300">
-                        Giới thiệu
-                    </a>
-                    <a href="#contact"
-                       class="nav-item px-5 py-2 text-white rounded-3xl transition-all duration-300">
-                        Liên hệ
-                    </a>
                 </div>
             </div>
 
