@@ -22,7 +22,8 @@ class CourseController extends Controller
         $courses = Course::with(['category', 'instructor'])
             ->withCount('enrollments')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(15); // Thêm phân trang 15 items per page
+
         return view('admin.courses.index', compact('courses'));
     }
 

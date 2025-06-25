@@ -39,6 +39,13 @@
     </script>
 
     <style>
+        @font-face {
+            font-family: 'CustomTitle';
+            src: url('{{ asset("assets/fonts/title2.otf") }}') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
         [x-cloak] { display: none !important; }
 
         .sidebar-link.active {
@@ -133,7 +140,7 @@
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-danger shadow-neumorph-sm flex items-center justify-center">
                         <i class="fas fa-graduation-cap text-white text-lg"></i>
                     </div>
-                    <h1 class="text-xl font-bold gradient-text logo-glow">LMS Admin</h1>
+                    <h1 class="text-3xl font-bold gradient-text" style="font-family: 'CustomTitle', sans-serif; ">Tech.era</h1>
                 </div>
             </div>
 
@@ -238,10 +245,7 @@
                         class="sidebar-toggle w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200">
                     <i class="fas fa-bars text-gray-600 text-lg"></i>
                 </button>
-                <div>
-                    <h2 class="text-xl font-bold text-primary">@yield('page-title', 'Dashboard')</h2>
-                    <p class="text-sm text-gray-500">@yield('page-description', 'Quản lý hệ thống LMS')</p>
-                </div>
+
             </div>
 
             <!-- Header Actions -->

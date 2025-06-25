@@ -153,29 +153,60 @@
                         <!-- Enhanced Preview Section -->
                         <div class="relative">
                             @if($course->preview_video)
-                                <video controls class="w-full h-56 object-cover">
-                                    <source src="{{ asset('storage/' . $course->preview_video) }}" type="video/mp4">
-                                </video>
-                            @else
-                                <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://via.placeholder.com/400x225?text=Course+Preview' }}"
-                                     alt="{{ $course->title }}"
-                                     class="w-full h-56 object-cover">
-                            @endif
+                                @php
+                                    // Extract YouTube video ID from URL
+                                    $videoId = null;
+                                    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $course->preview_video, $matches)) {
+                                        $videoId = $matches[1];
+                                    }
+                                @endphp
 
-                            @if(!$course->preview_video)
-                                <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center group hover:bg-opacity-50 transition-all duration-300">
-                                    <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
-                                        <i class="fas fa-play text-white text-2xl ml-1"></i>
+                                @if($videoId)
+                                    <!-- YouTube Embed -->
+                                    <div class="relative w-full h-56">
+                                        <iframe
+                                            class="w-full h-full object-cover rounded-t-lg"
+                                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&showinfo=0&modestbranding=1"
+                                            title="{{ $course->title }}"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                @elseif(filter_var($course->preview_video, FILTER_VALIDATE_URL))
+                                    <!-- Other video URLs (if any) -->
+                                    <video controls class="w-full h-56 object-cover rounded-t-lg">
+                                        <source src="{{ $course->preview_video }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @else
+                                    <!-- Local video file -->
+                                    <video controls class="w-full h-56 object-cover rounded-t-lg">
+                                        <source src="{{ asset('storage/' . $course->preview_video) }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @endif
+                            @else
+                                <!-- Fallback thumbnail with play button overlay -->
+                                <div class="relative">
+                                    <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://via.placeholder.com/400x225?text=Course+Preview' }}"
+                                         alt="{{ $course->title }}"
+                                         class="w-full h-56 object-cover rounded-t-lg">
+
+                                    <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center group hover:bg-opacity-50 transition-all duration-300 rounded-t-lg">
+                                        <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
+                                            <i class="fas fa-play text-white text-2xl ml-1"></i>
+                                        </div>
                                     </div>
                                 </div>
                             @endif
 
                             <!-- Quality Badge -->
                             <div class="absolute top-4 left-4">
-                                <span class="bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg">
-                                    <i class="fas fa-crown mr-2"></i>
-                                    Premium
-                                </span>
+        <span class="bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg">
+            <i class="fas fa-crown mr-2"></i>
+            Premium
+        </span>
                             </div>
                         </div>
 
