@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'LMS - Hệ thống quản lý học tập')</title>
+    <title>@yield('title', 'Tech.era')</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -15,6 +15,31 @@
 
     <!-- Custom Styles -->
     <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(126, 2, 2, 0.3);
+            border-radius: 4px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(126, 2, 2, 0.6);
+            transform: scaleY(1.1);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background: #7e0202;
+        }
         @font-face {
             font-family: 'CustomTitle';
             src: url('{{ asset("assets/fonts/title2.otf") }}') format('opentype');
@@ -122,6 +147,7 @@
     </style>
     @stack('styles')
 </head>
+
 <body class="bg-gray-50">
 <!-- Floating Navbar -->
 <nav
@@ -154,8 +180,8 @@
                        class="nav-item px-5 py-2 rounded-3xl transition-all duration-300 {{ request()->routeIs('home') ? 'bg-white text-black' : 'text-white' }}">
                         Trang chủ
                     </a>
-                    <a href="{{ route('student.courses.index') }}"
-                       class="nav-item px-5 py-2 rounded-3xl transition-all duration-300 {{ request()->routeIs('student.courses.*') ? 'bg-white text-black' : 'text-white' }}">
+                    <a href="{{ route('courses.index') }}"
+                       class="nav-item px-5 py-2 rounded-3xl transition-all duration-300 {{ request()->routeIs('courses') ? 'bg-white text-black' : 'text-white' }}">
                         Khóa học
                     </a>
                 </div>
@@ -354,6 +380,7 @@
 {{--    @include('components.chatbot-guest')--}}
 {{--@endauth--}}
 <!-- Main Content -->
+<x-cursor />
 <main class="font-quicksand">
     @yield('content')
 </main>

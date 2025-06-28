@@ -24,11 +24,11 @@
 
                 <h1 class="text-5xl md:text-[52px] mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent" style="font-family: 'CustomTitle', sans-serif;">
                     Khám phá vô vàn
-                    <span class=" bg-gradient-to-r from-white/80 via-[#ed292a] to-[#ed292a] bg-clip-text text-transparent"><br/>khóa học chất lượng</span>
+                    <span class=" bg-gradient-to-r from-white  bg-clip-text text-transparent"><br/>khóa học chất lượng</span>
                 </h1>
                 <!-- Enhanced Search Bar -->
                 <div class="max-w-2xl mx-auto pt-8">
-                    <form action="{{ route('student.courses.index') }}" method="GET" class="relative">
+                    <form action="{{ route('courses.index') }}" method="GET" class="relative">
                         <div class="relative group">
                             <div class="absolute inset-0 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-[40px] blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
                             <div class="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-[40px] p-1">
@@ -86,7 +86,7 @@
 
                         </div>
 
-                        <form action="{{ route('student.courses.index') }}" method="GET" id="filterForm">
+                        <form action="{{ route('courses.index') }}" method="GET" id="filterForm">
                             <!-- Preserve search query -->
                             @if(request('search'))
                                 <input type="hidden" name="search" value="{{ request('search') }}">
@@ -274,7 +274,7 @@
                                 <div class="group p-1.5 bg-white rounded-[30px] shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-200 hover:border-[#ed292a]/20 hover:-translate-y-2 flex flex-col h-full">
                                     <!-- Course Thumbnail -->
                                     <div class="relative overflow-hidden">
-                                        <a href="{{ route('student.courses.show', $course->slug) }}">
+                                        <a href="{{ route('courses.show', $course->slug) }}">
                                             <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://via.placeholder.com/400x225?text=Course+Image' }}"
                                                  alt="{{ $course->title }}"
                                                  class="w-full rounded-3xl h-52 object-cover transition-transform duration-500">

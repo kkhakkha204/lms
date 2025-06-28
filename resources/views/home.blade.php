@@ -18,7 +18,7 @@
 
                 <!-- Main Slogan -->
                 <h1 class="text-3xl md:text-4xl lg:text-[48px] leading-relaxed mb-6 animate-fade-in-up animation-delay-200" style="font-family: 'CustomTitle', sans-serif; ">
-                    <span class="text-gray-800 block mb-1">Đột phá kiến thức,</span>
+                    <span class="text-gray-800 block mb-1 ">Đột phá kiến thức,</span>
                     <span class="text-gray-800 block mb-1">dẫn dắt kỷ nguyên mới</span>
                     <span class="bg-gradient-to-r from-[#7e0202] via-[#ed292a] to-[#ed292a] bg-clip-text text-transparent block">
                         Tech.era
@@ -50,59 +50,28 @@
     <!-- Section Divider -->
     <section class="bg-gray-900 py-8 overflow-hidden">
         <div class="whitespace-nowrap">
-            <!-- Scrolling Keywords -->
+            <!-- Từ khóa cuộn -->
             <div class="inline-flex animate-scroll items-center gap-8 text-white/80 font-quicksand">
-                <!-- First Set -->
-                <span class="text-lg font-normal">Website Development</span>
+                <!-- Lần hiển thị đầu -->
+                <span class="text-lg font-normal">Phát triển Website</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">Mobile App Design</span>
+                <span class="text-lg font-normal">Thiết kế Ứng dụng Di động</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">UI/UX Design</span>
+                <span class="text-lg font-normal">Thiết kế UI/UX</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">Data Science</span>
+                <span class="text-lg font-normal">Khoa học Dữ liệu</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">Machine Learning</span>
+                <span class="text-lg font-normal">Học Máy</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">Cloud Computing</span>
+                <span class="text-lg font-normal">Điện toán Đám mây</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">Cybersecurity</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">DevOps</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Blockchain</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Artificial Intelligence</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <!-- Duplicate Set for Seamless Loop -->
-                <span class="text-lg font-normal">Website Development</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Mobile App Design</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">UI/UX Design</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Data Science</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Machine Learning</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Cloud Computing</span>
-                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
-
-                <span class="text-lg font-normal">Cybersecurity</span>
+                <span class="text-lg font-normal">An ninh mạng</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
                 <span class="text-lg font-normal">DevOps</span>
@@ -111,11 +80,43 @@
                 <span class="text-lg font-normal">Blockchain</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
 
-                <span class="text-lg font-normal">Artificial Intelligence</span>
+                <span class="text-lg font-normal">Trí tuệ Nhân tạo</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <!-- Bản sao để cuộn liên tục -->
+                <span class="text-lg font-normal">Phát triển Website</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Thiết kế Ứng dụng Di động</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Thiết kế UI/UX</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Khoa học Dữ liệu</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Học Máy</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Điện toán Đám mây</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">An ninh mạng</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">DevOps</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Blockchain</span>
+                <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
+
+                <span class="text-lg font-normal">Trí tuệ Nhân tạo</span>
                 <div class="w-2 h-2 bg-gradient-to-r from-[#7e0202] to-[#ed292a] rounded-full"></div>
             </div>
         </div>
     </section>
+
 
     <!-- About Us Section -->
     <section class="relative py-20 overflow-hidden">
@@ -184,7 +185,7 @@
                     <div class="relative">
                         <!-- Large Team Photo -->
                         <div class="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
-                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            <img src="https://images2.thanhnien.vn/528068263637045248/2023/12/18/anh-1-huyen-tran-1702873758596491079558.jpg"
                                  alt="Team collaboration"
                                  class="w-full h-[400px] object-cover">
                             <!-- Overlay -->

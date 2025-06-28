@@ -153,9 +153,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 // Routes công khai cho course listing
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/courses', [StudentController::class, 'index'])->name('student.courses.index');
-Route::get('/courses/{slug}', [StudentController::class, 'showCourse'])->name('student.courses.show');
-Route::get('/category/{slug}', [StudentController::class, 'coursesByCategory'])->name('student.courses.category');
+Route::get('/courses', [StudentController::class, 'index'])->name('courses.index');
+Route::get('/courses/{slug}', [StudentController::class, 'showCourse'])->name('courses.show');
+Route::get('/category/{slug}', [StudentController::class, 'coursesByCategory'])->name('courses.category');
 
 // Routes yêu cầu đăng nhập
 Route::middleware(['auth'])->group(function () {

@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -45,6 +47,9 @@
             font-weight: normal;
             font-style: normal;
             font-display: swap;
+        }
+        .font-quicksand {
+            font-family: 'Quicksand', sans-serif;
         }
         [x-cloak] { display: none !important; }
 
@@ -236,7 +241,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="content-shift" :class="sidebarOpen ? 'ml-64' : 'ml-0'">
+    <main class= "content-shift font-quicksand" :class="sidebarOpen ? 'ml-64' : 'ml-0'">
         <!-- Top Header -->
         <header class="bg-white shadow-neumorph-sm h-16 flex items-center justify-between px-6 sticky top-0 z-40">
             <!-- Sidebar Toggle & Title -->

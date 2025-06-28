@@ -3,180 +3,391 @@
 @section('title', 'Chỉnh sửa người dùng')
 @section('page-title', 'Chỉnh sửa người dùng')
 
+@push('styles')
+    <style>
+        .neumorphic-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 8px 8px 16px rgba(28, 28, 28, 0.1),
+            -8px -8px 16px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.05);
+        }
+
+        .neumorphic-inset {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: inset 4px 4px 8px rgba(28, 28, 28, 0.1),
+            inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.05);
+        }
+
+        .neumorphic-button {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 4px 4px 8px rgba(28, 28, 28, 0.1),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .neumorphic-button:hover {
+            box-shadow: 6px 6px 12px rgba(28, 28, 28, 0.15),
+            -6px -6px 12px rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .neumorphic-button:active {
+            box-shadow: inset 2px 2px 4px rgba(28, 28, 28, 0.1),
+            inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+            transform: translateY(0);
+        }
+
+        .primary-button {
+            background: linear-gradient(135deg, #ed292a, #7e0202);
+            color: white;
+            box-shadow: 4px 4px 8px rgba(237, 41, 42, 0.3),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+        }
+
+        .primary-button:hover {
+            background: linear-gradient(135deg, #7e0202, #ed292a);
+            box-shadow: 6px 6px 12px rgba(237, 41, 42, 0.4),
+            -6px -6px 12px rgba(255, 255, 255, 0.9);
+        }
+
+        .secondary-button {
+            background: linear-gradient(135deg, #1c1c1c, #2d2d2d);
+            color: white;
+            box-shadow: 4px 4px 8px rgba(28, 28, 28, 0.3),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+        }
+
+        .secondary-button:hover {
+            background: linear-gradient(135deg, #2d2d2d, #1c1c1c);
+            box-shadow: 6px 6px 12px rgba(28, 28, 28, 0.4),
+            -6px -6px 12px rgba(255, 255, 255, 0.9);
+        }
+
+        .form-input {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: inset 2px 2px 4px rgba(28, 28, 28, 0.1),
+            inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.05);
+            transition: all 0.3s ease;
+            padding: 12px 16px;
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            box-shadow: inset 3px 3px 6px rgba(237, 41, 42, 0.2),
+            inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+            border-color: #ed292a;
+            outline: none;
+        }
+
+        .form-input.error {
+            border-color: #dc3545;
+            box-shadow: inset 3px 3px 6px rgba(220, 53, 69, 0.2),
+            inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ed292a, #7e0202);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .avatar-frame {
+            border-radius: 50%;
+            box-shadow: 4px 4px 8px rgba(28, 28, 28, 0.1),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+            padding: 2px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        }
+
+        .form-section {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: inset 1px 1px 2px rgba(28, 28, 28, 0.05),
+            inset -1px -1px 2px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.03);
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 16px;
+            box-shadow: 4px 4px 8px rgba(255, 193, 7, 0.2),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .checkbox-container {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 12px;
+            box-shadow: 2px 2px 4px rgba(28, 28, 28, 0.1),
+            -2px -2px 4px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.03);
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            background: #ffffff;
+            box-shadow: inset 2px 2px 4px rgba(28, 28, 28, 0.1),
+            inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.1);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox:checked {
+            background: linear-gradient(135deg, #ed292a, #7e0202);
+            box-shadow: 2px 2px 4px rgba(237, 41, 42, 0.3),
+            -2px -2px 4px rgba(255, 255, 255, 0.9);
+        }
+
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #1c1c1c, #2d2d2d);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 4px 4px 8px rgba(28, 28, 28, 0.3),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #2d2d2d, #1c1c1c);
+            box-shadow: 6px 6px 12px rgba(28, 28, 28, 0.4),
+            -6px -6px 12px rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .user-info-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 16px;
+            box-shadow: 4px 4px 8px rgba(28, 28, 28, 0.1),
+            -4px -4px 8px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(28, 28, 28, 0.03);
+        }
+    </style>
+@endpush
+
 @section('content')
-    <div class="space-y-6">
-        <!-- Back Button -->
+    <div class="space-y-8 p-6">
+        <!-- Header Section -->
         <div class="flex justify-between items-center">
             <a href="{{ route('admin.users.show', $user) }}"
-               class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>Quay lại chi tiết
+               class="back-button inline-flex items-center px-6 py-3 font-semibold transition-all duration-300">
+                <i class="fas fa-arrow-left mr-3"></i>Quay lại chi tiết
             </a>
 
-            <div class="flex items-center space-x-4">
-                <span class="text-gray-600">Chỉnh sửa:</span>
-                <div class="flex items-center">
-                    <img class="h-8 w-8 rounded-full object-cover mr-2"
-                         src="{{ $user->avatar_url }}"
-                         alt="{{ $user->name }}">
-                    <span class="font-medium text-gray-900">{{ $user->name }}</span>
+            <div class="user-info-card p-4">
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600 font-medium">Đang chỉnh sửa:</span>
+                    <div class="flex items-center">
+                        <div class="avatar-frame mr-3">
+                            <img class="h-10 w-10 rounded-full object-cover"
+                                 src="{{ $user->avatar_url }}"
+                                 alt="{{ $user->name }}">
+                        </div>
+                        <span class="font-bold text-lg gradient-text">{{ $user->name }}</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Edit Form -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Thông tin người dùng</h3>
+        <div class="neumorphic-card">
+            <div class="px-8 py-6 border-b border-gray-100">
+                <h3 class="text-2xl font-bold gradient-text">Thông tin người dùng</h3>
+                <p class="text-gray-600 mt-2">Cập nhật thông tin cá nhân và cài đặt tài khoản</p>
             </div>
 
-            <form method="POST" action="{{ route('admin.users.update', $user) }}" class="p-6">
+            <form method="POST" action="{{ route('admin.users.update', $user) }}" class="p-8">
                 @csrf
                 @method('PUT')
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Name -->
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                            Họ và tên <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text"
-                               name="name"
-                               id="name"
-                               value="{{ old('name', $user->name) }}"
-                               required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror">
-                        @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <!-- Basic Information Section -->
+                <div class="form-section p-6 mb-8">
+                    <h4 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-user text-blue-600 mr-3"></i>
+                        Thông tin cơ bản
+                    </h4>
 
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                            Email <span class="text-red-500">*</span>
-                        </label>
-                        <input type="email"
-                               name="email"
-                               id="email"
-                               value="{{ old('email', $user->email) }}"
-                               required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('email') border-red-500 @enderror">
-                        @error('email')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Phone -->
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-                            Số điện thoại
-                        </label>
-                        <input type="text"
-                               name="phone"
-                               id="phone"
-                               value="{{ old('phone', $user->phone) }}"
-                               placeholder="Nhập số điện thoại"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('phone') border-red-500 @enderror">
-                        @error('phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Role -->
-                    <div>
-                        <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
-                            Vai trò <span class="text-red-500">*</span>
-                        </label>
-                        <select name="role"
-                                id="role"
-                                required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('role') border-red-500 @enderror">
-                            <option value="student" {{ old('role', $user->role) === 'student' ? 'selected' : '' }}>Học viên</option>
-                            <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Quản trị viên</option>
-                        </select>
-                        @error('role')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Bio -->
-                    <div class="md:col-span-2">
-                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
-                            Tiểu sử
-                        </label>
-                        <textarea name="bio"
-                                  id="bio"
-                                  rows="4"
-                                  placeholder="Nhập tiểu sử người dùng..."
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('bio') border-red-500 @enderror">{{ old('bio', $user->bio) }}</textarea>
-                        @error('bio')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Active Status -->
-                    <div class="md:col-span-2">
-                        <div class="flex items-center">
-                            <input type="checkbox"
-                                   name="is_active"
-                                   id="is_active"
-                                   value="1"
-                                   {{ old('is_active', $user->is_active) ? 'checked' : '' }}
-                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                            <label for="is_active" class="ml-2 block text-sm text-gray-700">
-                                Tài khoản hoạt động
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Name -->
+                        <div>
+                            <label for="name" class="block text-sm font-bold text-gray-700 mb-3">
+                                Họ và tên <span class="text-red-500">*</span>
                             </label>
+                            <input type="text"
+                                   name="name"
+                                   id="name"
+                                   value="{{ old('name', $user->name) }}"
+                                   required
+                                   class="form-input w-full @error('name') error @enderror">
+                            @error('name')
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+                            @enderror
                         </div>
-                        <p class="mt-1 text-sm text-gray-500">
-                            Bỏ tick để khóa tài khoản người dùng
-                        </p>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-bold text-gray-700 mb-3">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email"
+                                   name="email"
+                                   id="email"
+                                   value="{{ old('email', $user->email) }}"
+                                   required
+                                   class="form-input w-full @error('email') error @enderror">
+                            @error('email')
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Phone -->
+                        <div>
+                            <label for="phone" class="block text-sm font-bold text-gray-700 mb-3">
+                                Số điện thoại
+                            </label>
+                            <input type="text"
+                                   name="phone"
+                                   id="phone"
+                                   value="{{ old('phone', $user->phone) }}"
+                                   placeholder="Nhập số điện thoại"
+                                   class="form-input w-full @error('phone') error @enderror">
+                            @error('phone')
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Role -->
+                        <div>
+                            <label for="role" class="block text-sm font-bold text-gray-700 mb-3">
+                                Vai trò <span class="text-red-500">*</span>
+                            </label>
+                            <select name="role"
+                                    id="role"
+                                    required
+                                    class="form-input w-full @error('role') error @enderror">
+                                <option value="student" {{ old('role', $user->role) === 'student' ? 'selected' : '' }}>
+                                    👨‍🎓 Học viên
+                                </option>
+                                <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>
+                                    🛡️ Quản trị viên
+                                </option>
+                            </select>
+                            @error('role')
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="md:col-span-2">
+                            <label for="bio" class="block text-sm font-bold text-gray-700 mb-3">
+                                Tiểu sử
+                            </label>
+                            <textarea name="bio"
+                                      id="bio"
+                                      rows="4"
+                                      placeholder="Nhập tiểu sử người dùng..."
+                                      class="form-input w-full resize-none @error('bio') error @enderror">{{ old('bio', $user->bio) }}</textarea>
+                            @error('bio')
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Active Status -->
+                        <div class="md:col-span-2">
+                            <div class="checkbox-container p-4">
+                                <div class="flex items-start space-x-4">
+                                    <input type="checkbox"
+                                           name="is_active"
+                                           id="is_active"
+                                           value="1"
+                                           {{ old('is_active', $user->is_active) ? 'checked' : '' }}
+                                           class="custom-checkbox mt-1">
+                                    <div>
+                                        <label for="is_active" class="block text-sm font-bold text-gray-900">
+                                            Tài khoản hoạt động
+                                        </label>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            Bỏ tick để khóa tài khoản người dùng và ngăn họ đăng nhập vào hệ thống
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Password Section -->
-                <div class="mt-8 pt-6 border-t border-gray-200">
-                    <h4 class="text-lg font-medium text-gray-900 mb-4">Đổi mật khẩu</h4>
-                    <p class="text-sm text-gray-600 mb-4">Để trống nếu không muốn thay đổi mật khẩu</p>
+                <div class="form-section p-6 mb-8">
+                    <div class="mb-6">
+                        <h4 class="text-xl font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-lock text-purple-600 mr-3"></i>
+                            Đổi mật khẩu
+                        </h4>
+                        <p class="text-gray-600 mt-2">Để trống nếu không muốn thay đổi mật khẩu hiện tại</p>
+                    </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- New Password -->
                         <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="password" class="block text-sm font-bold text-gray-700 mb-3">
                                 Mật khẩu mới
                             </label>
                             <input type="password"
                                    name="password"
                                    id="password"
                                    placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('password') border-red-500 @enderror">
+                                   class="form-input w-full @error('password') error @enderror">
                             @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Confirm Password -->
                         <div>
-                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="password_confirmation" class="block text-sm font-bold text-gray-700 mb-3">
                                 Xác nhận mật khẩu
                             </label>
                             <input type="password"
                                    name="password_confirmation"
                                    id="password_confirmation"
                                    placeholder="Nhập lại mật khẩu mới"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                   class="form-input w-full">
                         </div>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-4">
+                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-100">
                     <a href="{{ route('admin.users.show', $user) }}"
-                       class="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
-                        Hủy
+                       class="neumorphic-button secondary-button px-8 py-3 font-semibold rounded-xl transition-all duration-300">
+                        <i class="fas fa-times mr-2"></i>Hủy
                     </a>
 
                     <button type="submit"
-                            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                            class="neumorphic-button primary-button px-8 py-3 font-semibold rounded-xl transition-all duration-300">
                         <i class="fas fa-save mr-2"></i>Lưu thay đổi
                     </button>
                 </div>
@@ -184,20 +395,38 @@
         </div>
 
         <!-- Additional Information -->
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div class="flex">
+        <div class="info-card p-6">
+            <div class="flex items-start">
                 <div class="flex-shrink-0">
-                    <i class="fas fa-info-circle text-yellow-400"></i>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-info-circle text-yellow-600 text-xl"></i>
+                    </div>
                 </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-yellow-800">Lưu ý khi chỉnh sửa</h3>
-                    <div class="mt-2 text-sm text-yellow-700">
-                        <ul class="list-disc pl-5 space-y-1">
-                            <li>Thay đổi vai trò người dùng có thể ảnh hưởng đến quyền truy cập của họ</li>
-                            <li>Khóa tài khoản sẽ ngăn người dùng đăng nhập vào hệ thống</li>
-                            <li>Mật khẩu mới phải có ít nhất 8 ký tự</li>
-                            <li>Email phải là duy nhất trong hệ thống</li>
-                        </ul>
+                <div class="ml-4">
+                    <h3 class="text-lg font-bold text-yellow-800 mb-3">Lưu ý quan trọng khi chỉnh sửa</h3>
+                    <div class="text-yellow-700">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-shield-alt text-yellow-600 mr-2"></i>
+                                    <span class="font-medium">Thay đổi vai trò người dùng có thể ảnh hưởng đến quyền truy cập</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-lock text-yellow-600 mr-2"></i>
+                                    <span class="font-medium">Khóa tài khoản sẽ ngăn người dùng đăng nhập</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-key text-yellow-600 mr-2"></i>
+                                    <span class="font-medium">Mật khẩu mới phải có ít nhất 8 ký tự</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-envelope text-yellow-600 mr-2"></i>
+                                    <span class="font-medium">Email phải là duy nhất trong hệ thống</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -259,7 +488,7 @@
             this.value = value;
         });
 
-        // Form submission confirmation
+        // Enhanced form submission confirmation
         document.querySelector('form').addEventListener('submit', function(e) {
             const roleSelect = document.getElementById('role');
             const isActiveCheckbox = document.getElementById('is_active');
@@ -271,23 +500,66 @@
             let warnings = [];
 
             if (roleSelect.value !== originalRole) {
-                warnings.push('Bạn đang thay đổi vai trò của người dùng');
+                warnings.push('🔄 Bạn đang thay đổi vai trò của người dùng');
             }
 
             if (isActiveCheckbox.checked !== originalIsActive) {
                 if (!isActiveCheckbox.checked) {
-                    warnings.push('Bạn đang khóa tài khoản người dùng');
+                    warnings.push('🔒 Bạn đang khóa tài khoản người dùng');
                 } else {
-                    warnings.push('Bạn đang mở khóa tài khoản người dùng');
+                    warnings.push('🔓 Bạn đang mở khóa tài khoản người dùng');
                 }
             }
 
             if (warnings.length > 0) {
-                const confirmMessage = warnings.join('\n') + '\n\nBạn có chắc chắn muốn tiếp tục?';
+                const confirmMessage = warnings.join('\n') + '\n\n⚠️ Bạn có chắc chắn muốn tiếp tục?';
                 if (!confirm(confirmMessage)) {
                     e.preventDefault();
                 }
             }
+        });
+
+        // Real-time form validation feedback
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('error');
+                } else {
+                    this.classList.add('error');
+                }
+            });
+
+            input.addEventListener('input', function() {
+                if (this.classList.contains('error') && this.checkValidity()) {
+                    this.classList.remove('error');
+                }
+            });
+        });
+
+        // Custom checkbox animation
+        const checkbox = document.getElementById('is_active');
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            }
+        });
+
+        // Auto-save draft functionality (optional)
+        let saveTimer;
+        const formInputs = document.querySelectorAll('input, textarea, select');
+
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(saveTimer);
+                saveTimer = setTimeout(() => {
+                    // Could implement auto-save draft here
+                    console.log('Auto-saving draft...');
+                }, 2000);
+            });
         });
     </script>
 @endpush

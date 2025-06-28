@@ -8,10 +8,10 @@
             <!-- Header Section -->
             <div class="flex justify-between items-center mb-8">
                 <div class="flex items-center space-x-4">
-                    <div class="w-3 h-12 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full shadow-lg"></div>
+                    <div class="w-3 h-14 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full shadow-lg"></div>
                     <div>
-                        <h1 class="text-4xl font-bold text-[#1c1c1c] tracking-tight">Quản lý khóa học</h1>
-                        <p class="text-gray-600 mt-1">Tạo và quản lý các khóa học của bạn</p>
+                        <h1 class="text-4xl font-bold text-[#1c1c1c] tracking-wide" style="font-family: 'CustomTitle', sans-serif; ">Quản lý khóa học</h1>
+                        <p class="text-gray-600 mt-1 ">Tạo và quản lý các khóa học của bạn</p>
                     </div>
                 </div>
 
