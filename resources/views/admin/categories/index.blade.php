@@ -146,7 +146,6 @@
 
         .modal-content {
             background: var(--bg-white);
-            box-shadow: 20px 20px 40px var(--shadow-dark), -20px -20px 40px var(--shadow-light);
             border-radius: 25px;
             border: none;
         }

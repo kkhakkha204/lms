@@ -366,7 +366,7 @@
                         <!-- Enhanced Pagination -->
                         <div class="mt-12 flex justify-center">
                             <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-4">
-                                {{ $courses->appends(request()->query())->links() }}
+                                @include('components.vietnamese-pagination', ['paginator' => $courses->appends(request()->query())])
                             </div>
                         </div>
                     @else

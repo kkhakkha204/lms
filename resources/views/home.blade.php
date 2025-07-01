@@ -196,7 +196,7 @@
                         <div class="absolute -top-8 -left-8 z-20 animate-float">
                             <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/20">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+                                    <img src="{{ asset('assets/homepages/quan.png') }}"
                                          alt="Team member"
                                          class="w-12 h-12 rounded-full object-cover">
                                     <div>
@@ -210,9 +210,9 @@
                         <div class="absolute -bottom-6 -right-6 z-20 animate-float-delayed">
                             <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/20">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+                                    <img src="{{ asset('assets/homepages/linh.png') }}"
                                          alt="Team member"
-                                         class="w-12 h-12 rounded-full object-cover">
+                                         class="w-12 h-12 rounded-full object-cover object-top">
                                     <div>
                                         <p class="font-semibold text-gray-900 text-sm">Đặng Hồng Linh</p>
                                         <p class="text-gray-600 text-xs">UX Designer</p>
@@ -225,7 +225,7 @@
                         <div class="absolute top-1/2 -left-12 z-20 animate-pulse-slow">
                             <div class="bg-black text-white rounded-2xl p-6 shadow-2xl">
                                 <div class="text-center">
-                                    <p class="text-3xl font-bold font-CustomTitle" style="font-family: 'CustomTitle', sans-serif; ">50+</p>
+                                    <p class="text-3xl font-bold font-CustomTitle" style="font-family: 'CustomTitle', sans-serif; ">15+</p>
                                     <p class="text-sm opacity-90">Chuyên gia</p>
                                 </div>
                             </div>

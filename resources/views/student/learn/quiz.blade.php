@@ -84,17 +84,19 @@
                 </div>
             </div>
         </div>
-
-        <!-- Quiz Content -->
-        <div x-show="quizStarted && !showResults" class="space-y-6">
-            <!-- Timer -->
-            @if($quiz->time_limit)
-                <div class="bg-white rounded-xl shadow-lg border p-4 sticky top-4 z-10">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm text-gray-600 flex items-center">
-                            <i class="fas fa-clock mr-2"></i>Thời gian còn lại:
-                        </span>
-                        <span class="text-xl font-bold" :class="timeLeft <= 300 ? 'text-[#ed292a]' : 'text-[#1c1c1c]'" x-text="formatTime(timeLeft)"></span>
+        <!-- Timer -->
+        @if($quiz->time_limit)
+            <!-- Timer - Di chuyển ra ngoài content area -->
+            <div x-show="quizStarted && !showResults && {{ $quiz->time_limit ? 'true' : 'false' }}"
+                 class="fixed top-24 right-4 z-50 w-40">
+                <div class="bg-[#1c1c1c] rounded-xl shadow-lg border p-4">
+                    <div class="flex-col items-center justify-between mb-3">
+            <span class="text-[12px] text-gray-100 flex items-center">
+                <i class="fas fa-clock mr-2 "></i>Thời gian còn lại:
+            </span>
+                        <span class="text-xl font-bold mt-4"
+                              :class="timeLeft <= 300 ? 'text-[#ffffff]' : 'text-[#1c1c1c]'"
+                              x-text="formatTime(timeLeft)"></span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="h-2 rounded-full transition-all duration-1000"
@@ -102,7 +104,11 @@
                              :style="`width: ${Math.max(0, (timeLeft / totalTime) * 100)}%`"></div>
                     </div>
                 </div>
-            @endif
+            </div>
+        @endif
+        <!-- Quiz Content -->
+        <div x-show="quizStarted && !showResults" class="space-y-6">
+
 
             <!-- Questions -->
             @foreach($quiz->questions as $index => $question)
