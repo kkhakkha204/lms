@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Danh sách khóa học - LMS')
+@section('title', 'Danh sách khóa học')
 @section('description', 'Khám phá hàng nghìn khóa học chất lượng cao từ các chuyên gia hàng đầu')
 
 @section('content')
@@ -18,13 +18,12 @@
                 <!-- Badge -->
                 <div class="inline-flex items-center pb-2">
                         <span class="bg-black  text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg backdrop-blur-sm">
-                            Về Tech.era
+                            Tech.era
                         </span>
                 </div>
 
-                <h1 class="text-5xl md:text-[52px] mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent" style="font-family: 'CustomTitle', sans-serif;">
-                    Khám phá vô vàn
-                    <span class=" bg-gradient-to-r from-white  bg-clip-text text-transparent"><br/>khóa học chất lượng</span>
+                <h1 class="text-5xl md:text-[52px] mb-6 " style="font-family: 'CustomTitle', sans-serif;">
+                    Khám phá vô vàn<br/>khóa học chất lượng
                 </h1>
                 <!-- Enhanced Search Bar -->
                 <div class="max-w-2xl mx-auto pt-8">
@@ -38,8 +37,7 @@
                                                name="search"
                                                value="{{ request('search') }}"
                                                placeholder="Tìm kiếm khóa học, chủ đề, kỹ năng..."
-                                               class="w-full pl-4 pr-4 bg-transparent text-white placeholder-gray-300 text-[16px] focus:outline-none">
-
+                                               class="w-full pl-4 pr-4 bg-transparent text-white placeholder-gray-300 text-[16px] focus:outline-none focus:ring-0 focus:border-transparent outline-none border-none">
                                     </div>
                                     <button type="submit"
                                             class="bg-[#1c1c1c] text-white px-4 py-2.5 rounded-3xl hover:shadow-lg hover:shadow-[#ed292a]/25 font-medium transition-all duration-300 hover:scale-105">
@@ -56,11 +54,11 @@
                 <div class="flex justify-center items-center space-x-8 mt-4 text-sm">
                     <div class="flex items-center text-gray-50">
                         <i class="fas fa-users mr-2 text-gray-50"></i>
-                        <span>10,000+ Học viên</span>
+                        <span>1,000+ Học viên</span>
                     </div>
                     <div class="flex items-center text-gray-50">
                         <i class="fas fa-book mr-2 text-gray-50"></i>
-                        <span>500+ Khóa học</span>
+                        <span>50+ Khóa học</span>
                     </div>
                     <div class="flex items-center text-gray-50">
                         <i class="fas fa-star mr-2 text-gray-50"></i>
@@ -231,7 +229,8 @@
                                     class="flex items-center space-x-3 bg-white border-2 border-gray-200 rounded-xl px-6 py-3 hover:border-[#ed292a] hover:bg-gray-50 transition-all duration-300 font-medium">
                                 <i class="fas fa-sort text-[#ed292a]"></i>
                                 <span class="text-[#1c1c1c]">Sắp xếp theo</span>
-                                <i class="fas fa-chevron-down text-sm text-gray-400 transition-transform" :class="{ 'rotate-180': open }"></i>
+                                <i class="fas fa-chevron-down text-sm text-gray-400 transition-transform"
+                                   x-bind:class="{ 'rotate-180': open }"></i>
                             </button>
 
                             <div x-show="open"
@@ -269,7 +268,7 @@
 
                     <!-- Enhanced Course Grid -->
                     @if($courses->count() > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 font-quicksand">
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 font-quicksand" id="grid">
                             @foreach($courses as $course)
                                 <div class="group p-1.5 bg-white rounded-[30px] shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-200 hover:border-[#ed292a]/20 hover:-translate-y-2 flex flex-col h-full">
                                     <!-- Course Thumbnail -->
@@ -365,7 +364,7 @@
 
                         <!-- Enhanced Pagination -->
                         <div class="mt-12 flex justify-center">
-                            <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-4">
+                            <div class="p-4">
                                 @include('components.vietnamese-pagination', ['paginator' => $courses->appends(request()->query())])
                             </div>
                         </div>
@@ -394,74 +393,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Enhanced Popular Categories -->
-    @if(!request()->hasAny(['search', 'category', 'level', 'price_type']))
-        <section class="py-20 bg-gradient-to-br from-[#1c1c1c] to-[#2a2a2a] relative overflow-hidden">
-            <!-- Background Elements -->
-            <div class="absolute inset-0">
-                <div class="absolute top-20 left-20 w-40 h-40 bg-[#ed292a] opacity-10 rounded-full blur-2xl"></div>
-                <div class="absolute bottom-20 right-20 w-32 h-32 bg-white opacity-5 rounded-full blur-xl"></div>
-            </div>
-
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-[#ed292a] bg-opacity-20 border border-[#ed292a] border-opacity-30 text-[#ed292a] text-sm font-medium mb-6">
-                        <i class="fas fa-fire mr-2"></i>
-                        Xu hướng học tập
-                    </div>
-                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
-                        Danh mục <span class="text-[#ed292a]">phổ biến nhất</span>
-                    </h2>
-                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">
-                        Khám phá các chủ đề học tập được yêu thích và tìm kiếm nhiều nhất bởi cộng đồng học viên
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                    @foreach($categories->take(8) as $category)
-                        <a href="{{ route('student.courses.category', $category->slug) }}"
-                           class="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 text-center hover:bg-white/20 hover:border-[#ed292a]/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#ed292a]/10">
-
-                            <!-- Category Icon/Image -->
-                            <div class="relative mb-6">
-                                @if($category->image)
-                                    <img src="{{ $category->image_url }}"
-                                         alt="{{ $category->name }}"
-                                         class="w-20 h-20 mx-auto rounded-2xl object-cover group-hover:scale-110 transition-transform duration-300">
-                                @else
-                                    <div class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#ed292a]/20 to-[#7e0202]/20 group-hover:from-[#ed292a]/30 group-hover:to-[#7e0202]/30 transition-all duration-300"
-                                         style="background: linear-gradient(135deg, {{ $category->color ?? '#ed292a' }}20, {{ $category->color ?? '#7e0202' }}20);">
-                                        <i class="fas fa-folder text-3xl group-hover:scale-110 transition-transform duration-300"
-                                           style="color: {{ $category->color ?? '#ed292a' }};"></i>
-                                    </div>
-                                @endif
-
-                                <!-- Floating Badge -->
-                                <div class="absolute -top-2 -right-2 bg-[#ed292a] text-white rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">
-                                    {{ $category->courses_count ?? 0 }}
-                                </div>
-                            </div>
-
-                            <!-- Category Info -->
-                            <h3 class="font-bold text-lg text-white group-hover:text-[#ed292a] transition-colors duration-300 mb-2">
-                                {{ $category->name }}
-                            </h3>
-                            <p class="text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
-                                {{ $category->courses_count ?? 0 }} khóa học
-                            </p>
-
-                            <!-- Hover Arrow -->
-                            <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <i class="fas fa-arrow-right text-[#ed292a] text-lg"></i>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-
-            </div>
-        </section>
-    @endif
 @endsection
 
 @push('styles')
@@ -489,19 +420,6 @@
         /* Smooth Animations */
         .group {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Enhanced Shadows */
-        .shadow-glow {
-            box-shadow: 0 0 30px rgba(237, 41, 42, 0.15);
-        }
-
-        /* Pagination Styling */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .pagination a,
@@ -539,25 +457,6 @@
             background: #f1f5f9;
             color: #94a3b8;
             cursor: not-allowed;
-        }
-
-        /* Backdrop Blur Support */
-        @supports (backdrop-filter: blur(10px)) {
-            .backdrop-blur-sm {
-                backdrop-filter: blur(4px);
-            }
-        }
-
-        /* Mobile Responsive Improvements */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-                line-height: 1.2;
-            }
-
-            .course-card {
-                margin-bottom: 1rem;
-            }
         }
     </style>
 @endpush

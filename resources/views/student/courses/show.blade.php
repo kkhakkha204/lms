@@ -18,13 +18,16 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-2">
                     <!-- Enhanced Breadcrumb -->
-                    <nav class="flex items-center space-x-3 text-sm mb-8 p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl">
-                        <a href="{{ route('student.courses.index') }}" class="text-[#ed292a] hover:text-white transition-colors duration-300 font-medium">
+                    <nav
+                        class="flex items-center space-x-3 text-sm mb-8 p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl">
+                        <a href="{{ route('student.courses.index') }}"
+                           class="text-[#ed292a] hover:text-white transition-colors duration-300 font-medium">
                             <i class="fas fa-graduation-cap mr-2"></i>
                             Khóa học
                         </a>
                         <i class="fas fa-chevron-right text-gray-400"></i>
-                        <a href="{{ route('student.courses.category', $course->category->slug) }}" class="text-[#ed292a] hover:text-white transition-colors duration-300 font-medium">
+                        <a href="{{ route('student.courses.category', $course->category->slug) }}"
+                           class="text-[#ed292a] hover:text-white transition-colors duration-300 font-medium">
                             {{ $course->category->name }}
                         </a>
                         <i class="fas fa-chevron-right text-gray-400"></i>
@@ -33,12 +36,14 @@
 
                     <!-- Enhanced Course Title & Info -->
                     <div class="mb-8">
-                        <div class="inline-flex items-center px-4 py-2 rounded-full bg-[#ed292a] bg-opacity-20 border border-[#ed292a] border-opacity-30 text-[#ed292a] text-sm font-medium mb-6">
+                        <div
+                            class="inline-flex items-center px-4 py-2 rounded-full bg-[#ed292a] bg-opacity-20 border border-[#ed292a] border-opacity-30 text-[#ed292a] text-sm font-medium mb-6">
                             <i class="fas fa-star mr-2"></i>
                             Khóa học được đánh giá cao
                         </div>
 
-                        <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight" style="font-family: 'CustomTitle', sans-serif; ">
+                        <h1 class="text-4xl md:text-5xl mb-6 tracking-wide"
+                            style="font-family: 'CustomTitle', sans-serif; ">
                             {{ $course->title }}
                         </h1>
 
@@ -70,7 +75,8 @@
                             <div class="flex justify-center text-[#ed292a] mb-2">
                                 <i class="fas fa-users text-2xl"></i>
                             </div>
-                            <div class="text-2xl font-semibold text-white">{{ number_format($course->enrolled_count) }}</div>
+                            <div
+                                class="text-2xl font-semibold text-white">{{ number_format($course->enrolled_count) }}</div>
                         </div>
 
                         <!-- Duration -->
@@ -100,7 +106,8 @@
                                     'advanced' => 'Nâng cao'
                                 ];
                             @endphp
-                            <div class="text-lg font-semibold text-white">{{ $levelLabels[$course->level] ?? ucfirst($course->level) }}</div>
+                            <div
+                                class="text-lg font-semibold text-white">{{ $levelLabels[$course->level] ?? ucfirst($course->level) }}</div>
                         </div>
 
                         <!-- Language -->
@@ -108,7 +115,8 @@
                             <div class="flex justify-center text-purple-400 mb-2">
                                 <i class="fas fa-globe text-2xl"></i>
                             </div>
-                            <div class="text-lg font-semibold text-white">{{ $course->language == 'vi' ? 'Tiếng Việt' : 'English' }}</div>
+                            <div
+                                class="text-lg font-semibold text-white">{{ $course->language == 'vi' ? 'Tiếng Việt' : 'English' }}</div>
                         </div>
                     </div>
 
@@ -123,7 +131,8 @@
                                 <img src="{{ $course->instructor->avatar_url }}"
                                      alt="{{ $course->instructor->name }}"
                                      class="w-20 h-20 rounded-full border-4 border-white shadow-lg">
-                                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <div
+                                    class="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center">
                                     <i class="fas fa-check text-[#1c1c1c] text-sm"></i>
                                 </div>
                             </div>
@@ -168,7 +177,6 @@
                                             class="w-full h-full object-cover rounded-t-lg"
                                             src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&showinfo=0&modestbranding=1"
                                             title="{{ $course->title }}"
-                                            frameborder="0"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowfullscreen>
                                         </iframe>
@@ -189,12 +197,15 @@
                             @else
                                 <!-- Fallback thumbnail with play button overlay -->
                                 <div class="relative">
-                                    <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://via.placeholder.com/400x225?text=Course+Preview' }}"
-                                         alt="{{ $course->title }}"
-                                         class="w-full h-56 object-cover rounded-t-lg">
+                                    <img
+                                        src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://via.placeholder.com/400x225?text=Course+Preview' }}"
+                                        alt="{{ $course->title }}"
+                                        class="w-full h-56 object-cover rounded-t-lg">
 
-                                    <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center group hover:bg-opacity-50 transition-all duration-300 rounded-t-lg">
-                                        <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
+                                    <div
+                                        class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center group hover:bg-opacity-50 transition-all duration-300 rounded-t-lg">
+                                        <div
+                                            class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
                                             <i class="fas fa-play text-white text-2xl ml-1"></i>
                                         </div>
                                     </div>
@@ -203,7 +214,8 @@
 
                             <!-- Quality Badge -->
                             <div class="absolute top-4 left-4">
-        <span class="bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg">
+        <span
+            class="bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg">
             <i class="fas fa-crown mr-2"></i>
             Premium
         </span>
@@ -227,7 +239,8 @@
                                                 </span>
 
                                             </div>
-                                            <div class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium">
+                                            <div
+                                                class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium">
                                                 <i class="fas fa-tag mr-2"></i>
                                                 Tiết kiệm {{ number_format($course->price - $course->discount_price) }}đ
                                             </div>
@@ -274,7 +287,8 @@
 
                             <!-- 30-day Money Back Guarantee -->
                             <div class="text-center mb-6">
-                                <div class="inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-xl text-sm font-medium">
+                                <div
+                                    class="inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-xl text-sm font-medium">
                                     <i class="fas fa-shield-alt mr-2"></i>
                                     Đảm bảo hoàn tiền trong 30 ngày
                                 </div>
@@ -289,7 +303,8 @@
                                 <ul class="space-y-3 text-sm text-gray-700">
                                     <li class="flex items-center">
                                         <i class="fas fa-play-circle text-[#ed292a] w-5 mr-3"></i>
-                                        <span class="font-medium">{{ $totalLessons }} bài học video chất lượng cao</span>
+                                        <span
+                                            class="font-medium">{{ $totalLessons }} bài học video chất lượng cao</span>
                                     </li>
                                     @if($totalQuizzes > 0)
                                         <li class="flex items-center">
@@ -323,16 +338,20 @@
                                     Chia sẻ khóa học:
                                 </h4>
                                 <div class="grid grid-cols-4 gap-3">
-                                    <button class="bg-blue-600 text-white py-3 rounded-xl text-sm hover:bg-blue-700 transition-colors duration-300 hover:scale-105">
+                                    <button
+                                        class="bg-blue-600 text-white py-3 rounded-xl text-sm hover:bg-blue-700 transition-colors duration-300 hover:scale-105">
                                         <i class="fab fa-facebook-f"></i>
                                     </button>
-                                    <button class="bg-blue-400 text-white py-3 rounded-xl text-sm hover:bg-blue-500 transition-colors duration-300 hover:scale-105">
+                                    <button
+                                        class="bg-blue-400 text-white py-3 rounded-xl text-sm hover:bg-blue-500 transition-colors duration-300 hover:scale-105">
                                         <i class="fab fa-twitter"></i>
                                     </button>
-                                    <button class="bg-blue-700 text-white py-3 rounded-xl text-sm hover:bg-blue-800 transition-colors duration-300 hover:scale-105">
+                                    <button
+                                        class="bg-blue-700 text-white py-3 rounded-xl text-sm hover:bg-blue-800 transition-colors duration-300 hover:scale-105">
                                         <i class="fab fa-linkedin-in"></i>
                                     </button>
-                                    <button class="bg-gray-600 text-white py-3 rounded-xl text-sm hover:bg-gray-700 transition-colors duration-300 hover:scale-105">
+                                    <button
+                                        class="bg-gray-600 text-white py-3 rounded-xl text-sm hover:bg-gray-700 transition-colors duration-300 hover:scale-105">
                                         <i class="fas fa-link"></i>
                                     </button>
                                 </div>
@@ -351,22 +370,23 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-2">
                     <!-- Enhanced Tabs Navigation -->
-                    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-2 mb-8" x-data="{ activeTab: 'overview' }">
+                    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-2 mb-8"
+                         x-data="{ activeTab: 'overview' }">
                         <nav class="flex space-x-2">
                             <button @click="activeTab = 'overview'"
-                                    :class="activeTab === 'overview' ? 'bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white shadow-lg' : 'text-gray-600 hover:text-[#ed292a] hover:bg-gray-50'"
+                                    x-bind:class="activeTab === 'overview' ? 'bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white shadow-lg' : 'text-gray-600 hover:text-[#ed292a] hover:bg-gray-50'"
                                     class="flex-1 py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300">
                                 <i class="fas fa-info-circle mr-2"></i>
                                 Tổng quan
                             </button>
                             <button @click="activeTab = 'curriculum'"
-                                    :class="activeTab === 'curriculum' ? 'bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white shadow-lg' : 'text-gray-600 hover:text-[#ed292a] hover:bg-gray-50'"
+                                    x-bind:class="activeTab === 'curriculum' ? 'bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white shadow-lg' : 'text-gray-600 hover:text-[#ed292a] hover:bg-gray-50'"
                                     class="flex-1 py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300">
                                 <i class="fas fa-list mr-2"></i>
                                 Nội dung khóa học
                             </button>
                             <button @click="activeTab = 'reviews'"
-                                    :class="activeTab === 'reviews' ? 'bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white shadow-lg' : 'text-gray-600 hover:text-[#ed292a] hover:bg-gray-50'"
+                                    x-bind:class="activeTab === 'reviews' ? 'bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white shadow-lg' : 'text-gray-600 hover:text-[#ed292a] hover:bg-gray-50'"
                                     class="flex-1 py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300">
                                 <i class="fas fa-star mr-2"></i>
                                 Đánh giá ({{ $course->reviews_count }})
@@ -377,57 +397,40 @@
                         <div x-show="activeTab === 'overview'" class="mt-8 p-6">
                             <div class="prose max-w-none">
                                 <h3 class="text-3xl font-bold text-[#1c1c1c] mb-6 flex items-center">
-                                    <div class="w-2 h-8 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full mr-4"></div>
+                                    <div
+                                        class="w-2 h-8 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full mr-4"></div>
                                     Mô tả khóa học
                                 </h3>
                                 <div class="text-gray-700 leading-relaxed text-lg">
                                     {!! nl2br(e($course->description)) !!}
                                 </div>
                             </div>
-
-                            <!-- What You'll Learn -->
-                            @if($course->tags && count($course->tags) > 0)
-                                <div class="mt-12 bg-gradient-to-r from-[#ed292a]/5 to-[#7e0202]/5 rounded-2xl p-8 border border-[#ed292a]/20">
-                                    <h3 class="text-3xl font-bold text-[#1c1c1c] mb-6 flex items-center">
-                                        <div class="w-12 h-12 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-xl flex items-center justify-center mr-4">
-                                            <i class="fas fa-lightbulb text-white text-xl"></i>
-                                        </div>
-                                        Bạn sẽ học được gì
-                                    </h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        @foreach($course->tags as $tag)
-                                            <div class="flex items-start bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-                                                <div class="w-6 h-6 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                                    <i class="fas fa-check text-white text-sm"></i>
-                                                </div>
-                                                <span class="text-gray-700 font-medium">{{ $tag }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
                         </div>
 
                         <!-- Curriculum Tab -->
                         <div x-show="activeTab === 'curriculum'" class="mt-8 p-6">
                             <h3 class="text-3xl font-bold text-[#1c1c1c] mb-8 flex items-center">
-                                <div class="w-2 h-8 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full mr-4"></div>
+                                <div
+                                    class="w-2 h-8 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full mr-4"></div>
                                 Nội dung khóa học
                             </h3>
 
                             <div class="space-y-6">
                                 @foreach($course->sections as $index => $section)
-                                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden" x-data="{ expanded: {{ $index === 0 ? 'true' : 'false' }} }">
+                                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden"
+                                         x-data="{ expanded: {{ $index === 0 ? 'true' : 'false' }} }">
                                         <button @click="expanded = !expanded"
                                                 class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors duration-300">
                                             <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-xl flex items-center justify-center mr-4">
+                                                <div
+                                                    class="w-12 h-12 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-xl flex items-center justify-center mr-4">
                                                     <i class="fas fa-folder text-white"></i>
                                                 </div>
                                                 <div>
                                                     <h4 class="text-xl font-bold text-[#1c1c1c] mb-1">{{ $section->title }}</h4>
                                                     <p class="text-sm text-gray-500">
-                                                        {{ $section->lessons->count() + $section->quizzes->count() }} bài học
+                                                        {{ $section->lessons->count() + $section->quizzes->count() }}
+                                                        bài học
                                                         @php
                                                             $totalDuration = $section->lessons->filter(function($lesson) {
                                                             return is_numeric($lesson->video_duration);
@@ -444,7 +447,7 @@
                                                     {{ $section->lessons->count() + $section->quizzes->count() }} mục
                                                 </span>
                                                 <i class="fas fa-chevron-down transition-transform duration-300 text-[#ed292a]"
-                                                   :class="expanded ? 'transform rotate-180' : ''"></i>
+                                                   x-bind:class="expanded ? 'transform rotate-180' : ''"></i>
                                             </div>
                                         </button>
 
@@ -457,15 +460,19 @@
                                                 <div class="space-y-3">
                                                     <!-- Lessons -->
                                                     @foreach($section->lessons as $lesson)
-                                                        <div class="flex items-center justify-between py-4 px-6 bg-white hover:bg-gray-50 rounded-xl transition-colors duration-300 border border-gray-200">
+                                                        <div
+                                                            class="flex items-center justify-between py-4 px-6 bg-white hover:bg-gray-50 rounded-xl transition-colors duration-300 border border-gray-200">
                                                             <div class="flex items-center">
-                                                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                                                <div
+                                                                    class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
                                                                     <i class="fas fa-play text-blue-600 text-sm"></i>
                                                                 </div>
                                                                 <div>
-                                                                    <span class="text-gray-800 font-medium">{{ $lesson->title }}</span>
+                                                                    <span
+                                                                        class="text-gray-800 font-medium">{{ $lesson->title }}</span>
                                                                     @if($lesson->is_preview)
-                                                                        <span class="ml-3 text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">
+                                                                        <span
+                                                                            class="ml-3 text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">
                                                                             <i class="fas fa-eye mr-1"></i>
                                                                             Xem trước miễn phí
                                                                         </span>
@@ -474,13 +481,15 @@
                                                             </div>
                                                             <div class="flex items-center space-x-4">
                                                                 @if($lesson->video_duration)
-                                                                    <span class="text-sm text-gray-500 flex items-center">
+                                                                    <span
+                                                                        class="text-sm text-gray-500 flex items-center">
                                                                         <i class="fas fa-clock mr-1"></i>
                                                                         {{ $lesson->video_duration }} phút
                                                                     </span>
                                                                 @endif
                                                                 @if($lesson->is_preview)
-                                                                    <button class="text-[#ed292a] hover:text-[#7e0202] transition-colors duration-300">
+                                                                    <button
+                                                                        class="text-[#ed292a] hover:text-[#7e0202] transition-colors duration-300">
                                                                         <i class="fas fa-play-circle"></i>
                                                                     </button>
                                                                 @endif
@@ -490,12 +499,15 @@
 
                                                     <!-- Quizzes -->
                                                     @foreach($section->quizzes as $quiz)
-                                                        <div class="flex items-center justify-between py-4 px-6 bg-white hover:bg-gray-50 rounded-xl transition-colors duration-300 border border-gray-200">
+                                                        <div
+                                                            class="flex items-center justify-between py-4 px-6 bg-white hover:bg-gray-50 rounded-xl transition-colors duration-300 border border-gray-200">
                                                             <div class="flex items-center">
-                                                                <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                                                                <div
+                                                                    class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
                                                                     <i class="fas fa-question-circle text-orange-600 text-sm"></i>
                                                                 </div>
-                                                                <span class="text-gray-800 font-medium">{{ $quiz->title }}</span>
+                                                                <span
+                                                                    class="text-gray-800 font-medium">{{ $quiz->title }}</span>
                                                             </div>
                                                             <span class="text-sm text-gray-500 flex items-center">
                                                                 <i class="fas fa-question mr-1"></i>
@@ -515,7 +527,8 @@
                         <div x-show="activeTab === 'reviews'" class="mt-8 p-6">
                             <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
                                 <h3 class="text-3xl font-bold text-[#1c1c1c] mb-4 md:mb-0 flex items-center">
-                                    <div class="w-2 h-8 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full mr-4"></div>
+                                    <div
+                                        class="w-2 h-8 bg-gradient-to-b from-[#ed292a] to-[#7e0202] rounded-full mr-4"></div>
                                     Đánh giá từ học viên
                                 </h3>
 
@@ -551,11 +564,13 @@
 
                             <!-- User's Review (if exists) -->
                             @if($userReview)
-                                <div class="bg-gradient-to-r from-[#ed292a]/5 to-[#7e0202]/5 border-2 border-[#ed292a]/20 rounded-2xl p-6 mb-8">
+                                <div
+                                    class="bg-gradient-to-r from-[#ed292a]/5 to-[#7e0202]/5 border-2 border-[#ed292a]/20 rounded-2xl p-6 mb-8">
                                     <div class="flex items-start justify-between">
                                         <div class="flex-1">
                                             <div class="flex items-center mb-3">
-                                                <div class="w-3 h-3 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-full mr-3"></div>
+                                                <div
+                                                    class="w-3 h-3 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-full mr-3"></div>
                                                 <h4 class="font-bold text-[#1c1c1c] mr-4">Đánh giá của bạn</h4>
                                                 <div class="flex text-amber-400">
                                                     @for($i = 1; $i <= 5; $i++)
@@ -566,7 +581,8 @@
                                                         @endif
                                                     @endfor
                                                 </div>
-                                                <span class="text-sm text-gray-600 ml-3">{{ $userReview->created_at->diffForHumans() }}</span>
+                                                <span
+                                                    class="text-sm text-gray-600 ml-3">{{ $userReview->created_at->diffForHumans() }}</span>
                                             </div>
                                             @if($userReview->review)
                                                 <p class="text-gray-800 leading-relaxed">{{ $userReview->review }}</p>
@@ -584,7 +600,8 @@
                             <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                                     <div class="text-center">
-                                        <div class="text-6xl font-bold text-[#1c1c1c] mb-4">{{ number_format($course->rating, 1) }}</div>
+                                        <div
+                                            class="text-6xl font-bold text-[#1c1c1c] mb-4">{{ number_format($course->rating, 1) }}</div>
                                         <div class="flex justify-center text-amber-400 mb-4">
                                             @for($i = 1; $i <= 5; $i++)
                                                 @if($i <= floor($course->rating))
@@ -596,19 +613,25 @@
                                                 @endif
                                             @endfor
                                         </div>
-                                        <div class="text-lg text-gray-600 font-medium">{{ number_format($course->reviews_count) }} đánh giá</div>
+                                        <div
+                                            class="text-lg text-gray-600 font-medium">{{ number_format($course->reviews_count) }}
+                                            đánh giá
+                                        </div>
                                     </div>
 
                                     <div class="space-y-4">
                                         @foreach($ratingBreakdown as $stars => $data)
                                             <div class="flex items-center">
-                                                <span class="text-sm font-medium text-gray-700 w-16">{{ $stars }} sao</span>
+                                                <span
+                                                    class="text-sm font-medium text-gray-700 w-16">{{ $stars }} sao</span>
                                                 <div class="flex-1 mx-4 bg-gray-200 rounded-full h-3 overflow-hidden">
-                                                    <div class="bg-gradient-to-r from-[#ed292a] to-[#7e0202] h-3 rounded-full transition-all duration-500"
-                                                         style="width: {{ $data['percentage'] }}%"></div>
+                                                    <div
+                                                        class="bg-gradient-to-r from-[#ed292a] to-[#7e0202] h-3 rounded-full transition-all duration-500"
+                                                        style="width: {{ $data['percentage'] }}%"></div>
                                                 </div>
                                                 <span class="text-sm font-semibold text-gray-700 w-12">{{ $data['percentage'] }}%</span>
-                                                <span class="text-sm text-gray-500 w-12 ml-2">({{ $data['count'] }})</span>
+                                                <span
+                                                    class="text-sm text-gray-500 w-12 ml-2">({{ $data['count'] }})</span>
                                             </div>
                                         @endforeach
                                     </div>
@@ -620,18 +643,21 @@
                                 @if($course->reviews->count() > 0)
                                     <div class="space-y-6">
                                         @foreach($course->reviews as $review)
-                                            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-300">
+                                            <div
+                                                class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-300">
                                                 <div class="flex items-start space-x-4">
                                                     <div class="relative">
                                                         <img src="{{ $review->student->avatar_url }}"
                                                              alt="{{ $review->student->name }}"
                                                              class="w-14 h-14 rounded-full border-2 border-gray-200">
-                                                        <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-[#ed292a] rounded-full flex items-center justify-center">
+                                                        <div
+                                                            class="absolute -bottom-1 -right-1 w-6 h-6 bg-[#ed292a] rounded-full flex items-center justify-center">
                                                             <i class="fas fa-check text-white text-xs"></i>
                                                         </div>
                                                     </div>
                                                     <div class="flex-1">
-                                                        <div class="flex flex-col md:flex-row md:items-center md:space-x-4 mb-3">
+                                                        <div
+                                                            class="flex flex-col md:flex-row md:items-center md:space-x-4 mb-3">
                                                             <h5 class="font-bold text-[#1c1c1c] text-lg">{{ $review->student->name }}</h5>
                                                             <div class="flex items-center space-x-2">
                                                                 <div class="flex text-amber-400">
@@ -643,9 +669,11 @@
                                                                         @endif
                                                                     @endfor
                                                                 </div>
-                                                                <span class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                                                                <span
+                                                                    class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                                                                 @if($review->updated_at && $review->updated_at != $review->created_at)
-                                                                    <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">(đã chỉnh sửa)</span>
+                                                                    <span
+                                                                        class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">(đã chỉnh sửa)</span>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -670,12 +698,15 @@
                                         </div>
                                     @endif
                                 @else
-                                    <div class="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-200">
-                                        <div class="w-24 h-24 bg-gradient-to-r from-[#ed292a]/10 to-[#7e0202]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <div
+                                        class="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-200">
+                                        <div
+                                            class="w-24 h-24 bg-gradient-to-r from-[#ed292a]/10 to-[#7e0202]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                                             <i class="fas fa-star text-[#ed292a] text-3xl"></i>
                                         </div>
                                         <h4 class="text-2xl font-bold text-[#1c1c1c] mb-3">Chưa có đánh giá nào</h4>
-                                        <p class="text-gray-600 mb-6 max-w-md mx-auto">Hãy là người đầu tiên chia sẻ trải nghiệm của bạn về khóa học này!</p>
+                                        <p class="text-gray-600 mb-6 max-w-md mx-auto">Hãy là người đầu tiên chia sẻ
+                                            trải nghiệm của bạn về khóa học này!</p>
                                         @if($canReview)
                                             <a href="{{ route('courses.review.create', $course->slug) }}"
                                                class="inline-flex items-center bg-gradient-to-r from-[#ed292a] to-[#7e0202] text-white px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-[#ed292a]/25 font-semibold transition-all duration-300 hover:scale-105">
@@ -696,24 +727,28 @@
                     @if($relatedCourses->count() > 0)
                         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mb-8">
                             <h3 class="text-2xl font-bold text-[#1c1c1c] mb-6 flex items-center">
-                                <div class="w-8 h-8 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-lg flex items-center justify-center mr-3">
+                                <div
+                                    class="w-8 h-8 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-lg flex items-center justify-center mr-3">
                                     <i class="fas fa-graduation-cap text-white"></i>
                                 </div>
                                 Khóa học liên quan
                             </h3>
                             <div class="space-y-4">
                                 @foreach($relatedCourses as $relatedCourse)
-                                    <div class="group bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-[#ed292a]/30">
+                                    <div
+                                        class="group bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-[#ed292a]/30">
                                         <div class="flex items-start space-x-4">
                                             <div class="relative">
-                                                <img src="{{ $relatedCourse->thumbnail ? asset('storage/' . $relatedCourse->thumbnail) : 'https://via.placeholder.com/100x60?text=Course' }}"
-                                                     alt="{{ $relatedCourse->title }}"
-                                                     class="w-20 h-12 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300">
-                                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-300"></div>
+                                                <img
+                                                    src="{{ $relatedCourse->thumbnail ? asset('storage/' . $relatedCourse->thumbnail) : 'https://via.placeholder.com/100x60?text=Course' }}"
+                                                    alt="{{ $relatedCourse->title }}"
+                                                    class="w-24 h-24 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300">
+                                                <div
+                                                    class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-300"></div>
                                             </div>
                                             <div class="flex-1 min-w-0">
                                                 <h4 class="text-sm font-bold text-[#1c1c1c] line-clamp-2 mb-2 group-hover:text-[#ed292a] transition-colors duration-300">
-                                                    <a href="{{ route('student.courses.show', $relatedCourse->slug) }}">
+                                                    <a href="{{ route('courses.show', $relatedCourse->slug) }}">
                                                         {{ $relatedCourse->title }}
                                                     </a>
                                                 </h4>
@@ -730,7 +765,8 @@
                                                         @if($relatedCourse->is_free)
                                                             Miễn phí
                                                         @else
-                                                            {{ number_format($relatedCourse->discount_price ?: $relatedCourse->price) }}đ
+                                                            {{ number_format($relatedCourse->discount_price ?: $relatedCourse->price) }}
+                                                            đ
                                                         @endif
                                                     </div>
                                                 </div>
@@ -746,14 +782,16 @@
                     @if($course->tags && count($course->tags) > 0)
                         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
                             <h3 class="text-xl font-bold text-[#1c1c1c] mb-6 flex items-center">
-                                <div class="w-8 h-8 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-lg flex items-center justify-center mr-3">
+                                <div
+                                    class="w-8 h-8 bg-gradient-to-r from-[#ed292a] to-[#7e0202] rounded-lg flex items-center justify-center mr-3">
                                     <i class="fas fa-tags text-white"></i>
                                 </div>
                                 Từ khóa liên quan
                             </h3>
                             <div class="flex flex-wrap gap-3">
                                 @foreach($course->tags as $tag)
-                                    <span class="inline-block bg-gradient-to-r from-[#ed292a]/10 to-[#7e0202]/10 text-[#1c1c1c] text-sm px-4 py-2 rounded-xl border border-[#ed292a]/20 hover:bg-gradient-to-r hover:from-[#ed292a] hover:to-[#7e0202] hover:text-white font-medium transition-all duration-300 cursor-pointer">
+                                    <span
+                                        class="inline-block bg-gradient-to-r from-[#ed292a]/10 to-[#7e0202]/10 text-[#1c1c1c] text-sm px-4 py-2 rounded-xl border border-[#ed292a]/20 hover:bg-gradient-to-r hover:from-[#ed292a] hover:to-[#7e0202] hover:text-white font-medium transition-all duration-300 cursor-pointer">
                                         {{ $tag }}
                                     </span>
                                 @endforeach
@@ -768,15 +806,6 @@
 
 @push('scripts')
     <script>
-        function addToCart(courseId) {
-            // TODO: Implement add to cart functionality
-            showNotification('Tính năng giỏ hàng sẽ được phát triển trong phần tiếp theo!', 'info');
-        }
-
-        function buyNow(courseId) {
-            // TODO: Implement buy now functionality
-            showNotification('Tính năng thanh toán sẽ được phát triển trong phần tiếp theo!', 'info');
-        }
 
         function showNotification(message, type = 'success') {
             // Create notification element
@@ -815,7 +844,7 @@
         }
 
         // Smooth scroll for tabs
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const urlHash = window.location.hash;
             if (urlHash) {
                 const tabButton = document.querySelector(`[x-data] button[onclick*="${urlHash.substring(1)}"]`);
@@ -928,12 +957,12 @@
             const diffInSeconds = Math.floor((now - date) / 1000);
 
             const intervals = [
-                { label: 'năm', seconds: 31536000 },
-                { label: 'tháng', seconds: 2592000 },
-                { label: 'tuần', seconds: 604800 },
-                { label: 'ngày', seconds: 86400 },
-                { label: 'giờ', seconds: 3600 },
-                { label: 'phút', seconds: 60 }
+                {label: 'năm', seconds: 31536000},
+                {label: 'tháng', seconds: 2592000},
+                {label: 'tuần', seconds: 604800},
+                {label: 'ngày', seconds: 86400},
+                {label: 'giờ', seconds: 3600},
+                {label: 'phút', seconds: 60}
             ];
 
             for (const interval of intervals) {
@@ -947,7 +976,7 @@
         }
 
         // Check if user can review when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             @auth
             checkCanReview();
             @endauth
@@ -984,7 +1013,7 @@
                     </a>
                 `;
             } else {
-                let buttonText = '';
+                let buttonText;
                 switch (reason) {
                     case 'not_enrolled':
                         buttonText = 'Bạn cần đăng ký khóa học để đánh giá';
@@ -1022,7 +1051,7 @@
         }, observerOptions);
 
         // Observe elements for animation
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const animatedElements = document.querySelectorAll('.bg-white, .bg-gradient-to-r');
             animatedElements.forEach(element => {
                 element.style.opacity = '0';
@@ -1036,13 +1065,6 @@
 
 @push('styles')
     <style>
-        @font-face {
-            font-family: 'CustomTitle';
-            src: url('{{ asset("assets/fonts/title2.otf") }}') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -1091,28 +1113,6 @@
             text-decoration: none;
         }
 
-        /* Custom gradient text */
-        .gradient-text {
-            background: linear-gradient(135deg, #ed292a, #7e0202);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Enhanced shadows */
-        .shadow-glow {
-            box-shadow: 0 0 30px rgba(237, 41, 42, 0.15);
-        }
-
-        .shadow-glow-lg {
-            box-shadow: 0 0 60px rgba(237, 41, 42, 0.2);
-        }
-
-        /* Smooth animations */
-        .animate-fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1139,35 +1139,6 @@
             }
         }
 
-        /* Enhanced hover effects */
-        .hover-lift {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hover-lift:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Custom scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #ed292a, #7e0202);
-            border-radius: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #7e0202, #ed292a);
-        }
-
         /* Rating stars animation */
         .rating-stars i {
             transition: all 0.2s ease;
@@ -1189,92 +1160,9 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Button hover effects */
-        .btn-primary {
-            background: linear-gradient(135deg, #ed292a, #7e0202);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        /* Card hover effects */
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         .card-hover:hover {
             transform: translateY(-8px);
             box-shadow: 0 25px 50px rgba(237, 41, 42, 0.15);
-        }
-
-        /* Backdrop blur fallback */
-        @supports not (backdrop-filter: blur(10px)) {
-            .backdrop-blur-fallback {
-                background-color: rgba(255, 255, 255, 0.9);
-            }
-        }
-
-        /* Enhanced mobile responsive */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-                line-height: 1.2;
-            }
-
-            .course-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .instructor-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .sidebar-sticky {
-                position: relative;
-                top: 0;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .course-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .auto-dark {
-                background-color: #1c1c1c;
-                color: white;
-            }
-        }
-
-        /* High contrast mode support */
-        @media (prefers-contrast: high) {
-            .high-contrast {
-                border: 2px solid currentColor;
-            }
         }
 
         /* Reduced motion support */

@@ -32,7 +32,7 @@
 
                 <!-- CTA Button -->
                 <div class="flex justify-center animate-fade-in-up animation-delay-600 font-quicksand">
-                    <a href="#courses"
+                    <a href="/courses"
                        class="group bg-gray-900 text-white hover:bg-gray-800
                               font-medium  pl-6 py-[4px] pr-[4px] rounded-[40px] text-[16px] transition-all duration-300
                               hover:shadow-lg flex items-center gap-3">
@@ -566,14 +566,6 @@
     </section>
     <!-- Custom Styles -->
     <style>
-        @font-face {
-            font-family: 'CustomTitle';
-            src: url('{{ asset("assets/fonts/title2.otf") }}') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
         @keyframes fade-in-up {
             from {
                 opacity: 0;
@@ -759,7 +751,7 @@
                 right: -1rem;
             }
         }
-        /* Line clamp utility */
+
         /* Line clamp utility */
         .line-clamp-2 {
             display: -webkit-box;
@@ -865,23 +857,6 @@
 
         .testimonial-card:hover::before {
             left: 100%;
-        }
-
-        /* Animation Classes */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .fade-in-up.animated {
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         /* Responsive adjustments */
