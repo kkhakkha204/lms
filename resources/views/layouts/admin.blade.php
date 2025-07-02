@@ -120,7 +120,6 @@
 
         .user-avatar {
             background: linear-gradient(145deg, #f0f0f0, #ffffff);
-            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
         }
 
         .dropdown-menu {
@@ -135,63 +134,60 @@
 <div class="min-h-screen">
     <!-- Sidebar -->
     <aside
-        class="fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 ease-out"
+        class="fixed inset-y-0 left-0 z-50 w-48 transition-transform duration-300 ease-out"
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     >
         <div class="h-full bg-gradient-to-b from-gray-50 to-gray-100 shadow-neumorph">
             <!-- Logo Section -->
             <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-danger shadow-neumorph-sm flex items-center justify-center">
-                        <i class="fas fa-graduation-cap text-white text-lg"></i>
-                    </div>
                     <h1 class="text-3xl font-bold gradient-text" style="font-family: 'CustomTitle', sans-serif; ">Tech.era</h1>
                 </div>
             </div>
 
             <!-- Navigation -->
             <nav class="mt-8 px-4">
-                <div class="space-y-2">
+                <div class="space-y-4">
                     <!-- Dashboard -->
                     <a href="{{ route('admin.statistics') }}"
-                       class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.statistics') ? 'active' : '' }}">
+                       class="sidebar-link flex items-center px-4 pb-2 pt-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.statistics') ? 'active' : '' }}">
                         <i class="fas fa-chart-line w-5 h-5 mr-3 group-hover:text-accent transition-colors"></i>
-                        <span class="font-medium">Thống kê</span>
+                        <span class="text-sm font-medium mb-1">Thống kê</span>
                     </a>
 
                     <!-- Categories -->
                     <a href="{{ route('admin.categories.index') }}"
-                       class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                       class="sidebar-link flex items-center px-4 pb-2 pt-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                         <i class="fas fa-tags w-5 h-5 mr-3 group-hover:text-accent transition-colors"></i>
-                        <span class="font-medium">Danh mục khóa học</span>
+                        <span class="text-sm font-medium mb-1">Danh mục</span>
                     </a>
 
                     <!-- Courses -->
                     <a href="{{ route('admin.courses.index') }}"
-                       class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+                       class="sidebar-link flex items-center px-4 pb-2 pt-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
                         <i class="fas fa-book w-5 h-5 mr-3 group-hover:text-accent transition-colors"></i>
-                        <span class="font-medium">Khóa học</span>
+                        <span class="text-sm font-medium mb-1">Khóa học</span>
                     </a>
 
                     <!-- Payments -->
                     <a href="{{ route('admin.payments.index') }}"
-                       class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+                       class="sidebar-link flex items-center px-4 pb-2 pt-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
                         <i class="fas fa-credit-card w-5 h-5 mr-3 group-hover:text-accent transition-colors"></i>
-                        <span class="font-medium">Thanh toán</span>
+                        <span class="text-sm font-medium mb-1">Đơn hàng</span>
                     </a>
 
                     <!-- Users -->
                     <a href="{{ route('admin.users.index') }}"
-                       class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                       class="sidebar-link flex items-center px-4 pb-2 pt-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="fas fa-users w-5 h-5 mr-3 group-hover:text-accent transition-colors"></i>
-                        <span class="font-medium">Người dùng</span>
+                        <span class="text-sm font-medium mb-1">Người dùng</span>
                     </a>
 
                     <!-- Reviews -->
                     <a href="{{ route('admin.reviews.index') }}"
-                       class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                       class="sidebar-link flex items-center px-4 pb-2 pt-3 text-gray-700 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-neumorph-sm group {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                         <i class="fas fa-star w-5 h-5 mr-3 group-hover:text-accent transition-colors"></i>
-                        <span class="font-medium">Đánh giá</span>
+                        <span class="text-sm font-medium mb-1">Đánh giá</span>
                     </a>
                 </div>
             </nav>
@@ -200,15 +196,11 @@
             <div class="absolute bottom-0 w-full p-4" x-data="{ dropdownOpen: false }">
                 <div class="relative">
                     <button @click="dropdownOpen = !dropdownOpen"
-                            class="w-full flex items-center px-4 py-3 bg-white rounded-xl shadow-neumorph-sm hover:shadow-neumorph transition-all duration-200">
+                            class="w-full flex items-center bg-[#1c1c1c] px-4 py-3 rounded-xl transition-all duration-200 justify-between">
                         <div class="user-avatar w-8 h-8 rounded-lg flex items-center justify-center mr-3">
-                            <i class="fas fa-user text-gray-600"></i>
+                            <i class="fas fa-user text-gray-800"></i>
                         </div>
-                        <div class="flex-1 text-left">
-                            <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-gray-500">Administrator</p>
-                        </div>
-                        <i class="fas fa-chevron-up transition-transform" :class="dropdownOpen ? 'rotate-180' : ''"></i>
+                        <i class="fas fa-chevron-up text-white transition-transform" :class="dropdownOpen ? 'rotate-180' : ''"></i>
                     </button>
 
                     <!-- Dropdown Menu -->
@@ -241,7 +233,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class= "content-shift font-quicksand" :class="sidebarOpen ? 'ml-64' : 'ml-0'">
+    <main class= "content-shift font-quicksand" :class="sidebarOpen ? 'ml-48' : 'ml-0'">
         <!-- Top Header -->
         <header class="bg-white shadow-neumorph-sm h-16 flex items-center justify-between px-6 sticky top-0 z-40">
             <!-- Sidebar Toggle & Title -->
@@ -255,47 +247,6 @@
 
             <!-- Header Actions -->
             <div class="flex items-center space-x-4">
-                <!-- Notifications -->
-                <div class="relative" x-data="{ notificationOpen: false }">
-                    <button @click="notificationOpen = !notificationOpen"
-                            class="neumorph-button w-10 h-10 rounded-xl flex items-center justify-center relative">
-                        <i class="fas fa-bell text-gray-600"></i>
-                        <span class="notification-badge absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs text-white font-bold">3</span>
-                    </button>
-
-                    <!-- Notification Dropdown -->
-                    <div x-show="notificationOpen"
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 transform scale-95"
-                         x-transition:enter-end="opacity-100 transform scale-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 transform scale-100"
-                         x-transition:leave-end="opacity-0 transform scale-95"
-                         @click.away="notificationOpen = false"
-                         class="dropdown-menu absolute right-0 mt-2 w-80 rounded-xl py-2 max-h-96 overflow-y-auto">
-                        <div class="px-4 py-2 border-b border-gray-200">
-                            <h3 class="font-semibold text-gray-800">Thông báo</h3>
-                        </div>
-                        <div class="py-2">
-                            <a href="#" class="block px-4 py-3 hover:bg-gray-100 transition-colors">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-800">Đơn hàng mới</p>
-                                        <p class="text-xs text-gray-500">Có đơn hàng mới cần xử lý</p>
-                                        <p class="text-xs text-gray-400 mt-1">2 phút trước</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- More notifications... -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <button class="neumorph-button w-10 h-10 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-plus text-gray-600"></i>
-                </button>
             </div>
         </header>
 

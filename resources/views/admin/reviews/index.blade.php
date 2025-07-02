@@ -107,7 +107,7 @@
 
         .neu-badge {
             border-radius: 20px;
-            padding: 6px 12px;
+            padding: 10px 12px;
             font-size: 12px;
             font-weight: 600;
             box-shadow: 2px 2px 6px rgba(28, 28, 28, 0.1),
@@ -257,7 +257,6 @@
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Đánh giá</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nội dung</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Trạng thái</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Ngày tạo</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Thao tác</th>
                         </tr>
                         </thead>
@@ -305,16 +304,13 @@
                                 <td class="px-6 py-4">
                                     @if($review->is_approved)
                                         <span class="neu-badge neu-badge-success">
-                                            <i class="fas fa-check-circle mr-1"></i>Đã duyệt
+                                            <i class="fas fa-check-circle "></i>
                                         </span>
                                     @else
                                         <span class="neu-badge neu-badge-warning">
-                                            <i class="fas fa-clock mr-1"></i>Chờ duyệt
+                                            <i class="fas fa-clock "></i>
                                         </span>
                                     @endif
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600 font-medium">
-                                    {{ $review->created_at->format('d/m/Y') }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex space-x-2">

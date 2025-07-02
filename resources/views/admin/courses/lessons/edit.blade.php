@@ -3,293 +3,410 @@
 @section('title', 'Chỉnh sửa bài học')
 
 @section('content')
-    <div class="container mx-auto p-6">
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Chỉnh sửa bài học</h1>
-            <p class="text-gray-600 mt-2">{{ $lesson->title }}</p>
-            <p class="text-sm text-gray-500">Khóa học: {{ $course->title }} - Chương: {{ $section->title }}</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md">
-            <form action="{{ route('admin.courses.sections.lessons.update', [$course, $section, $lesson]) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
-                @csrf
-                @method('PUT')
-
-                <!-- Tiêu đề -->
-                <div>
-                    <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Tiêu đề bài học <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        value="{{ old('title', $lesson->title) }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Nhập tiêu đề bài học"
-                        required
-                    >
-                    @error('title')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    <p class="text-gray-500 text-sm mt-1">Slug hiện tại: <code class="bg-gray-100 px-2 py-1 rounded">{{ $lesson->slug }}</code></p>
-                </div>
-
-                <!-- Nội dung bài học với Rich Text Editor -->
-                <div>
-                    <label for="content" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Nội dung bài học
-                    </label>
-                    <textarea
-                        id="content"
-                        name="content"
-                        rows="15"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Nhập nội dung bài học..."
-                    >{{ old('content', $lesson->content) }}</textarea>
-                    @error('content')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    <div class="mt-2 text-sm text-gray-600">
-                        <p><strong>Hướng dẫn:</strong></p>
-                        <ul class="list-disc list-inside space-y-1 text-xs">
-                            <li>Sử dụng toolbar để định dạng văn bản (đậm, nghiêng, gạch chân...)</li>
-                            <li>Chèn hình ảnh, bảng, liên kết, code snippet</li>
-                            <li>Tạo danh sách có thứ tự hoặc không có thứ tự</li>
-                            <li>Thêm màu sắc cho văn bản và nền</li>
-                        </ul>
+    <div class="min-h-screen bg-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <!-- Header Section -->
+            <div class="mb-12">
+                <div class="text-center space-y-6">
+                    <h1 class="text-5xl font-bold text-primary tracking-tight">Chỉnh sửa bài học</h1>
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center px-8 py-4 bg-white rounded-2xl shadow-neumorph">
+                            <i class="fas fa-play-circle text-accent mr-4 text-xl"></i>
+                            <div class="text-left">
+                                <p class="text-xl font-bold text-primary">{{ $lesson->title }}</p>
+                            </div>
+                        </div>
+                        <div class="inline-flex items-center px-6 py-3 bg-white rounded-xl shadow-neumorph-sm">
+                            <i class="fas fa-graduation-cap text-gray-600 mr-3"></i>
+                            <div class="text-left text-sm">
+                                <p class="text-gray-600">Khóa học: <span class="font-medium text-accent">{{ $course->title }}</span></p>
+                                <p class="text-gray-600">Chương: <span class="font-medium text-accent">{{ $section->title }}</span></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Tóm tắt -->
-                <div>
-                    <label for="summary" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Tóm tắt bài học
-                    </label>
-                    <textarea
-                        id="summary"
-                        name="summary"
-                        rows="3"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Tóm tắt ngắn gọn về nội dung bài học"
-                    >{{ old('summary', $lesson->summary) }}</textarea>
-                    @error('summary')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Video Section -->
-                <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Video bài học</h3>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div>
-                            <!-- URL Video -->
-                            <div class="mb-4">
-                                <label for="video_url" class="block text-sm font-medium text-gray-700 mb-2">
-                                    URL Video
-                                </label>
-                                <input
-                                    type="url"
-                                    id="video_url"
-                                    name="video_url"
-                                    value="{{ old('video_url', $lesson->video_url) }}"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="https://youtube.com/watch?v=..."
-                                >
-                                @error('video_url')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                                @enderror
+            <!-- Main Form Card -->
+            <div class="bg-white rounded-3xl shadow-neumorph overflow-hidden">
+                <!-- Card Header -->
+                <div class="relative px-8 py-8 bg-gradient-to-br from-accent via-danger to-accent">
+                    <div class="absolute inset-0 bg-black bg-opacity-10 rounded-t-3xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-sm">
+                                <i class="fas fa-edit text-2xl text-white"></i>
                             </div>
-
-                            <!-- Thông tin video -->
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label for="video_duration" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Thời lượng
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="video_duration"
-                                        name="video_duration"
-                                        value="{{ old('video_duration', $lesson->video_duration) }}"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                        placeholder="00:05:30"
-                                    >
-                                    @error('video_duration')
-                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label for="video_size" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Dung lượng (MB)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="video_size"
-                                        name="video_size"
-                                        value="{{ old('video_size', $lesson->video_size) }}"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                        placeholder="50"
-                                    >
-                                    @error('video_size')
-                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Thông tin loại bài học -->
-                            <div class="mt-4 p-3 bg-blue-50 rounded-lg">
-                                <p class="text-sm text-blue-800">
-                                    <span class="font-medium">Loại bài học hiện tại:</span>
-                                    @if($lesson->type === 'video')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Video</span>
-                                    @elseif($lesson->type === 'text')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Văn bản</span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Kết hợp</span>
-                                    @endif
+                            <div>
+                                <h2 class="text-2xl font-bold text-white">Cập nhật thông tin bài học</h2>
+                                <p class="text-white text-opacity-90 mt-1 text-lg">
+                                    Chỉnh sửa nội dung học tập chất lượng cao
                                 </p>
-                                <p class="text-xs text-blue-600 mt-1">Loại sẽ được tự động cập nhật dựa trên nội dung</p>
-                            </div>
-                        </div>
-
-                        <!-- Video Preview -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                Xem trước video
-                            </label>
-                            <div id="video-preview" class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center min-h-[200px] flex items-center justify-center">
-                                @if($lesson->video_url)
-                                    @php
-                                        $youtubeRegex = '/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/';
-                                        preg_match($youtubeRegex, $lesson->video_url, $matches);
-                                    @endphp
-                                    @if(isset($matches[1]))
-                                        <iframe
-                                            width="100%"
-                                            height="200"
-                                            src="https://www.youtube.com/embed/{{ $matches[1] }}"
-                                            frameborder="0"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowfullscreen
-                                            class="rounded-lg">
-                                        </iframe>
-                                    @else
-                                        <video
-                                            width="100%"
-                                            height="200"
-                                            controls
-                                            class="rounded-lg">
-                                            <source src="{{ $lesson->video_url }}" type="video/mp4">
-                                            Trình duyệt không hỗ trợ video này
-                                        </video>
-                                    @endif
-                                @else
-                                    <p class="text-gray-500">Chưa có video</p>
-                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tài liệu hiện có -->
-                @if($lesson->materials->count() > 0)
-                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tài liệu hiện có</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            @foreach($lesson->materials as $material)
-                                <div class="flex items-center justify-between bg-white p-3 rounded-lg border">
-                                    <div class="flex items-center space-x-3">
-                                        <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                        </svg>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-900">{{ $material->title }}</p>
-                                            <p class="text-xs text-gray-500">{{ number_format($material->file_size / 1024, 2) }} KB</p>
+                <!-- Form Content -->
+                <form action="{{ route('admin.courses.sections.lessons.update', [$course, $section, $lesson]) }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-12">
+                    @csrf
+                    @method('PUT')
+
+                    <!-- Basic Information Section -->
+                    <div class="space-y-8">
+                        <h3 class="text-2xl font-bold text-primary flex items-center">
+                            <i class="fas fa-info-circle text-accent mr-3"></i>
+                            Thông tin cơ bản
+                        </h3>
+
+                        <!-- Title Field -->
+                        <div class="space-y-4">
+                            <label for="title" class="flex items-center text-lg font-bold text-primary">
+                                <i class="fas fa-heading text-accent mr-3"></i>
+                                Tiêu đề bài học
+                                <span class="text-danger ml-2">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text"
+                                       id="title"
+                                       name="title"
+                                       value="{{ old('title', $lesson->title) }}"
+                                       placeholder="Nhập tiêu đề bài học..."
+                                       class="w-full px-6 py-5 text-lg bg-white border-0 rounded-2xl shadow-neumorph-inset focus:shadow-neumorph transition-all duration-300 placeholder-gray-400 text-primary font-medium"
+                                       required>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-6">
+                                    <i class="fas fa-edit text-gray-400"></i>
+                                </div>
+                            </div>
+                            @error('title')
+                            <div class="flex items-center p-4 bg-danger bg-opacity-5 rounded-xl border border-danger border-opacity-20">
+                                <i class="fas fa-exclamation-triangle text-danger mr-3"></i>
+                                <span class="text-danger font-medium">{{ $message }}</span>
+                            </div>
+                            @enderror
+                            <div class="flex items-center p-4 bg-blue-50 rounded-xl border-l-4 border-accent">
+                                <i class="fas fa-link text-accent mr-3"></i>
+                                <p class="text-gray-700 text-sm">
+                                    Slug hiện tại: <code class="bg-accent bg-opacity-10 text-accent px-3 py-1 rounded-lg font-mono">{{ $lesson->slug }}</code>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Summary Field -->
+                        <div class="space-y-4">
+                            <label for="summary" class="flex items-center text-lg font-bold text-primary">
+                                <i class="fas fa-list-alt text-accent mr-3"></i>
+                                Tóm tắt bài học
+                            </label>
+                            <div class="relative">
+                            <textarea id="summary"
+                                      name="summary"
+                                      rows="4"
+                                      placeholder="Tóm tắt ngắn gọn về nội dung bài học..."
+                                      class="w-full px-6 py-5 text-lg bg-white border-0 rounded-2xl shadow-neumorph-inset focus:shadow-neumorph transition-all duration-300 placeholder-gray-400 text-primary font-medium resize-none">{{ old('summary', $lesson->summary) }}</textarea>
+                                <div class="absolute top-5 right-0 flex items-center pr-6">
+                                    <i class="fas fa-align-left text-gray-400"></i>
+                                </div>
+                            </div>
+                            @error('summary')
+                            <div class="flex items-center p-4 bg-danger bg-opacity-5 rounded-xl border border-danger border-opacity-20">
+                                <i class="fas fa-exclamation-triangle text-danger mr-3"></i>
+                                <span class="text-danger font-medium">{{ $message }}</span>
+                            </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Content Section -->
+                    <div class="space-y-8">
+                        <h3 class="text-2xl font-bold text-primary flex items-center">
+                            <i class="fas fa-file-alt text-accent mr-3"></i>
+                            Nội dung bài học
+                        </h3>
+
+                        <div class="space-y-4">
+                            <label for="content" class="flex items-center text-lg font-bold text-primary">
+                                <i class="fas fa-code text-accent mr-3"></i>
+                                Nội dung chi tiết
+                            </label>
+                            <div class="relative">
+                            <textarea id="content"
+                                      name="content"
+                                      rows="20"
+                                      placeholder="Nhập nội dung bài học..."
+                                      class="w-full px-6 py-5 text-lg bg-white border-0 rounded-2xl shadow-neumorph-inset focus:shadow-neumorph transition-all duration-300 placeholder-gray-400 text-primary font-medium resize-none">{{ old('content', $lesson->content) }}</textarea>
+                            </div>
+                            @error('content')
+                            <div class="flex items-center p-4 bg-danger bg-opacity-5 rounded-xl border border-danger border-opacity-20">
+                                <i class="fas fa-exclamation-triangle text-danger mr-3"></i>
+                                <span class="text-danger font-medium">{{ $message }}</span>
+                            </div>
+                            @enderror
+
+                            <!-- Rich Text Editor Instructions -->
+                            <div class="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-neumorph-inset border-l-4 border-accent">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-tools text-accent text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold text-primary mb-3">Hướng dẫn sử dụng</h4>
+                                        <ul class="space-y-2 text-gray-700">
+                                            <li class="flex items-center">
+                                                <i class="fas fa-check text-accent mr-2"></i>
+                                                Sử dụng toolbar để định dạng văn bản (đậm, nghiêng, gạch chân...)
+                                            </li>
+                                            <li class="flex items-center">
+                                                <i class="fas fa-check text-accent mr-2"></i>
+                                                Chèn hình ảnh, bảng, liên kết, code snippet
+                                            </li>
+                                            <li class="flex items-center">
+                                                <i class="fas fa-check text-accent mr-2"></i>
+                                                Tạo danh sách có thứ tự hoặc không có thứ tự
+                                            </li>
+                                            <li class="flex items-center">
+                                                <i class="fas fa-check text-accent mr-2"></i>
+                                                Thêm màu sắc cho văn bản và nền
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Section -->
+                    <div class="space-y-8">
+                        <h3 class="text-2xl font-bold text-primary flex items-center">
+                            <i class="fas fa-video text-accent mr-3"></i>
+                            Video bài học
+                        </h3>
+
+                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-neumorph-inset p-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Video Input -->
+                                <div class="space-y-6">
+                                    <!-- URL Video -->
+                                    <div class="space-y-4">
+                                        <label for="video_url" class="flex items-center text-lg font-bold text-primary">
+                                            <i class="fas fa-link text-accent mr-3"></i>
+                                            URL Video
+                                        </label>
+                                        <div class="relative">
+                                            <input type="url"
+                                                   id="video_url"
+                                                   name="video_url"
+                                                   value="{{ old('video_url', $lesson->video_url) }}"
+                                                   placeholder="https://youtube.com/watch?v=..."
+                                                   class="w-full px-6 py-4 text-lg bg-white border-0 rounded-xl shadow-neumorph-sm focus:shadow-neumorph transition-all duration-300 placeholder-gray-400 text-primary font-medium">
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                                                <i class="fas fa-globe text-gray-400"></i>
+                                            </div>
+                                        </div>
+                                        @error('video_url')
+                                        <div class="flex items-center p-3 bg-danger bg-opacity-5 rounded-lg border border-danger border-opacity-20">
+                                            <i class="fas fa-exclamation-triangle text-danger mr-2 text-sm"></i>
+                                            <span class="text-danger text-sm font-medium">{{ $message }}</span>
+                                        </div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Video Duration -->
+                                    <div class="space-y-4">
+                                        <label for="video_duration" class="flex items-center text-lg font-bold text-primary">
+                                            <i class="fas fa-clock text-accent mr-3"></i>
+                                            Thời lượng
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text"
+                                                   id="video_duration"
+                                                   name="video_duration"
+                                                   value="{{ old('video_duration', $lesson->video_duration) }}"
+                                                   placeholder="00:05:30"
+                                                   class="w-full px-6 py-4 text-lg bg-white border-0 rounded-xl shadow-neumorph-sm focus:shadow-neumorph transition-all duration-300 placeholder-gray-400 text-primary font-medium">
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                                                <i class="fas fa-stopwatch text-gray-400"></i>
+                                            </div>
+                                        </div>
+                                        @error('video_duration')
+                                        <div class="flex items-center p-3 bg-danger bg-opacity-5 rounded-lg border border-danger border-opacity-20">
+                                            <i class="fas fa-exclamation-triangle text-danger mr-2 text-sm"></i>
+                                            <span class="text-danger text-sm font-medium">{{ $message }}</span>
+                                        </div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Lesson Type Info -->
+                                    <div class="p-6 bg-white rounded-xl shadow-neumorph-sm border-l-4 border-primary">
+                                        <div class="flex items-start space-x-4">
+                                            <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                <i class="fas fa-tag text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-lg font-bold text-primary mb-2">Loại bài học hiện tại</h4>
+                                                <div class="flex items-center space-x-3">
+                                                    @if($lesson->type === 'video')
+                                                        <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-purple-100 text-purple-800 shadow-neumorph-sm">
+                                                        <i class="fas fa-video mr-2"></i>Video
+                                                    </span>
+                                                    @elseif($lesson->type === 'text')
+                                                        <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-green-100 text-green-800 shadow-neumorph-sm">
+                                                        <i class="fas fa-file-alt mr-2"></i>Văn bản
+                                                    </span>
+                                                    @else
+                                                        <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-blue-100 text-blue-800 shadow-neumorph-sm">
+                                                        <i class="fas fa-layer-group mr-2"></i>Kết hợp
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                                <p class="text-gray-600 text-sm mt-2">Loại sẽ được tự động cập nhật dựa trên nội dung</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="flex space-x-2">
-                                        <a href="{{ Storage::url($material->file_path) }}" target="_blank"
-                                           class="text-blue-600 hover:text-blue-800">
-                                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                        </a>
-                                        <button type="button" onclick="deleteMaterial({{ $material->id }})"
-                                                class="text-red-600 hover:text-red-800">
-                                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
+                                </div>
+
+                                <!-- Video Preview -->
+                                <div class="space-y-4">
+                                    <label class="flex items-center text-lg font-bold text-primary">
+                                        <i class="fas fa-eye text-accent mr-3"></i>
+                                        Xem trước video
+                                    </label>
+                                    <div id="video-preview" class="bg-white rounded-xl shadow-neumorph-inset p-6 text-center min-h-[250px] flex items-center justify-center border-2 border-dashed border-gray-200">
+                                        @if($lesson->video_url)
+                                            @php
+                                                $youtubeRegex = '/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/';
+                                                preg_match($youtubeRegex, $lesson->video_url, $matches);
+                                            @endphp
+                                            @if(isset($matches[1]))
+                                                <iframe
+                                                    width="100%"
+                                                    height="200"
+                                                    src="https://www.youtube.com/embed/{{ $matches[1] }}"
+                                                    frameborder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowfullscreen
+                                                    class="rounded-lg shadow-lg">
+                                                </iframe>
+                                            @else
+                                                <video
+                                                    width="100%"
+                                                    height="200"
+                                                    controls
+                                                    class="rounded-lg shadow-lg">
+                                                    <source src="{{ $lesson->video_url }}" type="video/mp4">
+                                                    Trình duyệt không hỗ trợ video này
+                                                </video>
+                                            @endif
+                                        @else
+                                            <div class="space-y-4">
+                                                <i class="fas fa-play-circle text-6xl text-gray-400"></i>
+                                                <p class="text-gray-500 font-medium">Chưa có video</p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
                         </div>
                     </div>
-                @endif
 
-                <!-- Thêm tài liệu mới -->
-                <div>
-                    <label for="materials" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Thêm tài liệu mới (PDF)
-                    </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                        <input
-                            type="file"
-                            id="materials"
-                            name="materials[]"
-                            multiple
-                            accept=".pdf"
-                            class="hidden"
-                        >
-                        <label for="materials" class="cursor-pointer">
-                            <div class="space-y-2">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                </svg>
-                                <div class="text-gray-600">
-                                    <span class="font-medium text-blue-600 hover:text-blue-500">Chọn file PDF</span>
-                                    <span> hoặc kéo thả vào đây</span>
+                    <!-- Existing Materials Section -->
+                    @if($lesson->materials->count() > 0)
+                        <div class="space-y-8">
+                            <h3 class="text-2xl font-bold text-primary flex items-center">
+                                <i class="fas fa-folder-open text-accent mr-3"></i>
+                                Tài liệu hiện có
+                            </h3>
+
+                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-neumorph-inset p-8">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    @foreach($lesson->materials as $material)
+                                        <div class="bg-white rounded-xl shadow-neumorph p-6 transition-all duration-300 hover:shadow-neumorph-inset">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="w-12 h-12 bg-danger bg-opacity-10 rounded-xl flex items-center justify-center">
+                                                        <i class="fas fa-file-pdf text-danger text-xl"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-lg font-bold text-primary">{{ $material->title }}</p>
+                                                        <p class="text-sm text-gray-600">{{ number_format($material->file_size / 1024, 2) }} KB</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex space-x-3">
+                                                    <a href="{{ Storage::url($material->file_path) }}" target="_blank"
+                                                       class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-200 transition-colors shadow-neumorph-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button type="button" onclick="deleteMaterial({{ $material->id }})"
+                                                            class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center hover:bg-red-200 transition-colors shadow-neumorph-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <p class="text-sm text-gray-500">Chỉ chấp nhận file PDF, tối đa 10MB mỗi file</p>
                             </div>
-                        </label>
+                        </div>
+                    @endif
+
+                    <!-- Add New Materials Section -->
+                    <div class="space-y-8">
+                        <h3 class="text-2xl font-bold text-primary flex items-center">
+                            <i class="fas fa-paperclip text-accent mr-3"></i>
+                            Thêm tài liệu mới
+                        </h3>
+
+                        <div class="space-y-4">
+                            <label for="materials" class="flex items-center text-lg font-bold text-primary">
+                                <i class="fas fa-file-pdf text-accent mr-3"></i>
+                                Tài liệu PDF
+                            </label>
+                            <div class="bg-white rounded-2xl shadow-neumorph-inset border-2 border-dashed border-gray-300 p-12 text-center hover:border-accent transition-colors duration-300">
+                                <input type="file"
+                                       id="materials"
+                                       name="materials[]"
+                                       multiple
+                                       accept=".pdf"
+                                       class="hidden">
+                                <label for="materials" class="cursor-pointer">
+                                    <div class="space-y-6">
+                                        <div class="w-20 h-20 mx-auto bg-accent bg-opacity-10 rounded-2xl flex items-center justify-center">
+                                            <i class="fas fa-cloud-upload-alt text-4xl text-accent"></i>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <p class="text-xl font-bold text-primary">
+                                                <span class="text-accent">Chọn file PDF</span> hoặc kéo thả vào đây
+                                            </p>
+                                            <p class="text-gray-600">Chỉ chấp nhận file PDF, tối đa 10MB mỗi file</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div id="selected-files" class="space-y-3"></div>
+                            @error('materials.*')
+                            <div class="flex items-center p-4 bg-danger bg-opacity-5 rounded-xl border border-danger border-opacity-20">
+                                <i class="fas fa-exclamation-triangle text-danger mr-3"></i>
+                                <span class="text-danger font-medium">{{ $message }}</span>
+                            </div>
+                            @enderror
+                        </div>
                     </div>
-                    <div id="selected-files" class="mt-3 space-y-2"></div>
-                    @error('materials.*')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                <!-- Cho phép xem trước -->
-                <div class="flex items-center">
-                    <input
-                        type="checkbox"
-                        id="is_preview"
-                        name="is_preview"
-                        value="1"
-                        {{ old('is_preview', $lesson->is_preview) ? 'checked' : '' }}
-                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    >
-                    <label for="is_preview" class="ml-2 block text-sm text-gray-700">
-                        Cho phép học viên xem trước bài học này (không cần mua khóa học)
-                    </label>
-                </div>
-
-                <!-- Buttons -->
-                <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-                    <a href="{{ route('admin.courses.edit', $course) }}"
-                       class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                        Hủy
-                    </a>
-                    <button type="submit"
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        Cập nhật bài học
-                    </button>
-                </div>
-            </form>
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-end space-x-6 pt-8 border-t border-gray-100">
+                        <a href="{{ route('admin.courses.edit', $course) }}"
+                           class="group inline-flex items-center px-10 py-5 text-lg font-bold text-gray-700 transition-all duration-300 rounded-2xl shadow-neumorph hover:shadow-neumorph-inset neumorph-button">
+                            <i class="fas fa-times mr-3 group-hover:rotate-90 transition-transform duration-300"></i>
+                            Hủy
+                        </a>
+                        <button type="submit"
+                                class="group inline-flex items-center px-12 py-5 text-lg font-bold text-white bg-gradient-to-r from-accent to-danger rounded-2xl shadow-neumorph hover:shadow-neumorph-inset transition-all duration-300 transform hover:scale-105 hover:from-danger hover:to-accent">
+                            <i class="fas fa-check mr-3 group-hover:rotate-12 transition-transform duration-300"></i>
+                            Cập nhật bài học
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

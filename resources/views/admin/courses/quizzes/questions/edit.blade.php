@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Chỉnh sửa câu hỏi')
 
@@ -263,7 +263,7 @@
                     Hủy
                 </a>
                 <button type="submit"
-                        class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        class="px-6 py-2 bg-[#1c1c1c] text-white rounded-md hover:bg-blue-700 transition-colors">
                     Cập nhật câu hỏi
                 </button>
             </div>

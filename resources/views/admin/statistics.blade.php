@@ -9,8 +9,8 @@
             <div class="mb-12">
                 <div class="flex items-center justify-between">
                     <div class="relative">
-                        <div class="relative ">
-                            <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent tracking-wide" style="font-family: 'CustomTitle', sans-serif; ">
+                        <div class="relative">
+                            <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent tracking-wide" style="font-family: 'CustomTitle', sans-serif;">
                                 Dashboard thống kê
                             </h1>
                             <p class="text-gray-500 mt-2 font-medium">Tổng quan hiệu suất hệ thống E-Learning</p>
@@ -22,7 +22,7 @@
                             <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            <span class="font-semibold">{{ now()->format('d/m/Y') }}</span>
+                            <span class="font-semibold">{{ $startDate->format('d/m/Y') }} - {{ $endDate->format('d/m/Y') }}</span>
                         </div>
                     </div>
                 </div>
@@ -31,30 +31,113 @@
             <!-- Filter Controls -->
             <div class="mb-10">
                 <div class="bg-white rounded-2xl p-6 shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
-                    <form action="{{ route('admin.statistics') }}" method="GET" class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff]">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
-                                    </svg>
-                                </div>
-                                <span class="text-lg font-semibold text-gray-700">Bộ lọc thời gian</span>
+                    <form action="{{ route('admin.statistics') }}" method="GET" id="filterForm">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+                            <!-- Quick Filter -->
+                            <div class="lg:col-span-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Bộ lọc nhanh</label>
+                                <select name="filter" id="quickFilter"
+                                        class="w-full px-4 py-3 text-gray-700 font-medium bg-white rounded-xl shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] border border-gray-200/50 focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff] transition-all duration-300">
+                                    <option value="today" {{ ($filter ?? 'today') === 'today' ? 'selected' : '' }}>📅 Hôm nay</option>
+                                    <option value="week" {{ ($filter ?? 'today') === 'week' ? 'selected' : '' }}>📊 Tuần này</option>
+                                    <option value="month" {{ ($filter ?? 'today') === 'month' ? 'selected' : '' }}>📈 Tháng này</option>
+                                    <option value="custom" {{ ($filter ?? 'today') === 'custom' ? 'selected' : '' }}>🎛️ Tùy chỉnh</option>
+                                </select>
                             </div>
-                            <select name="filter" onchange="this.form.submit()"
-                                    class="px-6 py-3 text-gray-700 font-medium bg-white rounded-xl shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] border border-gray-200/50 focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff] transition-all duration-300">
-                                <option value="day" {{ ($filter ?? 'day') === 'day' ? 'selected' : '' }}>📅 Theo ngày</option>
-                                <option value="week" {{ ($filter ?? 'day') === 'week' ? 'selected' : '' }}>📊 Theo tuần</option>
-                                <option value="month" {{ ($filter ?? 'day') === 'month' ? 'selected' : '' }}>📈 Theo tháng</option>
-                            </select>
-                        </div>
-                        <div class="flex items-center px-5 py-3 bg-gradient-to-r from-green-50 to-emerald-50 text-emerald-700 rounded-xl shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] border border-emerald-100">
-                            <svg class="w-5 h-5 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                            </svg>
-                            <span class="font-semibold">Tự động cập nhật</span>
+
+                            <!-- Start Date -->
+                            <div class="lg:col-span-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Từ ngày</label>
+                                <input type="date" name="start_date" id="startDate"
+                                       value="{{ request('start_date', $startDate->format('Y-m-d')) }}"
+                                       class="w-full px-4 py-3 text-gray-700 font-medium bg-white rounded-xl shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] border border-gray-200/50 focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff] transition-all duration-300">
+                            </div>
+
+                            <!-- End Date -->
+                            <div class="lg:col-span-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Đến ngày</label>
+                                <input type="date" name="end_date" id="endDate"
+                                       value="{{ request('end_date', $endDate->format('Y-m-d')) }}"
+                                       class="w-full px-4 py-3 text-gray-700 font-medium bg-white rounded-xl shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] border border-gray-200/50 focus:outline-none focus:shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff] transition-all duration-300">
+                            </div>
+
+                            <!-- Apply Button -->
+                            <div class="lg:col-span-3">
+                                <button type="submit"
+                                        class="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded-xl shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] hover:shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] transition-all duration-300 hover:from-red-700 hover:to-red-800">
+                                    <span class="flex items-center justify-center space-x-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                        <span>Áp dụng</span>
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Total Revenue -->
+                <div class="bg-white rounded-2xl p-6 shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Tổng doanh thu</p>
+                            <p class="text-2xl font-bold text-gray-800">{{ number_format($additionalStats['total_revenue'], 0, ',', '.') }}₫</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Orders -->
+                <div class="bg-white rounded-2xl p-6 shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Tổng đơn hàng</p>
+                            <p class="text-2xl font-bold text-gray-800">{{ number_format($additionalStats['total_orders']) }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Students -->
+                <div class="bg-white rounded-2xl p-6 shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Học viên mới</p>
+                            <p class="text-2xl font-bold text-gray-800">{{ number_format($additionalStats['total_students']) }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Average Order -->
+                <div class="bg-white rounded-2xl p-6 shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Giá trị TB/đơn</p>
+                            <p class="text-2xl font-bold text-gray-800">{{ number_format($additionalStats['average_order'], 0, ',', '.') }}₫</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -71,15 +154,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-2xl font-bold text-gray-800">Biểu đồ Doanh Thu</h2>
-                                    <p class="text-gray-500 mt-1 font-medium">Xu hướng doanh thu theo thời gian</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-6 shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff]">
-                                    <div class="text-3xl font-bold text-white">
-                                        {{ number_format(collect($revenueData)->sum('total_revenue'), 0, ',', '.') }}₫
-                                    </div>
-                                    <div class="text-red-100 text-sm font-medium mt-1">Tổng doanh thu</div>
+                                    <p class="text-gray-500 mt-1 font-medium">Xu hướng doanh thu từ {{ $startDate->format('d/m/Y') }} đến {{ $endDate->format('d/m/Y') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -92,122 +167,166 @@
                 </div>
             </div>
 
-            <!-- Top Courses Section -->
-            <div class="bg-white rounded-3xl shadow-[20px_20px_40px_#d1d9e6,-20px_-20px_40px_#ffffff] border border-white/50 overflow-hidden mb-12">
-                <div class="p-8 bg-gradient-to-r from-gray-50 to-white">
-                    <div class="flex items-center justify-between">
+            <!-- Row with Top Courses and Top Customers -->
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                <!-- Top Courses Section -->
+                <div class="bg-white rounded-3xl shadow-[20px_20px_40px_#d1d9e6,-20px_-20px_40px_#ffffff] border border-white/50 overflow-hidden">
+                    <div class="p-6 bg-gradient-to-r from-gray-50 to-white">
                         <div class="flex items-center space-x-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff]">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff]">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                                 </svg>
                             </div>
                             <div>
-                                <h2 class="text-2xl font-bold text-gray-800">Top 5 Khóa Học Bán Chạy</h2>
-                                <p class="text-gray-500 mt-1 font-medium">Những khóa học có nhiều đăng ký nhất</p>
+                                <h3 class="text-lg font-bold text-gray-800">Top 5 Khóa Học</h3>
+                                <p class="text-gray-500 text-sm font-medium">Bán chạy nhất</p>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-700 rounded-2xl shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] border border-emerald-200/50">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                            </svg>
-                            <span class="font-semibold">Hiệu suất cao</span>
-                        </div>
                     </div>
-                </div>
 
-                <div class="p-4">
-                    @forelse ($topCourses as $index => $course)
-                        <div class="mb-4 last:mb-0">
-                            <div class="bg-white rounded-2xl p-6 shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50 hover:shadow-[16px_16px_32px_#d1d9e6,-16px_-16px_32px_#ffffff] transition-all duration-300">
-                                <div class="flex items-center">
-                                    <!-- Ranking Badge -->
-                                    <div class="flex-shrink-0 mr-6">
-                                        @php
-                                            $rankColors = [
-                                                0 => 'from-yellow-400 to-yellow-600',
-                                                1 => 'from-gray-400 to-gray-600',
-                                                2 => 'from-orange-400 to-orange-600'
-                                            ];
-                                            $defaultColor = 'from-red-600 to-red-700';
-                                        @endphp
-                                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {{ $rankColors[$index] ?? $defaultColor }} flex items-center justify-center shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] text-white font-bold text-lg">
-                                            {{ $index + 1 }}
+                    <div class="p-4 max-h-96 overflow-y-auto">
+                        @forelse ($topCourses as $index => $course)
+                            <div class="mb-3 last:mb-0">
+                                <div class="bg-white rounded-xl p-4 shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] border border-white/50">
+                                    <div class="flex items-center">
+                                        <!-- Ranking -->
+                                        <div class="flex-shrink-0 mr-4">
+                                            @php
+                                                $rankColors = [
+                                                    0 => 'from-yellow-400 to-yellow-600',
+                                                    1 => 'from-gray-400 to-gray-600',
+                                                    2 => 'from-orange-400 to-orange-600'
+                                                ];
+                                                $defaultColor = 'from-red-600 to-red-700';
+                                            @endphp
+                                            <div class="w-8 h-8 rounded-lg bg-gradient-to-br {{ $rankColors[$index] ?? $defaultColor }} flex items-center justify-center text-white font-bold text-sm">
+                                                {{ $index + 1 }}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Course Image -->
-                                    <div class="flex-shrink-0 mr-6">
-                                        <div class="relative">
+                                        <!-- Course Image -->
+                                        <div class="flex-shrink-0 mr-4">
                                             @if ($course->thumbnail)
                                                 <img src="{{ asset('storage/' . $course->thumbnail) }}"
                                                      alt="{{ $course->title }}"
-                                                     class="w-20 h-20 object-cover rounded-2xl shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] border-2 border-white">
+                                                     class="w-12 h-12 object-cover rounded-lg shadow-md border border-white">
                                             @else
-                                                <div class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] border-2 border-white">
-                                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center shadow-md border border-white">
+                                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                     </svg>
                                                 </div>
                                             @endif
-                                            <div class="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff]">
-                                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Course Info -->
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="font-bold text-lg text-gray-800 truncate mb-2">{{ $course->title }}</h3>
-                                        <div class="flex items-center space-x-6 text-sm">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
-                                                <span class="text-gray-600 font-medium">{{ $course->category ? $course->category->name : 'Chưa phân loại' }}</span>
-                                            </div>
-                                            @if($course->is_free)
-                                                <div class="flex items-center space-x-2">
-                                                    <div class="w-3 h-3 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full"></div>
-                                                    <span class="text-emerald-600 font-semibold">Miễn phí</span>
-                                                </div>
-                                            @else
-                                                <div class="flex items-center space-x-2">
-                                                    <div class="w-3 h-3 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></div>
-                                                    <span class="text-gray-600 font-semibold">{{ number_format($course->display_price, 0, ',', '.') }}₫</span>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <!-- Stats -->
-                                    <div class="flex-shrink-0">
-                                        <!-- Enrollment Stats -->
-                                        <div class="text-center">
-                                            <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-xl px-4 py-2 shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff]">
-                                                <div class="text-xl font-bold text-white">{{ number_format($course->enrollment_count) }}</div>
-                                                <div class="text-red-100 text-xs font-medium">đăng ký</div>
+                                        <!-- Course Info -->
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="font-semibold text-gray-800 truncate text-sm">{{ $course->title }}</h4>
+                                            <div class="flex items-center space-x-3 text-xs text-gray-500 mt-1">
+                                                <span>{{ $course->enrollment_count }} đăng ký</span>
+                                                @if($course->total_revenue)
+                                                    <span>{{ number_format($course->total_revenue, 0, ',', '.') }}₫</span>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="p-16 text-center">
-                            <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-200 to-gray-300 rounded-3xl flex items-center justify-center shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff]">
-                                <svg class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        @empty
+                            <div class="p-8 text-center">
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-700 mb-2">Chưa có dữ liệu</h4>
+                                <p class="text-gray-500 text-sm">Chưa có khóa học nào được đăng ký.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Top Customers Section -->
+                <div class="bg-white rounded-3xl shadow-[20px_20px_40px_#d1d9e6,-20px_-20px_40px_#ffffff] border border-white/50 overflow-hidden">
+                    <div class="p-6 bg-gradient-to-r from-gray-50 to-white">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff]">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-700 mb-3">Chưa có dữ liệu</h3>
-                            <p class="text-gray-500 font-medium">Chưa có khóa học nào được đăng ký.</p>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800">Top 5 Khách Hàng</h3>
+                                <p class="text-gray-500 text-sm font-medium">Mua nhiều nhất</p>
+                            </div>
                         </div>
-                    @endforelse
+                    </div>
+
+                    <div class="p-4 max-h-96 overflow-y-auto">
+                        @forelse ($topCustomers as $index => $customer)
+                            <div class="mb-3 last:mb-0">
+                                <div class="bg-white rounded-xl p-4 shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] border border-white/50">
+                                    <div class="flex items-center">
+                                        <!-- Ranking -->
+                                        <div class="flex-shrink-0 mr-4">
+                                            @php
+                                                $rankColors = [
+                                                    0 => 'from-yellow-400 to-yellow-600',
+                                                    1 => 'from-gray-400 to-gray-600',
+                                                    2 => 'from-orange-400 to-orange-600'
+                                                ];
+                                                $defaultColor = 'from-blue-600 to-blue-700';
+                                            @endphp
+                                            <div class="w-8 h-8 rounded-lg bg-gradient-to-br {{ $rankColors[$index] ?? $defaultColor }} flex items-center justify-center text-white font-bold text-sm">
+                                                {{ $index + 1 }}
+                                            </div>
+                                        </div>
+
+                                        <!-- Customer Avatar -->
+                                        <div class="flex-shrink-0 mr-4">
+                                            @if ($customer->avatar)
+                                                <img src="{{ $customer->avatar_url }}"
+                                                     alt="{{ $customer->name }}"
+                                                     class="w-12 h-12 object-cover rounded-lg shadow-md border border-white">
+                                            @else
+                                                <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center shadow-md border border-white">
+                                                    <span class="text-blue-600 font-semibold text-sm">{{ substr($customer->name, 0, 2) }}</span>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <!-- Customer Info -->
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="font-semibold text-gray-800 truncate text-sm">{{ $customer->name }}</h4>
+                                            <div class="flex items-center space-x-3 text-xs text-gray-500 mt-1">
+                                                <span>{{ $customer->total_orders }} đơn hàng</span>
+                                                <span>{{ $customer->courses_purchased }} khóa học</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Customer Stats -->
+                                        <div class="flex-shrink-0 text-right">
+                                            <div class="text-sm font-bold text-gray-800">{{ number_format($customer->total_spent, 0, ',', '.') }}₫</div>
+                                            <div class="text-xs text-gray-500">Tổng chi tiêu</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-8 text-center">
+                                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-700 mb-2">Chưa có dữ liệu</h4>
+                                <p class="text-gray-500 text-sm">Chưa có khách hàng nào mua hàng.</p>
+                            </div>
+                        @endforelse
+                    </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -215,6 +334,38 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle quick filter changes
+            const quickFilter = document.getElementById('quickFilter');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            const filterForm = document.getElementById('filterForm');
+
+            quickFilter.addEventListener('change', function() {
+                const value = this.value;
+                const today = new Date();
+
+                if (value === 'today') {
+                    const todayStr = today.toISOString().split('T')[0];
+                    startDate.value = todayStr;
+                    endDate.value = todayStr;
+                    filterForm.submit();
+                } else if (value === 'week') {
+                    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+                    const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+                    startDate.value = startOfWeek.toISOString().split('T')[0];
+                    endDate.value = endOfWeek.toISOString().split('T')[0];
+                    filterForm.submit();
+                } else if (value === 'month') {
+                    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    startDate.value = startOfMonth.toISOString().split('T')[0];
+                    endDate.value = endOfMonth.toISOString().split('T')[0];
+                    filterForm.submit();
+                }
+                // For 'custom', do nothing - let user pick dates manually
+            });
+
+            // Revenue Chart
             const ctx = document.getElementById('revenueChart').getContext('2d');
 
             // Create sophisticated gradient
@@ -249,8 +400,6 @@
                         pointHoverBackgroundColor: '#7e0202',
                         pointHoverBorderColor: '#ffffff',
                         pointHoverBorderWidth: 3,
-                        pointShadowColor: 'rgba(126, 2, 2, 0.3)',
-                        pointShadowBlur: 10
                     }]
                 },
                 options: {
@@ -284,7 +433,7 @@
                             caretSize: 8,
                             callbacks: {
                                 title: function(context) {
-                                    return 'Ngày: ' + context[0].label;
+                                    return 'Thời gian: ' + context[0].label;
                                 },
                                 label: function(context) {
                                     return 'Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.parsed.y) + '₫';
@@ -318,7 +467,8 @@
                                     size: 12,
                                     weight: '500'
                                 },
-                                padding: 10
+                                padding: 10,
+                                maxRotation: 45
                             }
                         },
                         y: {
@@ -376,11 +526,8 @@
             setTimeout(() => {
                 revenueChart.update('show');
             }, 300);
-        });
 
-        // Add some interactive enhancements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate statistics cards on scroll
+            // Animate cards on scroll
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -404,9 +551,9 @@
                 observer.observe(card);
             });
 
-            // Add hover effects for enhanced interactivity
-            const courseCards = document.querySelectorAll('[class*="shadow-"]');
-            courseCards.forEach(card => {
+            // Add hover effects
+            const hoverCards = document.querySelectorAll('[class*="shadow-"]');
+            hoverCards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-2px)';
                 });
@@ -419,33 +566,6 @@
     </script>
 
     <style>
-        /* Additional custom styles for enhanced neumorphism */
-        .shadow-neumorphism {
-            box-shadow: 20px 20px 40px #d1d9e6, -20px -20px 40px #ffffff;
-        }
-
-        .shadow-neumorphism-inset {
-            box-shadow: inset 8px 8px 16px #d1d9e6, inset -8px -8px 16px #ffffff;
-        }
-
-        .shadow-neumorphism-hover:hover {
-            box-shadow: 25px 25px 50px #d1d9e6, -25px -25px 50px #ffffff;
-        }
-
-        /* Smooth transitions for all interactive elements */
-        * {
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        /* Custom gradient backgrounds */
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, #7e0202 0%, #ed292a 100%);
-        }
-
-        .bg-gradient-secondary {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        }
-
         /* Enhanced chart container */
         #revenueChart {
             filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
@@ -467,15 +587,23 @@
             animation: fadeInUp 0.6s ease-out;
         }
 
-        /* Progress bar animation */
-        @keyframes progressLoad {
-            from {
-                width: 0%;
-            }
+        /* Custom scrollbar for overflow areas */
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .animate-progress {
-            animation: progressLoad 1.5s ease-out;
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-radius: 10px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b);
         }
     </style>
 @endsection

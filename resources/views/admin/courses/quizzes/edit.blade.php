@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Chỉnh sửa bài kiểm tra')
 
@@ -19,123 +19,188 @@
         <div class="max-w-6xl mx-auto space-y-8">
             <!-- Quiz Information Form -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <form action="{{ route('admin.courses.sections.quizzes.update', [$course, $section, $quiz]) }}" method="POST">
+                <form action="{{ route('admin.courses.sections.quizzes.update', [$course, $section, $quiz]) }}" method="POST" class="bg-white rounded-3xl shadow-neumorph overflow-hidden">
                     @csrf
                     @method('PUT')
 
                     <!-- Form Header -->
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-800">Thông tin bài kiểm tra</h2>
+                    <div class="px-8 py-6 bg-gradient-to-r from-neumorphism-light to-white border-b border-neumorphism-shadow/20">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white rounded-xl shadow-neumorph-sm flex items-center justify-center">
+                                <i class="fas fa-edit text-accent text-lg"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-primary">Chỉnh sửa bài kiểm tra</h2>
+                        </div>
+                        <p class="text-primary/60 mt-2 ml-13">Cập nhật thông tin chi tiết cho bài kiểm tra</p>
                     </div>
 
-                    <div class="p-6 space-y-6">
+                    <div class="p-8 space-y-8">
                         <!-- Title -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                Tiêu đề <span class="text-red-500">*</span>
+                        <div class="group">
+                            <label class="block text-sm font-semibold text-primary mb-3 flex items-center">
+                                <i class="fas fa-heading text-accent mr-2"></i>
+                                Tiêu đề
+                                <span class="text-danger ml-1">*</span>
                             </label>
-                            <input
-                                type="text"
-                                name="title"
-                                value="{{ old('title', $quiz->title) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('title') border-red-500 @enderror"
-                                required
-                            >
+                            <div class="relative">
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value="{{ old('title', $quiz->title) }}"
+                                    class="w-full px-4 py-4 bg-white rounded-xl shadow-neumorph-inset border-0 focus:outline-none focus:shadow-neumorph transition-all duration-300 text-primary placeholder-primary/40 @error('title') shadow-[inset_4px_4px_8px_#ffebee,inset_-4px_-4px_8px_#ffffff] @enderror"
+                                    required
+                                >
+                            </div>
                             @error('title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-danger flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
                         <!-- Description -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả</label>
-                            <textarea
-                                name="description"
-                                rows="3"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror"
-                            >{{ old('description', $quiz->description) }}</textarea>
+                        <div class="group">
+                            <label class="block text-sm font-semibold text-primary mb-3 flex items-center">
+                                <i class="fas fa-align-left text-accent mr-2"></i>
+                                Mô tả
+                            </label>
+                            <div class="relative">
+                <textarea
+                    name="description"
+                    rows="3"
+                    class="w-full px-4 py-4 bg-white rounded-xl shadow-neumorph-inset border-0 focus:outline-none focus:shadow-neumorph transition-all duration-300 text-primary placeholder-primary/40 resize-none @error('description') shadow-[inset_4px_4px_8px_#ffebee,inset_-4px_-4px_8px_#ffffff] @enderror"
+                >{{ old('description', $quiz->description) }}</textarea>
+                            </div>
                             @error('description')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-danger flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
                         <!-- Instructions -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Hướng dẫn làm bài</label>
-                            <textarea
-                                name="instructions"
-                                rows="4"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('instructions') border-red-500 @enderror"
-                            >{{ old('instructions', $quiz->instructions) }}</textarea>
+                        <div class="group">
+                            <label class="block text-sm font-semibold text-primary mb-3 flex items-center">
+                                <i class="fas fa-list-ol text-accent mr-2"></i>
+                                Hướng dẫn làm bài
+                            </label>
+                            <div class="relative">
+                <textarea
+                    name="instructions"
+                    rows="4"
+                    class="w-full px-4 py-4 bg-white rounded-xl shadow-neumorph-inset border-0 focus:outline-none focus:shadow-neumorph transition-all duration-300 text-primary placeholder-primary/40 resize-none @error('instructions') shadow-[inset_4px_4px_8px_#ffebee,inset_-4px_-4px_8px_#ffffff] @enderror"
+                >{{ old('instructions', $quiz->instructions) }}</textarea>
+                            </div>
                             @error('instructions')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-danger flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
                         <!-- Quiz Settings Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Time Limit -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Thời gian giới hạn (phút)
-                                </label>
-                                <input
-                                    type="number"
-                                    name="time_limit"
-                                    value="{{ old('time_limit', $quiz->time_limit) }}"
-                                    min="1"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('time_limit') border-red-500 @enderror"
-                                >
-                                @error('time_limit')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                                <p class="mt-1 text-xs text-gray-500">Để trống nếu không muốn giới hạn thời gian</p>
-                            </div>
+                        <div class="bg-gradient-to-r from-neumorphism-light to-white p-6 rounded-2xl shadow-neumorph-inset">
+                            <h3 class="text-lg font-bold text-primary mb-6 flex items-center">
+                                <i class="fas fa-cogs text-accent mr-2"></i>
+                                Cài đặt bài kiểm tra
+                            </h3>
 
-                            <!-- Max Attempts -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Số lần thử tối đa <span class="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="number"
-                                    name="max_attempts"
-                                    value="{{ old('max_attempts', $quiz->max_attempts) }}"
-                                    min="1"
-                                    max="10"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('max_attempts') border-red-500 @enderror"
-                                    required
-                                >
-                                @error('max_attempts')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Time Limit -->
+                                <div class="group">
+                                    <label class="block text-sm font-semibold text-primary mb-3 flex items-center">
+                                        <i class="fas fa-clock text-accent mr-2"></i>
+                                        Thời gian giới hạn (phút)
+                                    </label>
+                                    <div class="relative">
+                                        <input
+                                            type="number"
+                                            name="time_limit"
+                                            value="{{ old('time_limit', $quiz->time_limit) }}"
+                                            min="1"
+                                            class="w-full px-4 py-3 bg-white rounded-xl shadow-neumorph-inset border-0 focus:outline-none focus:shadow-neumorph transition-all duration-300 text-primary placeholder-primary/40 @error('time_limit') shadow-[inset_4px_4px_8px_#ffebee,inset_-4px_-4px_8px_#ffffff] @enderror"
+                                        >
+                                    </div>
+                                    @error('time_limit')
+                                    <p class="mt-2 text-sm text-danger flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ $message }}
+                                    </p>
+                                    @enderror
+                                    <p class="mt-2 text-xs text-primary/50 flex items-center">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        Để trống nếu không muốn giới hạn thời gian
+                                    </p>
+                                </div>
 
-                            <!-- Passing Score -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Điểm qua (%) <span class="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="number"
-                                    name="passing_score"
-                                    value="{{ old('passing_score', $quiz->passing_score) }}"
-                                    min="0"
-                                    max="100"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('passing_score') border-red-500 @enderror"
-                                    required
-                                >
-                                @error('passing_score')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <!-- Max Attempts -->
+                                <div class="group">
+                                    <label class="block text-sm font-semibold text-primary mb-3 flex items-center">
+                                        <i class="fas fa-redo text-accent mr-2"></i>
+                                        Số lần thử tối đa
+                                        <span class="text-danger ml-1">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <input
+                                            type="number"
+                                            name="max_attempts"
+                                            value="{{ old('max_attempts', $quiz->max_attempts) }}"
+                                            min="1"
+                                            max="10"
+                                            class="w-full px-4 py-3 bg-white rounded-xl shadow-neumorph-inset border-0 focus:outline-none focus:shadow-neumorph transition-all duration-300 text-primary placeholder-primary/40 @error('max_attempts') shadow-[inset_4px_4px_8px_#ffebee,inset_-4px_-4px_8px_#ffffff] @enderror"
+                                            required
+                                        >
+                                    </div>
+                                    @error('max_attempts')
+                                    <p class="mt-2 text-sm text-danger flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ $message }}
+                                    </p>
+                                    @enderror
+                                </div>
+
+                                <!-- Passing Score -->
+                                <div class="group md:col-span-2">
+                                    <label class="block text-sm font-semibold text-primary mb-3 flex items-center">
+                                        <i class="fas fa-medal text-accent mr-2"></i>
+                                        Điểm qua (%)
+                                        <span class="text-danger ml-1">*</span>
+                                    </label>
+                                    <div class="relative max-w-md">
+                                        <input
+                                            type="number"
+                                            name="passing_score"
+                                            value="{{ old('passing_score', $quiz->passing_score) }}"
+                                            min="0"
+                                            max="100"
+                                            class="w-full px-4 py-3 bg-white rounded-xl shadow-neumorph-inset border-0 focus:outline-none focus:shadow-neumorph transition-all duration-300 text-primary placeholder-primary/40 @error('passing_score') shadow-[inset_4px_4px_8px_#ffebee,inset_-4px_-4px_8px_#ffffff] @enderror"
+                                            required
+                                        >
+                                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary/50">
+                                            <i class="fas fa-percent"></i>
+                                        </div>
+                                    </div>
+                                    @error('passing_score')
+                                    <p class="mt-2 text-sm text-danger flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ $message }}
+                                    </p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 
                         <!-- Checkbox Options -->
-                        <div class="space-y-4">
-                            <h3 class="text-lg font-medium text-gray-800">Tùy chọn bài kiểm tra</h3>
+                        <div class="bg-gradient-to-r from-white to-neumorphism-light p-6 rounded-2xl shadow-neumorph">
+                            <h3 class="text-lg font-bold text-primary mb-6 flex items-center">
+                                <i class="fas fa-sliders-h text-accent mr-2"></i>
+                                Tùy chọn bài kiểm tra
+                            </h3>
 
-                            <div class="space-y-3">
+                            <div class="space-y-4">
                                 <!-- Show Results -->
                                 <div class="flex items-start space-x-3">
                                     <input
@@ -153,24 +218,6 @@
                                         <p class="text-xs text-gray-500">Học viên sẽ thấy điểm số và kết quả ngay sau khi nộp bài</p>
                                     </div>
                                 </div>
-
-                                <!-- Shuffle Questions -->
-                                <div class="flex items-start space-x-3">
-                                    <input
-                                        type="checkbox"
-                                        id="shuffle_questions"
-                                        name="shuffle_questions"
-                                        value="1"
-                                        {{ old('shuffle_questions', $quiz->shuffle_questions) ? 'checked' : '' }}
-                                        class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                    >
-                                    <div>
-                                        <label for="shuffle_questions" class="text-sm font-medium text-gray-700">
-                                            Xáo trộn câu hỏi
-                                        </label>
-                                        <p class="text-xs text-gray-500">Thứ tự câu hỏi sẽ được xáo trộn cho mỗi lần làm bài</p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -185,7 +232,7 @@
                         </a>
                         <button
                             type="submit"
-                            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            class="px-6 py-2 text-sm font-medium text-white bg-[#1c1c1c] border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                             Cập nhật bài kiểm tra
                         </button>

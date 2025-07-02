@@ -294,7 +294,77 @@
 </main>
 
 <!-- Footer -->
-<footer class="">
+<!-- Footer Component -->
+<!-- Footer Component -->
+<footer style="background-color: #1c1c1c" class="text-white font-quicksand">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Main Footer Content -->
+        <div class="py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+                <!-- Company Info -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Tech.era</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Nền tảng học trực tuyến hàng đầu, mang đến trải nghiệm học tập chất lượng cao với các khóa học đa dạng.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Quick Links -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-semibold text-white">Liên kết nhanh</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Trang chủ</a></li>
+                        <li><a href="/courses" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Khóa học</a></li>
+                        <li><a href="/dashboard" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Dashboard</a></li>
+                        <li><a href="/certificates/verify" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm">Xác thực chứng chỉ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-semibold text-white">Liên hệ</h4>
+                    <div class="space-y-3">
+                        <p class="text-gray-300 text-sm flex items-center">
+                            <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            techera@gmail.com
+                        </p>
+                        <p class="text-gray-300 text-sm flex items-center">
+                            <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            +84 123 456 789
+                        </p>
+                        <p class="text-gray-300 text-sm flex items-start">
+                            <svg class="w-4 h-4 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            250 Trinh Dinh Cuu, Hoang Mai, Ha Noi
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="border-t border-gray-700 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="text-gray-400 text-sm">
+                    © 2024 Techera. Bảo lưu mọi quyền.
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm">Chính sách bảo mật</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm">Điều khoản sử dụng</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm">Hỗ trợ</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
 <!-- Floating Action Buttons -->
