@@ -1,45 +1,49 @@
-{{-- ChatBot Component --}}
+{{-- Redesigned ChatBot Component for Logged-in Users --}}
 <!-- ChatBot Toggle Button -->
 <div id="chatbot-toggle" class="fixed bottom-6 right-6 z-50">
-    <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 shadow-lg transition-all duration-300 flex items-center justify-center group">
-        <i class="fas fa-comments text-xl group-hover:scale-110 transition-transform"></i>
-        <span class="absolute -top-12 right-0 bg-gray-800 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    <button class="bg-gradient-to-tr from-[#7e0202] to-[#ed292a] hover:from-[#ed292a] hover:to-[#7e0202] text-white rounded-full w-14 h-14 shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-105 active:scale-95">
+        <i class="fas fa-comments text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="absolute -top-12 right-0 bg-[#1c1c1c] text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap shadow-lg">
             Tư vấn khóa học
         </span>
     </button>
 </div>
 
 <!-- ChatBot Window -->
-<div id="chatbot-window" class="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-lg shadow-2xl z-40 transform translate-y-full opacity-0 transition-all duration-300">
+<div id="chatbot-window" class="fixed bottom-24 right-6 w-80 h-[500px] bg-white rounded-2xl shadow-2xl z-40 transform translate-y-full opacity-0 transition-all duration-300 border border-gray-100">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg">
+    <div class="bg-gradient-to-r from-[#1c1c1c] to-[#2a2a2a] text-white p-4 rounded-t-2xl">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="relative">
-                    <img src="https://via.placeholder.com/40x40/3B82F6/ffffff?text=AI" alt="AI" class="w-10 h-10 rounded-full">
-                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+                    <div class="w-8 h-8 bg-gradient-to-tr from-[#7e0202] to-[#ed292a] rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-[#ed292a] rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                    <h3 class="font-semibold">AI Tư vấn khóa học</h3>
-                    <p class="text-sm opacity-90 flex items-center">
-                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                    <h3 class="font-medium text-sm">AI Tư vấn</h3>
+                    <p class="text-xs opacity-80 flex items-center">
+                        <span class="w-1.5 h-1.5 bg-[#ed292a] rounded-full mr-2 animate-pulse"></span>
                         Trực tuyến
                     </p>
                 </div>
             </div>
-            <button id="chatbot-close" class="text-white hover:text-gray-200 p-1 rounded hover:bg-white hover:bg-opacity-20 transition-all">
-                <i class="fas fa-times"></i>
+            <button id="chatbot-close" class="text-white hover:text-gray-300 p-1.5 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                <i class="fas fa-times text-sm"></i>
             </button>
         </div>
     </div>
 
     <!-- Messages Container -->
-    <div id="messages-container" class="h-96 overflow-y-auto p-4 space-y-4 bg-gray-50">
+    <div id="messages-container" class="h-80 overflow-y-auto p-4 space-y-3 bg-gray-50">
         <!-- Welcome Message -->
-        <div class="flex items-start space-x-3 animate-fade-in">
-            <img src="https://via.placeholder.com/32x32/3B82F6/ffffff?text=AI" alt="AI" class="w-8 h-8 rounded-full">
-            <div class="bg-white rounded-lg p-3 max-w-xs shadow-sm border">
-                <p class="text-sm text-gray-700">
+        <div class="flex items-start space-x-2 animate-fade-in">
+            <div class="w-6 h-6 bg-gradient-to-tr from-[#7e0202] to-[#ed292a] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <i class="fas fa-robot text-white text-xs"></i>
+            </div>
+            <div class="bg-white rounded-xl p-3 max-w-[220px] shadow-sm border border-gray-100">
+                <p class="text-xs text-[#1c1c1c] leading-relaxed">
                     👋 Xin chào! Tôi là AI tư vấn khóa học.
                     <br><br>
                     Tôi có thể giúp bạn:
@@ -55,22 +59,22 @@
     </div>
 
     <!-- Quick Actions -->
-    <div id="quick-actions" class="px-4 py-2 border-t bg-white">
+    <div id="quick-actions" class="px-4 py-2 border-t border-gray-100 bg-white">
         <p class="text-xs text-gray-500 mb-2">Gợi ý câu hỏi:</p>
-        <div class="flex flex-wrap gap-2">
-            <button class="quick-action-btn bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs hover:bg-blue-200 transition-all transform hover:scale-105"
+        <div class="flex flex-wrap gap-1.5">
+            <button class="quick-action-btn bg-gray-100 hover:bg-[#7e0202] text-[#1c1c1c] hover:text-white px-2.5 py-1 rounded-lg text-xs transition-all duration-200 transform hover:scale-105"
                     data-message="Cho tôi xem các khóa học phổ biến nhất">
                 🔥 Khóa học hot
             </button>
-            <button class="quick-action-btn bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs hover:bg-green-200 transition-all transform hover:scale-105"
+            <button class="quick-action-btn bg-gray-100 hover:bg-[#7e0202] text-[#1c1c1c] hover:text-white px-2.5 py-1 rounded-lg text-xs transition-all duration-200 transform hover:scale-105"
                     data-message="Tôi là người mới bắt đầu, nên học khóa nào?">
                 🌱 Người mới
             </button>
-            <button class="quick-action-btn bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs hover:bg-purple-200 transition-all transform hover:scale-105"
+            <button class="quick-action-btn bg-gray-100 hover:bg-[#7e0202] text-[#1c1c1c] hover:text-white px-2.5 py-1 rounded-lg text-xs transition-all duration-200 transform hover:scale-105"
                     data-message="Có khóa học miễn phí nào không?">
                 🆓 Miễn phí
             </button>
-            <button class="quick-action-btn bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs hover:bg-orange-200 transition-all transform hover:scale-105"
+            <button class="quick-action-btn bg-gray-100 hover:bg-[#7e0202] text-[#1c1c1c] hover:text-white px-2.5 py-1 rounded-lg text-xs transition-all duration-200 transform hover:scale-105"
                     data-message="Tôi muốn học lập trình, bắt đầu từ đâu?">
                 💻 Lập trình
             </button>
@@ -78,32 +82,32 @@
     </div>
 
     <!-- Input Area -->
-    <div class="p-4 border-t bg-white rounded-b-lg">
+    <div class="p-4 border-t border-gray-100 bg-white rounded-b-2xl">
         <div class="flex space-x-2">
             <input
                 type="text"
                 id="message-input"
                 placeholder="Nhập câu hỏi của bạn..."
-                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="flex-1 border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ed292a] focus:border-transparent text-xs placeholder-gray-400"
                 maxlength="500"
             >
             <button
                 id="send-button"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+                class="bg-gradient-to-tr from-[#7e0202] to-[#ed292a] hover:from-[#ed292a] hover:to-[#7e0202] text-white px-3 py-2 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
                 title="Gửi tin nhắn"
             >
-                <i class="fas fa-paper-plane"></i>
+                <i class="fas fa-paper-plane text-xs"></i>
             </button>
         </div>
 
-        <!-- Character counter -->
+        <!-- Character counter and typing indicator -->
         <div class="flex justify-between items-center mt-2">
             <div id="typing-indicator" class="hidden">
-                <div class="flex items-center space-x-2 text-gray-500 text-sm">
+                <div class="flex items-center space-x-2 text-gray-400 text-xs">
                     <div class="flex space-x-1">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-1.5 h-1.5 bg-[#ed292a] rounded-full animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 bg-[#ed292a] rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-1.5 h-1.5 bg-[#ed292a] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                     </div>
                     <span>AI đang suy nghĩ...</span>
                 </div>
@@ -113,7 +117,7 @@
     </div>
 </div>
 
-<!-- Custom CSS -->
+<!-- Custom CSS for Redesigned User ChatBot -->
 <style>
     @keyframes fade-in {
         from { opacity: 0; transform: translateY(10px); }
@@ -125,21 +129,29 @@
     }
 
     #messages-container::-webkit-scrollbar {
-        width: 4px;
+        width: 3px;
     }
 
     #messages-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
+        background: transparent;
     }
 
     #messages-container::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 4px;
+        background: #ed292a;
+        border-radius: 3px;
     }
 
     #messages-container::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+        background: #7e0202;
+    }
+
+    /* Elegant hover effects */
+    .quick-action-btn:hover {
+        box-shadow: 0 4px 12px rgba(126, 2, 2, 0.25);
+    }
+
+    #chatbot-toggle button:hover {
+        box-shadow: 0 8px 25px rgba(237, 41, 42, 0.4);
     }
 
     /* Mobile responsive */
@@ -149,16 +161,39 @@
             right: 1rem;
             left: 1rem;
             bottom: 6rem;
+            height: 450px;
         }
 
         #chatbot-toggle {
             bottom: 1rem;
             right: 1rem;
         }
+
+        #messages-container {
+            height: 280px;
+        }
+    }
+
+    /* Message styles */
+    .user-message {
+        background: linear-gradient(135deg, #7e0202, #ed292a);
+        color: white;
+        margin-left: auto;
+    }
+
+    .bot-message {
+        background: white;
+        border: 1px solid #f0f0f0;
+    }
+
+    .error-message {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #7e0202;
     }
 </style>
 
-<!-- ChatBot JavaScript -->
+<!-- Redesigned User ChatBot JavaScript -->
 <script>
     class ChatBot {
         constructor() {
@@ -207,9 +242,11 @@
                 this.charCounter.textContent = `${length}/500`;
 
                 if (length > 450) {
-                    this.charCounter.classList.add('text-red-500');
+                    this.charCounter.classList.add('text-[#ed292a]');
+                    this.charCounter.classList.remove('text-gray-400');
                 } else {
-                    this.charCounter.classList.remove('text-red-500');
+                    this.charCounter.classList.remove('text-[#ed292a]');
+                    this.charCounter.classList.add('text-gray-400');
                 }
             });
 
@@ -222,13 +259,13 @@
                 });
             });
 
-            // Click outside to close
+            // Click outside to close (optional)
             document.addEventListener('click', (e) => {
                 const chatbotWindow = document.getElementById('chatbot-window');
                 const chatbotToggle = document.getElementById('chatbot-toggle');
 
                 if (this.isOpen && !chatbotWindow.contains(e.target) && !chatbotToggle.contains(e.target)) {
-                    // Don't close immediately, add small delay
+                    // Uncomment if you want click outside to close
                     // this.closeChatbot();
                 }
             });
@@ -320,7 +357,7 @@
 
         addMessage(message, sender, type = 'normal') {
             const messageDiv = document.createElement('div');
-            messageDiv.className = 'flex items-start space-x-3 animate-fade-in';
+            messageDiv.className = 'flex items-start space-x-2 animate-fade-in';
 
             const timestamp = new Date().toLocaleTimeString('vi-VN', {
                 hour: '2-digit',
@@ -330,22 +367,27 @@
             if (sender === 'user') {
                 messageDiv.innerHTML = `
                 <div class="flex-1"></div>
-                <div class="bg-blue-600 text-white rounded-lg p-3 max-w-xs shadow-sm">
-                    <p class="text-sm">${this.escapeHtml(message)}</p>
+                <div class="user-message rounded-xl p-3 max-w-[200px] shadow-sm">
+                    <p class="text-xs">${this.escapeHtml(message)}</p>
                     <p class="text-xs opacity-75 mt-1">${timestamp}</p>
                 </div>
-                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                <div class="w-6 h-6 bg-[#1c1c1c] rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0 mt-1">
                     {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'U' }}
                 </div>
             `;
             } else {
-                const bgColor = type === 'error' ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200';
-                const textColor = type === 'error' ? 'text-red-700' : 'text-gray-700';
+                let messageClass = 'bot-message';
+
+                if (type === 'error') {
+                    messageClass = 'error-message';
+                }
 
                 messageDiv.innerHTML = `
-                <img src="https://via.placeholder.com/32x32/3B82F6/ffffff?text=AI" alt="AI" class="w-8 h-8 rounded-full">
-                <div class="${bgColor} border rounded-lg p-3 max-w-xs shadow-sm">
-                    <p class="text-sm ${textColor}">${this.formatMessage(message)}</p>
+                <div class="w-6 h-6 bg-gradient-to-tr from-[#7e0202] to-[#ed292a] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <i class="fas fa-robot text-white text-xs"></i>
+                </div>
+                <div class="${messageClass} rounded-xl p-3 max-w-[220px] shadow-sm">
+                    <p class="text-xs leading-relaxed">${this.formatMessage(message)}</p>
                     <p class="text-xs text-gray-400 mt-1">${timestamp}</p>
                 </div>
             `;
@@ -366,7 +408,7 @@
             message = message.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
             // Convert URLs to links
-            message = message.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-600 hover:underline">$1</a>');
+            message = message.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-[#ed292a] hover:underline">$1</a>');
 
             return message;
         }
@@ -401,7 +443,7 @@
 
                 suggestions.forEach(suggestion => {
                     const btn = document.createElement('button');
-                    btn.className = 'quick-action-btn bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs hover:bg-blue-200 transition-all transform hover:scale-105';
+                    btn.className = 'quick-action-btn bg-gray-100 hover:bg-[#7e0202] text-[#1c1c1c] hover:text-white px-2.5 py-1 rounded-lg text-xs transition-all duration-200 transform hover:scale-105';
                     btn.setAttribute('data-message', suggestion);
                     btn.textContent = suggestion;
 

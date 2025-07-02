@@ -281,13 +281,13 @@
     </div>
 </nav>
 
-{{--<!-- ChatBot Component - Hiển thị trên tất cả trang -->--}}
-{{--@auth--}}
-{{--    @include('components.chatbot')--}}
-{{--@else--}}
-{{--    <!-- ChatBot cho guest users -->--}}
-{{--    @include('components.chatbot-guest')--}}
-{{--@endauth--}}
+<!-- ChatBot Component - Hiển thị trên tất cả trang -->
+@auth
+    @include('components.chatbot')
+@else
+    <!-- ChatBot cho guest users -->
+    @include('components.chatbot-guest')
+@endauth
 <!-- Main Content -->
 <main class="font-quicksand">
     @yield('content')
@@ -368,7 +368,7 @@
 </footer>
 
 <!-- Floating Action Buttons -->
-<div class="fixed bottom-6 right-6 z-50" x-data="floatingButtons()">
+<div class="fixed bottom-32 right-7 z-40" x-data="floatingButtons()">
     <!-- Back to Top Button -->
     <button @click="scrollToTop()"
             x-show="showBackToTop"

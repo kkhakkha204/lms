@@ -330,32 +330,6 @@
                                     </li>
                                 </ul>
                             </div>
-
-                            <!-- Enhanced Share Section -->
-                            <div class="border-t border-gray-200 pt-6 mt-6">
-                                <h4 class="font-bold text-[#1c1c1c] mb-4 flex items-center">
-                                    <i class="fas fa-share-alt text-[#ed292a] mr-3"></i>
-                                    Chia sẻ khóa học:
-                                </h4>
-                                <div class="grid grid-cols-4 gap-3">
-                                    <button
-                                        class="bg-blue-600 text-white py-3 rounded-xl text-sm hover:bg-blue-700 transition-colors duration-300 hover:scale-105">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </button>
-                                    <button
-                                        class="bg-blue-400 text-white py-3 rounded-xl text-sm hover:bg-blue-500 transition-colors duration-300 hover:scale-105">
-                                        <i class="fab fa-twitter"></i>
-                                    </button>
-                                    <button
-                                        class="bg-blue-700 text-white py-3 rounded-xl text-sm hover:bg-blue-800 transition-colors duration-300 hover:scale-105">
-                                        <i class="fab fa-linkedin-in"></i>
-                                    </button>
-                                    <button
-                                        class="bg-gray-600 text-white py-3 rounded-xl text-sm hover:bg-gray-700 transition-colors duration-300 hover:scale-105">
-                                        <i class="fas fa-link"></i>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
