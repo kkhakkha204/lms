@@ -213,16 +213,14 @@
                          x-transition:leave-end="opacity-0 transform scale-95"
                          @click.away="dropdownOpen = false"
                          class="dropdown-menu absolute bottom-full mb-2 w-full rounded-xl py-2">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg mx-2 transition-colors">
-                            <i class="fas fa-user-cog mr-2"></i>Hồ sơ
+                        <a href="#" class="">
                         </a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg mx-2 transition-colors">
-                            <i class="fas fa-cog mr-2"></i>Cài đặt
+                        <a href="#" class="">
                         </a>
                         <hr class="my-2 mx-2 border-gray-200">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-danger hover:bg-red-50 rounded-lg mx-2 transition-colors">
+                            <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-danger rounded-lg mx-2 transition-colors">
                                 <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
                             </button>
                         </form>

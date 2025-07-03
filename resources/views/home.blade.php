@@ -165,7 +165,7 @@
 
                     <!-- CTA Button -->
                     <div class="pt-4">
-                        <a href="#team"
+                        <a href="/courses"
                            class="group inline-flex items-center gap-3 bg-white text-gray-900 hover:bg-gray-100
                                   font-medium py-[4px] pl-8 pr-[4px] rounded-[40px] text-[16px] transition-all duration-300
                                   hover:shadow-2xl">
@@ -564,6 +564,13 @@
             </div>
         </div>
     </section>
+    <!-- ChatBot Component - Hiển thị trên tất cả trang -->
+    @auth
+        @include('components.chatbot')
+    @else
+        <!-- ChatBot cho guest users -->
+        @include('components.chatbot-guest')
+    @endauth
     <!-- Custom Styles -->
     <style>
         @keyframes fade-in-up {

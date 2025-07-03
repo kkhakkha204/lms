@@ -281,13 +281,6 @@
     </div>
 </nav>
 
-<!-- ChatBot Component - Hiển thị trên tất cả trang -->
-@auth
-    @include('components.chatbot')
-@else
-    <!-- ChatBot cho guest users -->
-    @include('components.chatbot-guest')
-@endauth
 <!-- Main Content -->
 <main class="font-quicksand">
     @yield('content')
